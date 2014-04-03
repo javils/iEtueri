@@ -1,5 +1,11 @@
 <resources>
 
     <string name="app_name">iEtueri</string>
+    <string name="title_today">Hoy</string>
+    <string name="title_schedule">Horario</string>
+    <string name="title_homework">Trabajos</string>
+    <string name="title_exam">Examenes</string>
+    <string name="title_course">Cursos</string>
+    <string name="title_subject">Asignaturas</string>
 
 </resources>

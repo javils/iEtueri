@@ -1,4 +1,4 @@
-iEteuri
+iEtueri
 =======
 
-App for mobile to organize the work of the student more easy.
+Mobile app for Android to facilitate the student's life, help you organize and keep log of their school results.
