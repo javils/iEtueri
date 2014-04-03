@@ -7,5 +7,6 @@
     <string name="title_exam">Examenes</string>
     <string name="title_course">Cursos</string>
     <string name="title_subject">Asignaturas</string>
+    <string name="quit_warnings">For quit warnings</string>
 
 </resources>
