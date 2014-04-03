@@ -17,12 +17,12 @@ import android.widget.Toast;
 public class NavigationDrawerController extends Fragment {
 
 	/** Constants that represent the sections of the Navigation */
-	public static final int SECTION_NUMBER_TODAY = 0;
-	public static final int SECTION_NUMBER_SCHEDULE = 1;
-	public static final int SECTION_NUMBER_HOMEWORKS = 2;
-	public static final int SECTION_NUMBER_EXAMS = 3;
-	public static final int SECTION_NUMBER_COURSES = 4;
-	public static final int SECTION_NUMBER_SUBJECTS = 5;
+	public static final int SECTION_NUMBER_TODAY = 1;
+	public static final int SECTION_NUMBER_SCHEDULE = 2;
+	public static final int SECTION_NUMBER_HOMEWORKS = 3;
+	public static final int SECTION_NUMBER_EXAMS = 4;
+	public static final int SECTION_NUMBER_COURSES = 5;
+	public static final int SECTION_NUMBER_SUBJECTS = 6;
 
 	/** The fragment argument representing the section number for this fragment. */
 	private static final String ARG_SECTION_NUMBER = "section_number";
@@ -51,7 +51,6 @@ public class NavigationDrawerController extends Fragment {
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
 		switch (section) {
 		case SECTION_NUMBER_TODAY: // TODAY SECTION
 			break;
