@@ -1,5 +1,7 @@
 package navigationdrawer;
 
+import schedule.EventsManager;
+import schedule.RefreshScheduleEventsData;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.FragmentManager;
@@ -28,6 +30,13 @@ public class MainActivity extends Activity implements NavigationDrawerCallbacks 
 		navigationDrawerFragment.setUp(R.id.navigation_drawer, (DrawerLayout) findViewById(R.id.drawer_layout));
 
 		title = getTitle();
+
+		new Thread(new RefreshScheduleEventsData(getApplicationContext())).start();
+
+		while (EventsManager.isThreadfinish() == false) {
+			// TODO: Make animation with progressbar or something else.
+		}
+
 	}
 
 	@Override

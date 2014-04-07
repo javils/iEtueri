@@ -1,9 +1,7 @@
 package schedule;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Locale;
 
 import org.joda.time.LocalDate;
 
@@ -45,13 +43,15 @@ public class RefreshScheduleEventsData implements Runnable {
 		EventsManager.getEvents().clear();
 		ContentResolver contentResolver = context.getContentResolver();
 
+		EventsManager.setThreadfinish(false);
+
 		/** Get the content of the Calendar Database */
 		Cursor cursor = contentResolver.query(CalendarContract.Events.CONTENT_URI, EVENT_PROJECTION, null, null, null);
 		cursor.moveToFirst();
 
 		/** Check all dates in the Cursor */
 		for (int i = 0; i < cursor.getCount(); ++i) {
-			String[] date = getDate(Long.parseLong(cursor.getString(CALENDAR_DTSTART))).split("-");
+			String[] date = Event.getDate(Long.parseLong(cursor.getString(CALENDAR_DTSTART))).split("-");
 			int year = Integer.valueOf(date[0]);
 			int month = Integer.valueOf(date[1]);
 			int day = Integer.valueOf(date[2]);
@@ -72,8 +72,8 @@ public class RefreshScheduleEventsData implements Runnable {
 			/** Get all data of event */
 			String title = cursor.getString(CALENDAR_TITLE);
 			String description = cursor.getString(CALENDAR_DESCRIPTION);
-			String dtstart = cursor.getString(CALENDAR_DTSTART);
-			String dtend = getDate(Long.parseLong(cursor.getString(CALENDAR_DTEND)));
+			String dtstart = Event.getDate(Long.parseLong(cursor.getString(CALENDAR_DTSTART)));
+			String dtend = Event.getDate(Long.parseLong(cursor.getString(CALENDAR_DTEND)));
 			String rrule = cursor.getString(CALENDAR_RRULE);
 			String location = cursor.getString(CALENDAR_EVENT_LOCATION);
 			boolean allDay = (cursor.getInt(CALENDAR_ALLDAY) == 0) ? false : true;
@@ -84,14 +84,15 @@ public class RefreshScheduleEventsData implements Runnable {
 						endminute, allDay);
 				EventsManager.addEvent(newEvent);
 
-				daysDiference = Long.parseLong(dtend) - Long.parseLong(dtstart);
+				daysDiference = Long.parseLong(cursor.getString(CALENDAR_DTEND))
+						- Long.parseLong(cursor.getString(CALENDAR_DTSTART));
 
 				if (daysDiference > EventsManager.ONEDAY_IN_MILLIECONDS) {
 					int count = 0;
 					/** Add all intermediate events to the list */
 					while ((daysDiference - EventsManager.ONEDAY_IN_MILLIECONDS) >= 0) {
-						String intermediateDay = getDate(Long.parseLong(dtend) - EventsManager.ONEDAY_IN_MILLIECONDS
-								* count);
+						String intermediateDay = Event.getDate(Long.parseLong(cursor.getString(CALENDAR_DTEND))
+								- EventsManager.ONEDAY_IN_MILLIECONDS * count);
 
 						daysDiference -= EventsManager.ONEDAY_IN_MILLIECONDS;
 						count++;
@@ -107,21 +108,22 @@ public class RefreshScheduleEventsData implements Runnable {
 					/** Add all of repetitions of the event */
 					for (LocalDate itr : LocalDateIteratorFactory.createLocalDateIterable("RRULE:" + rrule, localdate,
 							false)) {
-						Event newEvent = new Event(title, description, location, getDate(itr.toDate().getTime()),
+						Event newEvent = new Event(title, description, location, Event.getDate(itr.toDate().getTime()),
 								dtend, inithour, initminute, endhour, endminute, allDay);
 						EventsManager.addEvent(newEvent);
 
-						daysDiference = Long.parseLong(dtend) - itr.toDate().getTime();
+						daysDiference = Long.parseLong(cursor.getString(CALENDAR_DTEND)) - itr.toDate().getTime();
 
 						if (daysDiference > EventsManager.ONEDAY_IN_MILLIECONDS) {
 							int count = 0;
 
 							while (daysDiference > EventsManager.ONEDAY_IN_MILLIECONDS) {
-								dtstart = getDate(itr.toDate().getTime() - EventsManager.ONEDAY_IN_MILLIECONDS * count);
+								dtstart = Event.getDate(itr.toDate().getTime() - EventsManager.ONEDAY_IN_MILLIECONDS
+										* count);
 								daysDiference -= EventsManager.ONEDAY_IN_MILLIECONDS;
 								count++;
 
-								Event newIntermediateEvent = new Event(title, description, location, getDate(itr
+								Event newIntermediateEvent = new Event(title, description, location, Event.getDate(itr
 										.toDate().getTime()), dtend, inithour, initminute, endhour, endminute, allDay);
 								EventsManager.addEvent(newIntermediateEvent);
 
@@ -138,13 +140,6 @@ public class RefreshScheduleEventsData implements Runnable {
 
 			cursor.moveToNext();
 		}
-	}
-
-	/** Convert milliseconds in yyyy-MM-dd date format */
-	public static String getDate(long milliSeconds) {
-		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd", new Locale("es", "ES"));
-		Calendar calendar = Calendar.getInstance();
-		calendar.setTimeInMillis(milliSeconds);
-		return formatter.format(calendar.getTime());
+		EventsManager.setThreadfinish(true);
 	}
 }

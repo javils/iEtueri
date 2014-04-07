@@ -207,4 +207,12 @@ public class Event {
 			return hourInit + ":" + minuteInit + " - " + hourEnd + ":" + minuteEnd;
 		}
 	}
+
+	/** Convert milliseconds in yyyy-MM-dd date format */
+	public static String getDate(long milliSeconds) {
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd", new Locale("es", "ES"));
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTimeInMillis(milliSeconds);
+		return formatter.format(calendar.getTime());
+	}
 }
