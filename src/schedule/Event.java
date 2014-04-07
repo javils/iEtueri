@@ -48,13 +48,17 @@ public class Event {
 	}
 
 	/** Constructor */
-	public Event(String name, String place, String init, String end, int hour, int minute, boolean allday) {
+	public Event(String name, String description, String place, String init, String end, int initHour, int initMinute,
+			int endHour, int endMinute, boolean allday) {
 		this.name = name;
+		this.description = description;
 		this.place = place;
 		this.init = init;
 		this.end = end;
-		this.initHour = hour;
-		this.initMinute = minute;
+		this.initHour = initHour;
+		this.initMinute = initMinute;
+		this.endHour = endHour;
+		this.endMinute = endMinute;
 		this.allDay = allday;
 	}
 

@@ -1,7 +1,5 @@
 package schedule;
 
-import java.util.ArrayList;
-
 import android.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -19,9 +17,6 @@ public class ScheduleFragment extends Fragment implements OnDateChangeListener {
 	private CalendarView calendar;
 	private ListView listEvents;
 
-	/** ArrayList with all of the events of the calendars */
-	private static ArrayList<Event> events = new ArrayList<Event>();
-
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_schedule, container, false);
@@ -35,21 +30,6 @@ public class ScheduleFragment extends Fragment implements OnDateChangeListener {
 	@Override
 	public void onSelectedDayChange(CalendarView view, int year, int month, int dayOfMonth) {
 
-	}
-
-	/** Get all the events */
-	public static ArrayList<Event> getEvents() {
-		return events;
-	}
-
-	/** Set all events */
-	public static void setEvents(ArrayList<Event> events) {
-		ScheduleFragment.events = events;
-	}
-
-	/** Set only one event in the list */
-	public static void setEvent(Event event) {
-		events.add(event);
 	}
 
 }
