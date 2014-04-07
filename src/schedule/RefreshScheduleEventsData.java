@@ -104,6 +104,7 @@ public class RefreshScheduleEventsData implements Runnable {
 
 				LocalDate localdate = new LocalDate(year, month, day);
 				try {
+					/** Add all of repetitions of the event */
 					for (LocalDate itr : LocalDateIteratorFactory.createLocalDateIterable("RRULE:" + rrule, localdate,
 							false)) {
 						Event newEvent = new Event(title, description, location, getDate(itr.toDate().getTime()),
@@ -139,6 +140,7 @@ public class RefreshScheduleEventsData implements Runnable {
 		}
 	}
 
+	/** Convert milliseconds in yyyy-MM-dd date format */
 	public static String getDate(long milliSeconds) {
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd", new Locale("es", "ES"));
 		Calendar calendar = Calendar.getInstance();
