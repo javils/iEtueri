@@ -16,7 +16,7 @@ import com.javils.ietueri.R;
 /**
  * Adapter for the ListView of the Navigation Fragment
  * 
- * @author Javier
+ * @author Javier Luque Sanabria
  * 
  */
 public class DrawerListAdapter extends ArrayAdapter<DrawerList> {
