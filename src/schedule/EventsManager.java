@@ -55,7 +55,7 @@ public class EventsManager {
 
 	/** Find events with the same start year, month, and day */
 	public static ArrayList<Event> find(int year, int month, int dayOfMonth) {
-		// TODO: Use quickshort or other search algorithm
+		// TODO: Use quicksort or other search algorithm
 		ArrayList<Event> result = new ArrayList<Event>();
 		Calendar cal = Calendar.getInstance();
 		cal.set(year, month, dayOfMonth);
@@ -63,7 +63,15 @@ public class EventsManager {
 		for (int i = 0; i < events.size(); ++i) {
 			if (events.get(i).getInit().equals(Event.getDate(cal.getTimeInMillis())))
 				result.add(events.get(i));
-
+			else {
+				String[] sDate = events.get(i).getInit().split("-");
+				int eventYear = Integer.parseInt(sDate[0]);
+				int eventMonth = Integer.parseInt(sDate[1]);
+				int eventDay = Integer.parseInt(sDate[2]);
+				if (eventYear > year || (eventYear == year && eventMonth > month + 1)
+						|| (eventYear == year && eventMonth == (month + 1) && eventDay > dayOfMonth))
+					break;
+			}
 		}
 
 		return result;

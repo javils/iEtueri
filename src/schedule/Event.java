@@ -12,7 +12,7 @@ import java.util.Locale;
  * @author Javier Luque Sanabria
  * 
  */
-public class Event {
+public class Event implements Comparable<Event> {
 
 	/** Name of the event */
 	private String name;
@@ -214,5 +214,29 @@ public class Event {
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTimeInMillis(milliSeconds);
 		return formatter.format(calendar.getTime());
+	}
+
+	@Override
+	public int compareTo(Event event) {
+		String otherInitDate = event.getInit();
+		String[] othersDate = otherInitDate.split("-");
+
+		int otherYear = Integer.parseInt(othersDate[0]);
+		int otherMonth = Integer.parseInt(othersDate[1]);
+		int otherDay = Integer.parseInt(othersDate[2]);
+
+		Calendar otherEvent = Calendar.getInstance();
+		otherEvent.set(otherYear, otherMonth, otherDay);
+
+		String instanceInitDate = init;
+		String[] sDate = instanceInitDate.split("-");
+
+		int instanceYear = Integer.parseInt(sDate[0]);
+		int instanceMonth = Integer.parseInt(sDate[1]);
+		int instanceDay = Integer.parseInt(sDate[2]);
+		Calendar instanceEvent = Calendar.getInstance();
+		instanceEvent.set(instanceYear, instanceMonth, instanceDay);
+
+		return instanceEvent.compareTo(otherEvent);
 	}
 }

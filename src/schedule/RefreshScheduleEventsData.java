@@ -2,6 +2,7 @@ package schedule;
 
 import java.text.ParseException;
 import java.util.Calendar;
+import java.util.Collections;
 
 import org.joda.time.LocalDate;
 
@@ -140,6 +141,9 @@ public class RefreshScheduleEventsData implements Runnable {
 
 			cursor.moveToNext();
 		}
+		/** For more performance sort the array for searchs */
+		Collections.sort(EventsManager.getEvents());
+
 		EventsManager.setThreadfinish(true);
 	}
 }
