@@ -1,6 +1,7 @@
 package navigationdrawer;
 
 import schedule.ScheduleFragment;
+import today.TodayFragment;
 import android.app.Activity;
 import android.app.Fragment;
 import android.os.Bundle;
@@ -54,6 +55,7 @@ public class NavigationDrawerController extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		switch (section) {
 		case SECTION_NUMBER_TODAY: // TODAY SECTION
+			rootView = new TodayFragment().onCreateView(inflater, container, savedInstanceState);
 			break;
 		case SECTION_NUMBER_SCHEDULE: // SCHEDULE SECTION
 			rootView = new ScheduleFragment().onCreateView(inflater, container, savedInstanceState);
