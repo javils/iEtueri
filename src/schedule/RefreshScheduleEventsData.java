@@ -141,6 +141,8 @@ public class RefreshScheduleEventsData implements Runnable {
 
 			cursor.moveToNext();
 		}
+		cursor.close();
+
 		/** For more performance sort the array for searchs */
 		Collections.sort(EventsManager.getEvents());
 
