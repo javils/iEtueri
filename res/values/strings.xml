@@ -8,5 +8,6 @@
     <string name="title_course">Cursos</string>
     <string name="title_subject">Asignaturas</string>
     <string name="quit_warnings">For quit warnings</string>
+    <string name="today_new_event">Nuevo Evento</string>
 
 </resources>

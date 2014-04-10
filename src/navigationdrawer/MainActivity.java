@@ -75,8 +75,13 @@ public class MainActivity extends Activity implements NavigationDrawerCallbacks 
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Only show items in the action bar relevant to this screen if the
 		// drawer is not showing.
-		if (navigationDrawerFragment.isDrawerOpen()) {
+		if (!navigationDrawerFragment.isDrawerOpen()) {
 			// TODO: Add the menu of each section here.
+
+			/** Today Menu */
+			if (title.equals(getString(R.string.title_today)))
+				getMenuInflater().inflate(R.menu.menu_today, menu);
+
 			ActionBar actionBar = getActionBar();
 			actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
 			actionBar.setDisplayShowTitleEnabled(true);
@@ -92,6 +97,10 @@ public class MainActivity extends Activity implements NavigationDrawerCallbacks 
 		// Handle action bar item clicks here.
 
 		int id = item.getItemId();
+
+		/** Today Menu */
+		if (id == R.id.menu_today_menu_new)
+			return true;
 
 		// TODO: Add handle action for each item in the action bar here.
 		return super.onOptionsItemSelected(item);
