@@ -167,15 +167,29 @@ public class Event implements Comparable<Event> {
 		Date dateInit = new Date();
 		Date dateEnd = new Date();
 
+		Calendar calInit = Calendar.getInstance();
+		Calendar calEnd = Calendar.getInstance();
+
 		try {
+			/**
+			 * Need the date and hour and minutes for a good result, else take
+			 * the 0:00 hour like the init of the day and no it's a good idea
+			 */
 			dateInit = date.parse(init);
+			calInit.setTime(dateInit);
+			calInit.set(Calendar.HOUR, (int) initHour);
+			calInit.set(Calendar.MINUTE, (int) initMinute);
+
 			dateEnd = date.parse(end);
+			calEnd.setTime(dateEnd);
+			calEnd.set(Calendar.HOUR, (int) endHour);
+			calEnd.set(Calendar.MINUTE, (int) endMinute);
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
 
-		long initMilliseconds = dateInit.getTime();
-		long endMilliseconds = dateEnd.getTime();
+		long initMilliseconds = calInit.getTimeInMillis();
+		long endMilliseconds = calEnd.getTimeInMillis();
 		long nowMilliseconds = Calendar.getInstance().getTimeInMillis();
 
 		/** Diference into init and end with now. */
