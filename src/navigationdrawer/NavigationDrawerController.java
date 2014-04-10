@@ -67,7 +67,7 @@ public class NavigationDrawerController extends Fragment {
 		case SECTION_NUMBER_SUBJECTS: // SUBJECTS SECTION
 			break;
 		default:
-			Toast.makeText(getActivity(), "If you are here, there crash!", Toast.LENGTH_SHORT).show();
+			Toast.makeText(getActivity(), "If you are here, then crash!", Toast.LENGTH_SHORT).show();
 			break;
 		}
 

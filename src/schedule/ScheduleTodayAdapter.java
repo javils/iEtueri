@@ -69,7 +69,7 @@ public class ScheduleTodayAdapter extends ArrayAdapter<Event> {
 
 		// Fill the structure of the item
 		text = (TextView) view.findViewById(R.id.schedule_list_item_nameevent);
-		text.setText(event.getName());
+		text.setText("• " + event.getName());
 		text = (TextView) view.findViewById(R.id.schedule_list_item_place);
 		text.setText(event.getPlace());
 		text = (TextView) view.findViewById(R.id.schedule_list_item_date);
