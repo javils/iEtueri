@@ -99,8 +99,17 @@ public class MainActivity extends Activity implements NavigationDrawerCallbacks 
 		int id = item.getItemId();
 
 		/** Today Menu */
-		if (id == R.id.menu_today_menu_new)
+		if (id == R.id.menu_today_menu_new) {
+			FragmentManager fragmentManager = getFragmentManager();
+			fragmentManager
+					.beginTransaction()
+					.replace(
+							R.id.navigation_drawer_container,
+							NavigationDrawerController
+									.newInstance(NavigationDrawerController.SECTION_NUMBER_NEW_EVENT_TODAY)).commit();
+
 			return true;
+		}
 
 		// TODO: Add handle action for each item in the action bar here.
 		return super.onOptionsItemSelected(item);

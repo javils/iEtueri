@@ -9,5 +9,15 @@
     <string name="title_subject">Asignaturas</string>
     <string name="quit_warnings">For quit warnings</string>
     <string name="today_new_event">Nuevo Evento</string>
+    
+    <!--  NEW EVENT TODAY STRINGS -->
+    <string name="new_event_today_name">Nombre del evento</string>
+    <string name="new_event_today_place">Ubicación</string>
+    <string name="new_event_today_since">Desde:</string>
+    <string name="new_event_today_until">Hasta:</string>
+    <string name="new_event_today_allday">Todo el día</string>
+    <string name="new_event_today_description">Descripción</string>
+    <string name="new_event_today_repetition">Repetición:</string>
+    <string name="new_event_unique_today_event">Evento único</string>
 
 </resources>

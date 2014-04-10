@@ -1,6 +1,7 @@
 package navigationdrawer;
 
 import schedule.ScheduleFragment;
+import today.NewEventTodayFragment;
 import today.TodayFragment;
 import android.app.Activity;
 import android.app.Fragment;
@@ -25,6 +26,8 @@ public class NavigationDrawerController extends Fragment {
 	public static final int SECTION_NUMBER_EXAMS = 4;
 	public static final int SECTION_NUMBER_COURSES = 5;
 	public static final int SECTION_NUMBER_SUBJECTS = 6;
+	/** Secondary Views */
+	public static final int SECTION_NUMBER_NEW_EVENT_TODAY = 7;
 
 	/** The fragment argument representing the section number for this fragment. */
 	private static final String ARG_SECTION_NUMBER = "section_number";
@@ -67,6 +70,9 @@ public class NavigationDrawerController extends Fragment {
 		case SECTION_NUMBER_COURSES: // COURSES SECTION
 			break;
 		case SECTION_NUMBER_SUBJECTS: // SUBJECTS SECTION
+			break;
+		case SECTION_NUMBER_NEW_EVENT_TODAY: // NEW EVENT TODAY SECTION
+			rootView = new NewEventTodayFragment().onCreateView(inflater, container, savedInstanceState);
 			break;
 		default:
 			Toast.makeText(getActivity(), "If you are here, then crash!", Toast.LENGTH_SHORT).show();
