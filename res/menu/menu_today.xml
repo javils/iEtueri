@@ -2,6 +2,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
     <item android:id="@+id/menu_today_menu_new"
         android:icon="@drawable/ic_action_new"
-        android:title="@string/today_new_event"
+        android:title="@string/title_today_new_event"
         android:showAsAction="ifRoom" />
 </menu>

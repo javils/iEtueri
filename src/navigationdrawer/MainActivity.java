@@ -68,6 +68,9 @@ public class MainActivity extends Activity implements NavigationDrawerCallbacks 
 		case NavigationDrawerController.SECTION_NUMBER_SUBJECTS:
 			title = getString(R.string.title_subject);
 			break;
+		case NavigationDrawerController.SECTION_NUMBER_NEW_EVENT_TODAY:
+			title = getString(R.string.title_today_new_event);
+			break;
 		}
 	}
 
@@ -97,6 +100,9 @@ public class MainActivity extends Activity implements NavigationDrawerCallbacks 
 		// Handle action bar item clicks here.
 
 		int id = item.getItemId();
+
+		// first, call onPrepareOptionsMenu() for reset the ActionBar
+		invalidateOptionsMenu();
 
 		/** Today Menu */
 		if (id == R.id.menu_today_menu_new) {
