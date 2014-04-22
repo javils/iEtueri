@@ -22,5 +22,19 @@
     <!-- NEW EVENT TODAY REPETITION STRINGS -->
     <string name="new_event_repetition_each">Cada</string>
     <string name="new_event_repetition_done">Listo</string>
+    
+    <string-array name="new_event_repetition_types_repetition">
+        <item>Evento único</item>
+        <item>Repetir diariamente</item>
+        <item>Repetir semanalmente</item>
+        <item>Repetir mensualmente</item>
+        <item>Repetir anualmente</item>
+    </string-array>
+    
+    <string-array name="new_event_repetition_types_interval">
+        <item>Siempre</item>
+        <item>Hasta una fecha</item>
+        <item>Para un numero de eventos</item>
+    </string-array>
 
 </resources>
