@@ -19,5 +19,8 @@
     <string name="new_event_today_description">Descripción</string>
     <string name="new_event_today_repetition">Repetición:</string>
     <string name="new_event_unique_today_event">Evento único</string>
+    <!-- NEW EVENT TODAY REPETITION STRINGS -->
+    <string name="new_event_repetition_each">Cada</string>
+    <string name="new_event_repetition_done">Listo</string>
 
 </resources>

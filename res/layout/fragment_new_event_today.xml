@@ -128,7 +128,8 @@
             android:gravity="left|center_vertical"
             android:hint="@string/new_event_unique_today_event"
             android:minHeight="28dip"
-            android:minWidth="124dip" />
+            android:minWidth="124dip"
+            android:onClick="onClickButton" />
     </LinearLayout>
 
 </ScrollView>

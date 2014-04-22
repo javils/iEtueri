@@ -80,6 +80,12 @@ public class NewEventTodayFragment extends Fragment implements OnClickButtonXml 
 		dateFragment.show(getFragmentManager(), "newEventDatePicker");
 	}
 
+	public void showRepetitionDialog(View view) {
+		NewEventRepetitionDialogFragment repetitionFragment = new NewEventRepetitionDialogFragment();
+		repetitionFragment.setHandler((Button) view);
+		repetitionFragment.show(getFragmentManager(), "newEventRepetitionDialog");
+	}
+
 	@Override
 	public void onClickXml(View view) {
 		switch (view.getId()) {
@@ -90,6 +96,9 @@ public class NewEventTodayFragment extends Fragment implements OnClickButtonXml 
 		case R.id.newevent_today_from_hour:
 		case R.id.newevent_today_to_hour:
 			showTimePickerDialog(view);
+			break;
+		case R.id.newevent_today_repetition:
+			showRepetitionDialog(view);
 			break;
 		}
 	}
