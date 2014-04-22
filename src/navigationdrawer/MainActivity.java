@@ -2,13 +2,16 @@ package navigationdrawer;
 
 import schedule.EventsManager;
 import schedule.RefreshScheduleEventsData;
+import utility.OnClickButtonXml;
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.Fragment;
 import android.app.FragmentManager;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.javils.ietueri.R;
 
@@ -18,6 +21,8 @@ public class MainActivity extends Activity implements NavigationDrawerCallbacks 
 	// navigation drawer.
 	private NavigationDrawerFragment navigationDrawerFragment;
 	private CharSequence title;
+
+	private OnClickButtonXml fragment;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -43,9 +48,10 @@ public class MainActivity extends Activity implements NavigationDrawerCallbacks 
 	public void onNavigationDrawerItemSelected(int position) {
 		// update the main content by replacing fragments
 		FragmentManager fragmentManager = getFragmentManager();
-		fragmentManager.beginTransaction()
-				.replace(R.id.navigation_drawer_container, NavigationDrawerController.newInstance(position + 1))
-				.commit();
+		Fragment newFragment = NavigationDrawerController.newInstance(position + 1);
+		if (newFragment instanceof OnClickButtonXml)
+			this.fragment = (OnClickButtonXml) fragment;
+		fragmentManager.beginTransaction().replace(R.id.navigation_drawer_container, newFragment).commit();
 	}
 
 	public void onSectionAttached(int section) {
@@ -107,18 +113,22 @@ public class MainActivity extends Activity implements NavigationDrawerCallbacks 
 		/** Today Menu */
 		if (id == R.id.menu_today_menu_new) {
 			FragmentManager fragmentManager = getFragmentManager();
-			fragmentManager
-					.beginTransaction()
-					.replace(
-							R.id.navigation_drawer_container,
-							NavigationDrawerController
-									.newInstance(NavigationDrawerController.SECTION_NUMBER_NEW_EVENT_TODAY)).commit();
+			Fragment newFragment = NavigationDrawerController
+					.newInstance(NavigationDrawerController.SECTION_NUMBER_NEW_EVENT_TODAY);
+			if (newFragment instanceof OnClickButtonXml)
+				this.fragment = (OnClickButtonXml) newFragment;
+			fragmentManager.beginTransaction().replace(R.id.navigation_drawer_container, newFragment).commit();
 
 			return true;
 		}
 
 		// TODO: Add handle action for each item in the action bar here.
 		return super.onOptionsItemSelected(item);
+	}
+
+	public void onClickButton(View view) {
+		if (fragment != null)
+			fragment.onClickXml(view);
 	}
 
 }

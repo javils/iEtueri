@@ -11,13 +11,13 @@
         android:paddingLeft="15dp"
         android:paddingRight="15dp"
         android:paddingTop="10dp" >
-        
+
         <EditText
             android:id="@+id/newevent_today_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:hint="@string/new_event_today_name">
+            android:hint="@string/new_event_today_name" >
         </EditText>
 
         <EditText
@@ -43,26 +43,26 @@
 
             <Button
                 android:id="@+id/newevent_today_from_date"
+                style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.5"
                 android:background="@drawable/button_style"
                 android:minHeight="28dip"
-                android:minWidth="44dip"
-                style="?android:attr/buttonBarButtonStyle"
-                android:onClick="showDatePickerDialog" />
+                android:minWidth="44dip"    
+                android:onClick="onClickButton" />
 
             <Button
                 android:id="@+id/newevent_today_from_hour"
+                style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.5"
                 android:background="@drawable/button_style"
-                android:minHeight="28dip" 
-                style="?android:attr/buttonBarButtonStyle"
-                android:onClick="showTimePickerDialog"/>
+                android:minHeight="28dip"
+                android:onClick="onClickButton" />
         </LinearLayout>
-        
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -78,24 +78,24 @@
 
             <Button
                 android:id="@+id/newevent_today_to_date"
+                style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.5"
                 android:background="@drawable/button_style"
                 android:minHeight="28dip"
                 android:minWidth="44dip"
-                style="?android:attr/buttonBarButtonStyle"
-                android:onClick="showDatePickerDialog" />
+                android:onClick="onClickButton" />
 
             <Button
                 android:id="@+id/newevent_today_to_hour"
+                style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.5"
                 android:background="@drawable/button_style"
-                android:minHeight="28dip" 
-                style="?android:attr/buttonBarButtonStyle"
-                android:onClick="showTimePickerDialog"/>
+                android:minHeight="28dip"
+                android:onClick="onClickButton" />
         </LinearLayout>
 
         <CheckBox
@@ -128,9 +128,7 @@
             android:gravity="left|center_vertical"
             android:hint="@string/new_event_unique_today_event"
             android:minHeight="28dip"
-            android:minWidth="124dip"
-            android:onClick="showRepetitionDialog" />
-
+            android:minWidth="124dip" />
     </LinearLayout>
 
 </ScrollView>
