@@ -39,7 +39,8 @@ public class DatePickerDialogFragment extends DialogFragment implements OnDateSe
 
 		if (sDate.length == 3) {
 			year = Integer.valueOf(sDate[2]);
-			month = Integer.valueOf(sDate[1]);
+			/** Need decrement one, Calendar format for month is 0 to 11. */
+			month = Integer.valueOf(sDate[1]) - 1;
 			day = Integer.valueOf(sDate[0]);
 		}
 
