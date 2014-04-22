@@ -2,9 +2,12 @@ package today;
 
 import java.util.Calendar;
 
+import navigationdrawer.MainActivity;
+import navigationdrawer.NavigationDrawerController;
 import utility.DatePickerDialogFragment;
 import utility.OnClickButtonXml;
 import utility.TimePickerDialogFragment;
+import android.app.Activity;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -89,6 +92,12 @@ public class NewEventTodayFragment extends Fragment implements OnClickButtonXml 
 			showTimePickerDialog(view);
 			break;
 		}
+	}
 
+	@Override
+	public void onAttach(Activity activity) {
+		super.onAttach(activity);
+		((MainActivity) activity).onSectionAttached(getArguments()
+				.getInt(NavigationDrawerController.ARG_SECTION_NUMBER));
 	}
 }
