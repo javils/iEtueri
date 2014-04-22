@@ -3,9 +3,12 @@ package today;
 import java.util.ArrayList;
 import java.util.Calendar;
 
+import navigationdrawer.MainActivity;
+import navigationdrawer.NavigationDrawerController;
 import schedule.Event;
 import schedule.EventsManager;
 import schedule.ScheduleTodayAdapter;
+import android.app.Activity;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -47,5 +50,12 @@ public class TodayFragment extends Fragment {
 		}
 
 		return view;
+	}
+
+	@Override
+	public void onAttach(Activity activity) {
+		super.onAttach(activity);
+		((MainActivity) activity).onSectionAttached(getArguments()
+				.getInt(NavigationDrawerController.ARG_SECTION_NUMBER));
 	}
 }

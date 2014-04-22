@@ -3,12 +3,8 @@ package navigationdrawer;
 import schedule.ScheduleFragment;
 import today.NewEventTodayFragment;
 import today.TodayFragment;
-import android.app.Activity;
 import android.app.Fragment;
 import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Toast;
 
 /**
@@ -17,7 +13,7 @@ import android.widget.Toast;
  * @author Javier Luque Sanabria
  * 
  */
-public class NavigationDrawerController extends Fragment {
+public class NavigationDrawerController {
 
 	/** Constants that represent the sections of the Navigation */
 	public static final int SECTION_NUMBER_TODAY = 1;
@@ -26,16 +22,12 @@ public class NavigationDrawerController extends Fragment {
 	public static final int SECTION_NUMBER_EXAMS = 4;
 	public static final int SECTION_NUMBER_COURSES = 5;
 	public static final int SECTION_NUMBER_SUBJECTS = 6;
+
 	/** Secondary Views */
 	public static final int SECTION_NUMBER_NEW_EVENT_TODAY = 7;
 
 	/** The fragment argument representing the section number for this fragment. */
-	private static final String ARG_SECTION_NUMBER = "section_number";
-	/** The current section */
-	private static int section;
-
-	/** Pointer at the current section */
-	private View rootView;
+	public static final String ARG_SECTION_NUMBER = "section_number";
 
 	/**
 	 * Returns a new instance of this fragment for the given section number.
@@ -44,24 +36,29 @@ public class NavigationDrawerController extends Fragment {
 	 *            number of the section that we need show
 	 * @return fragment of the section that we need
 	 */
-	public static NavigationDrawerController newInstance(int section) {
-		NavigationDrawerController fragment = new NavigationDrawerController();
+	public static Fragment newInstance(int section) {
+		Fragment fragment = chooseFragment(section);
 		Bundle args = new Bundle();
 		args.putInt(ARG_SECTION_NUMBER, section);
 		fragment.setArguments(args);
-		NavigationDrawerController.section = section;
 
 		return fragment;
 	}
 
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+	/**
+	 * Choose the correct fragment in each case, this is for not create only the
+	 * View, we need create ALL the fragment for not break cyclelife of the
+	 * Activity and Fragment
+	 */
+	public static Fragment chooseFragment(int section) {
+		Fragment newFragment = new Fragment();
+
 		switch (section) {
 		case SECTION_NUMBER_TODAY: // TODAY SECTION
-			rootView = new TodayFragment().onCreateView(inflater, container, savedInstanceState);
+			newFragment = new TodayFragment();
 			break;
 		case SECTION_NUMBER_SCHEDULE: // SCHEDULE SECTION
-			rootView = new ScheduleFragment().onCreateView(inflater, container, savedInstanceState);
+			newFragment = new ScheduleFragment();
 			break;
 		case SECTION_NUMBER_HOMEWORKS: // HOMEWORKS SECTION
 			break;
@@ -72,19 +69,13 @@ public class NavigationDrawerController extends Fragment {
 		case SECTION_NUMBER_SUBJECTS: // SUBJECTS SECTION
 			break;
 		case SECTION_NUMBER_NEW_EVENT_TODAY: // NEW EVENT TODAY SECTION
-			rootView = new NewEventTodayFragment().onCreateView(inflater, container, savedInstanceState);
+			newFragment = new NewEventTodayFragment();
 			break;
 		default:
-			Toast.makeText(getActivity(), "If you are here, then crash!", Toast.LENGTH_SHORT).show();
+			Toast.makeText(newFragment.getActivity(), "If you are here, then crash!", Toast.LENGTH_SHORT).show();
 			break;
 		}
 
-		return rootView;
-	}
-
-	@Override
-	public void onAttach(Activity activity) {
-		super.onAttach(activity);
-		((MainActivity) activity).onSectionAttached(getArguments().getInt(ARG_SECTION_NUMBER));
+		return newFragment;
 	}
 }
