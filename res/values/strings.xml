@@ -34,6 +34,8 @@
     <string name="friday">Viernes</string>
     <string name="saturday">Sabado</string>
     <string name="sunday">Domingo</string>
+    <string name="cancel">Cancelar</string>
+    <string name="done">Listo</string>
         
     <string-array name="new_event_repetition_types_repetition">
         <item>Evento único</item>

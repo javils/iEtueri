@@ -16,7 +16,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.javils.ietueri.R;
 
@@ -90,7 +89,6 @@ public class NewEventTodayFragment extends Fragment implements OnClickButtonXml 
 	@Override
 	public void onClickXml(View view) {
 
-		Toast.makeText(getActivity(), getString(R.string.new_event_repetition_done), Toast.LENGTH_SHORT).show();
 		switch (view.getId()) {
 		case R.id.newevent_today_from_date:
 		case R.id.newevent_today_to_date:
