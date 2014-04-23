@@ -63,7 +63,7 @@ public class NewEventTodayFragment extends Fragment implements OnClickButtonXml 
 		int month = calendar.get(Calendar.MONTH) + 1;
 		int day = calendar.get(Calendar.DAY_OF_MONTH);
 		fromDate.setHint("" + day + "/" + month + "/" + year);
-		toDate.setHint("" + day + "/" + (month + 1) + "/" + year);
+		toDate.setHint("" + day + "/" + month + "/" + year);
 
 		return view;
 	}
