@@ -22,7 +22,7 @@ public class MainActivity extends Activity implements NavigationDrawerCallbacks 
 	private NavigationDrawerFragment navigationDrawerFragment;
 	private CharSequence title;
 
-	private OnClickButtonXml fragment;
+	private static OnClickButtonXml fragment;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +50,7 @@ public class MainActivity extends Activity implements NavigationDrawerCallbacks 
 		FragmentManager fragmentManager = getFragmentManager();
 		Fragment newFragment = NavigationDrawerController.newInstance(position + 1);
 		if (newFragment instanceof OnClickButtonXml)
-			this.fragment = (OnClickButtonXml) fragment;
+			MainActivity.fragment = (OnClickButtonXml) newFragment;
 		fragmentManager.beginTransaction().replace(R.id.navigation_drawer_container, newFragment).commit();
 	}
 
@@ -116,7 +116,7 @@ public class MainActivity extends Activity implements NavigationDrawerCallbacks 
 			Fragment newFragment = NavigationDrawerController
 					.newInstance(NavigationDrawerController.SECTION_NUMBER_NEW_EVENT_TODAY);
 			if (newFragment instanceof OnClickButtonXml)
-				this.fragment = (OnClickButtonXml) newFragment;
+				MainActivity.fragment = (OnClickButtonXml) newFragment;
 			fragmentManager.beginTransaction().replace(R.id.navigation_drawer_container, newFragment).commit();
 
 			return true;
@@ -124,6 +124,11 @@ public class MainActivity extends Activity implements NavigationDrawerCallbacks 
 
 		// TODO: Add handle action for each item in the action bar here.
 		return super.onOptionsItemSelected(item);
+	}
+
+	public static void setOnClickFragment(Fragment fragment) {
+		if (fragment instanceof OnClickButtonXml)
+			MainActivity.fragment = (OnClickButtonXml) fragment;
 	}
 
 	public void onClickButton(View view) {

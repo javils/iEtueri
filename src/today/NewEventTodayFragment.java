@@ -9,6 +9,7 @@ import utility.OnClickButtonXml;
 import utility.TimePickerDialogFragment;
 import android.app.Activity;
 import android.app.Fragment;
+import android.app.FragmentManager;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.javils.ietueri.R;
 
@@ -86,6 +88,32 @@ public class NewEventTodayFragment extends Fragment implements OnClickButtonXml 
 		repetitionFragment.show(getFragmentManager(), "newEventRepetitionDialog");
 	}
 
+	public void createNewEvent() {
+		Toast.makeText(getActivity(), "Nuevo Evento creado", Toast.LENGTH_SHORT).show();
+		FragmentManager fragmentManager = getFragmentManager();
+		Fragment newFragment = NavigationDrawerController.newInstance(NavigationDrawerController.SECTION_NUMBER_TODAY);
+		if (newFragment instanceof OnClickButtonXml)
+			MainActivity.setOnClickFragment(newFragment);
+		fragmentManager.beginTransaction().replace(R.id.navigation_drawer_container, newFragment).commit();
+
+		// first, call onPrepareOptionsMenu() for reset the ActionBar
+		getActivity().invalidateOptionsMenu();
+
+		// TODO: Add logic for create event here
+	}
+
+	public void cancelNewEvent() {
+		FragmentManager fragmentManager = getFragmentManager();
+		Fragment newFragment = NavigationDrawerController.newInstance(NavigationDrawerController.SECTION_NUMBER_TODAY);
+		if (newFragment instanceof OnClickButtonXml)
+			MainActivity.setOnClickFragment(newFragment);
+		fragmentManager.beginTransaction().replace(R.id.navigation_drawer_container, newFragment).commit();
+
+		// first, call onPrepareOptionsMenu() for reset the ActionBar
+		getActivity().invalidateOptionsMenu();
+
+	}
+
 	@Override
 	public void onClickXml(View view) {
 
@@ -101,6 +129,12 @@ public class NewEventTodayFragment extends Fragment implements OnClickButtonXml 
 			break;
 		case R.id.newevent_today_repetition:
 			showRepetitionDialog(view);
+			break;
+		case R.id.neworcancel_actionbar_acept:
+			createNewEvent();
+			break;
+		case R.id.neworcancel_actionbar_cancel:
+			cancelNewEvent();
 			break;
 		}
 	}
