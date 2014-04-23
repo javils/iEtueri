@@ -22,7 +22,19 @@
     <!-- NEW EVENT TODAY REPETITION STRINGS -->
     <string name="new_event_repetition_each">Cada</string>
     <string name="new_event_repetition_done">Listo</string>
-    
+    <string name="new_event_interval_until"> DD/MM/AAAA</string>
+    <string name="weeks">semanas</string>
+    <string name="events">eventos</string>
+    <string name="new_event_repetition_same_day_each_month">el mismo dia cada mes</string>
+    <string name="new_event_repetition_everymonday_each_month">cada primer lunes del mes</string>
+    <string name="monday">Lunes</string>
+    <string name="tuesday">Martes</string>
+    <string name="wednesday">Miercoles</string>
+    <string name="thursday">Jueves</string>
+    <string name="friday">Viernes</string>
+    <string name="saturday">Sabado</string>
+    <string name="sunday">Domingo</string>
+        
     <string-array name="new_event_repetition_types_repetition">
         <item>Evento único</item>
         <item>Repetir diariamente</item>

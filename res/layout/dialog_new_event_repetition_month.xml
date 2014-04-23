@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+ <RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
+     android:id="@+id/neweventrepetition_radiogroup_month"
+     android:layout_width="match_parent"
+     android:layout_height="match_parent"
+     android:orientation="vertical"
+     android:paddingLeft="25dp" >
+
+        <RadioButton
+            android:id="@+id/neweventrepetition_same_day_each_month"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/new_event_repetition_same_day_each_month" />
+
+        <RadioButton
+            android:id="@+id/neweventrepetition_everymonday_each_month"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/new_event_repetition_everymonday_each_month" />
+</RadioGroup>
