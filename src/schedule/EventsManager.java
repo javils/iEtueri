@@ -15,7 +15,7 @@ public class EventsManager {
 	public static final long ONEDAY_IN_MILLIECONDS = 86400000;
 
 	/** This flag indicate that thread is finish */
-	private static boolean threadfinish;
+	private static boolean threadfinish = false;
 
 	/** ArrayList with all of the events of the calendars */
 	private static ArrayList<Event> events = new ArrayList<Event>();
@@ -55,7 +55,7 @@ public class EventsManager {
 
 	/** Find events with the same start year, month, and day */
 	public static ArrayList<Event> find(int year, int month, int dayOfMonth) {
-		// TODO: Use quicksort or other search algorithm
+		// TODO: Use Threads
 		ArrayList<Event> result = new ArrayList<Event>();
 		Calendar cal = Calendar.getInstance();
 		cal.set(year, month, dayOfMonth);
