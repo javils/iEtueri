@@ -35,6 +35,8 @@ public class MainActivity extends Activity implements NavigationDrawerCallbacks 
 		navigationDrawerFragment.setUp(R.id.navigation_drawer, (DrawerLayout) findViewById(R.id.drawer_layout));
 
 		title = getTitle();
+		// TODO: Excute only in the first execution
+		// CalendarManager.createCalendar(getApplicationContext());
 
 		new Thread(new RefreshScheduleEventsData(getApplicationContext())).start();
 

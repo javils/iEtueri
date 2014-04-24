@@ -9,7 +9,9 @@ import org.joda.time.LocalDate;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
+import android.net.Uri;
 import android.provider.CalendarContract;
+import android.provider.CalendarContract.Calendars;
 
 import com.google.ical.compat.jodatime.LocalDateIteratorFactory;
 
@@ -40,6 +42,7 @@ public class RefreshScheduleEventsData implements Runnable {
 
 	@Override
 	public void run() {
+		checkCalendarID();
 		/** First clear the ArrayList */
 		EventsManager.getEvents().clear();
 		ContentResolver contentResolver = context.getContentResolver();
@@ -147,5 +150,23 @@ public class RefreshScheduleEventsData implements Runnable {
 		Collections.sort(EventsManager.getEvents());
 
 		EventsManager.setThreadfinish(true);
+	}
+
+	public void checkCalendarID() {
+		final String[] EVENT_PROJECTION = new String[] { Calendars._ID, Calendars.CALENDAR_DISPLAY_NAME, };
+
+		// The indices for the projection array above.
+		final int CALENDAR_ID_INDEX = 0;
+
+		Cursor cur = null;
+		ContentResolver cr = context.getContentResolver();
+		Uri uri = Calendars.CONTENT_URI;
+		String selection = "(" + Calendars.CALENDAR_DISPLAY_NAME + " = ?)";
+		String[] selectionArgs = new String[] { CalendarManager.CALENDAR_NAME };
+		// Submit the query and get a Cursor object back.
+		cur = cr.query(uri, EVENT_PROJECTION, selection, selectionArgs, null);
+		cur.moveToFirst();
+		CalendarManager.ID = cur.getInt(CALENDAR_ID_INDEX);
+		cur.close();
 	}
 }

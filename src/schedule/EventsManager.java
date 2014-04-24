@@ -1,7 +1,15 @@
 package schedule;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
+
+import android.net.Uri;
+import android.provider.CalendarContract;
+import android.provider.CalendarContract.Calendars;
 
 /**
  * This class is for organize the events, add, remove, etc
@@ -73,7 +81,6 @@ public class EventsManager {
 					break;
 			}
 		}
-
 		return result;
 	}
 
@@ -83,5 +90,39 @@ public class EventsManager {
 
 	public static void setThreadfinish(boolean threadfinish) {
 		EventsManager.threadfinish = threadfinish;
+	}
+
+	/** Check if the data of an event is correct or not */
+	public static boolean checkDataEvent(String name, String fromDate, String toDate, String fromHour, String toHour) {
+		if (name.trim().isEmpty())
+			return false;
+
+		SimpleDateFormat date = new SimpleDateFormat("dd/MM/yyyy HH:mm", new Locale("es", "ES"));
+		Date dateInit = new Date();
+		Date dateEnd = new Date();
+		Calendar calInit = Calendar.getInstance();
+		Calendar calEnd = Calendar.getInstance();
+
+		try {
+			dateInit = date.parse(fromDate.trim() + " " + fromHour.trim());
+			calInit.setTime(dateInit);
+			dateEnd = date.parse(toDate.trim() + " " + toHour.trim());
+			calEnd.setTime(dateEnd);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+
+		if (dateInit.compareTo(dateEnd) >= 0)
+			return false;
+
+		return true;
+	}
+
+	/** Builds the Uri for events */
+	public static Uri buildEventUri() {
+		return CalendarContract.Events.CONTENT_URI.buildUpon()
+				.appendQueryParameter(CalendarContract.CALLER_IS_SYNCADAPTER, "true")
+				.appendQueryParameter(Calendars.ACCOUNT_NAME, "javiluke93@gmail.com")
+				.appendQueryParameter(Calendars.ACCOUNT_TYPE, CalendarManager.ACCOUNT_TYPE).build();
 	}
 }

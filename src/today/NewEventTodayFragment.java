@@ -4,13 +4,19 @@ import java.util.Calendar;
 
 import navigationdrawer.MainActivity;
 import navigationdrawer.NavigationDrawerController;
+import schedule.CalendarManager;
+import schedule.Event;
+import schedule.EventsManager;
 import utility.DatePickerDialogFragment;
 import utility.OnClickButtonXml;
 import utility.TimePickerDialogFragment;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.os.Bundle;
+import android.provider.CalendarContract.Events;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -88,8 +94,77 @@ public class NewEventTodayFragment extends Fragment implements OnClickButtonXml 
 		repetitionFragment.show(getFragmentManager(), "newEventRepetitionDialog");
 	}
 
+	/** Create new event in the provider */
 	public void createNewEvent() {
-		Toast.makeText(getActivity(), "Nuevo Evento creado", Toast.LENGTH_SHORT).show();
+		/** Get data of event */
+		String eventName = name.getText().toString();
+		String eventPlace = location.getText().toString();
+		String eventFromDate = fromDate.getHint().toString();
+		String eventFromHour = fromHour.getHint().toString();
+		String eventToDate = toDate.getHint().toString();
+		String eventToHour = toHour.getHint().toString();
+		boolean eventAllDay = allDay.isChecked();
+		String eventDescription = description.getText().toString();
+
+		Event newEvent = null;
+
+		/** Check if the data it's correct */
+		if (EventsManager.checkDataEvent(eventName, eventFromDate, eventToDate, eventFromHour, eventToHour)) {
+
+			String[] initHourDate = eventFromHour.split(":");
+			int initHour = Integer.valueOf(initHourDate[0]);
+			int initMinute = Integer.valueOf(initHourDate[1]);
+
+			String[] endHourDate = eventToHour.split(":");
+			int endHour = Integer.valueOf(endHourDate[0]);
+			int endMinute = Integer.valueOf(endHourDate[1]);
+
+			String[] initDate = eventFromDate.split("/");
+			int initDay = Integer.valueOf(initDate[0]);
+			int initMonth = Integer.valueOf(initDate[1]);
+			int initYear = Integer.valueOf(initDate[2]);
+
+			String[] endDate = eventFromDate.split("/");
+			int endDay = Integer.valueOf(endDate[0]);
+			int endMonth = Integer.valueOf(endDate[1]);
+			int endYear = Integer.valueOf(endDate[2]);
+
+			/** Add event to the array list */
+			newEvent = new Event(eventName, eventDescription, eventPlace, eventFromDate, eventFromDate, initHour,
+					initMinute, endHour, endMinute, eventAllDay);
+			EventsManager.addEvent(newEvent);
+
+			/** Get milliseconds for dtstart */
+			Calendar calendar = Calendar.getInstance();
+			calendar.set(Calendar.YEAR, initYear);
+			calendar.set(Calendar.MONTH, initMonth - 1);
+			calendar.set(Calendar.DAY_OF_MONTH, initDay);
+			calendar.set(Calendar.HOUR_OF_DAY, initHour);
+			calendar.set(Calendar.MINUTE, initMinute);
+			String dtstart = "" + calendar.getTimeInMillis();
+
+			/** Get milliseconds for dtend */
+			calendar.set(Calendar.YEAR, endYear);
+			calendar.set(Calendar.MONTH, endMonth - 1);
+			calendar.set(Calendar.DAY_OF_MONTH, endDay);
+			calendar.set(Calendar.HOUR_OF_DAY, endHour);
+			calendar.set(Calendar.MINUTE, endMinute);
+			String dtend = "" + calendar.getTimeInMillis();
+
+			ContentResolver cr = getActivity().getApplicationContext().getContentResolver();
+			ContentValues cv = new ContentValues();
+			cv.put(Events.CALENDAR_ID, CalendarManager.ID);
+			cv.put(Events.TITLE, eventName);
+			cv.put(Events.DTSTART, dtstart);
+			cv.put(Events.DTEND, dtend);
+			cv.put(Events.EVENT_LOCATION, eventPlace);
+			cv.put(Events.ALL_DAY, eventAllDay);
+			cv.put(Events.DESCRIPTION, eventDescription);
+			cr.insert(EventsManager.buildEventUri(), cv);
+			Toast.makeText(getActivity(), "Nuevo Evento creado", Toast.LENGTH_SHORT).show();
+		}
+
+		/** Back to Today View */
 		FragmentManager fragmentManager = getFragmentManager();
 		Fragment newFragment = NavigationDrawerController.newInstance(NavigationDrawerController.SECTION_NUMBER_TODAY);
 		if (newFragment instanceof OnClickButtonXml)
@@ -98,10 +173,9 @@ public class NewEventTodayFragment extends Fragment implements OnClickButtonXml 
 
 		// first, call onPrepareOptionsMenu() for reset the ActionBar
 		getActivity().invalidateOptionsMenu();
-
-		// TODO: Add logic for create event here
 	}
 
+	/** Cancel the new event and back to Today View */
 	public void cancelNewEvent() {
 		FragmentManager fragmentManager = getFragmentManager();
 		Fragment newFragment = NavigationDrawerController.newInstance(NavigationDrawerController.SECTION_NUMBER_TODAY);
