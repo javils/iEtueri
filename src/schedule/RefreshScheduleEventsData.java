@@ -33,6 +33,9 @@ public class RefreshScheduleEventsData implements Runnable {
 	public static final int CALENDAR_EVENT_LOCATION = 6;
 	public static final int CALENDAR_ALLDAY = 7;
 
+	/** Max number of repetitions of a event */
+	public static final int MAX_EVENTS_REPETITION = 500;
+
 	/** Context for get the ContentResolver */
 	private Context context;
 
@@ -59,7 +62,7 @@ public class RefreshScheduleEventsData implements Runnable {
 			int year = Integer.valueOf(date[0]);
 			int month = Integer.valueOf(date[1]);
 			int day = Integer.valueOf(date[2]);
-			long daysDiference = 0;
+			long daysDifference = 0;
 
 			Calendar calendar = Calendar.getInstance();
 
@@ -95,17 +98,17 @@ public class RefreshScheduleEventsData implements Runnable {
 						endminute, allDay);
 				EventsManager.addEvent(newEvent);
 
-				daysDiference = Long.parseLong(cursor.getString(CALENDAR_DTEND))
+				daysDifference = Long.parseLong(cursor.getString(CALENDAR_DTEND))
 						- Long.parseLong(cursor.getString(CALENDAR_DTSTART));
 
-				if (daysDiference > EventsManager.ONEDAY_IN_MILLIECONDS) {
+				if (daysDifference > EventsManager.ONEDAY_IN_MILLIECONDS) {
 					int count = 0;
 					/** Add all intermediate events to the list */
-					while ((daysDiference - EventsManager.ONEDAY_IN_MILLIECONDS) >= 0) {
+					while ((daysDifference - EventsManager.ONEDAY_IN_MILLIECONDS) >= 0) {
 						String intermediateDay = Event.getDate(Long.parseLong(cursor.getString(CALENDAR_DTEND))
 								- EventsManager.ONEDAY_IN_MILLIECONDS * count);
 
-						daysDiference -= EventsManager.ONEDAY_IN_MILLIECONDS;
+						daysDifference -= EventsManager.ONEDAY_IN_MILLIECONDS;
 						count++;
 						Event newIntermediateEvent = new Event(title, description, location, intermediateDay, dtend,
 								inithour, initminute, endhour, endminute, allDay);
@@ -117,31 +120,34 @@ public class RefreshScheduleEventsData implements Runnable {
 				LocalDate localdate = new LocalDate(year, month, day);
 				try {
 					/** Add all of repetitions of the event */
+					String eventEndDate = cursor.getString(CALENDAR_DTEND) != null ? cursor.getString(CALENDAR_DTEND)
+							: "0";
+					int numberEventsRepetition = 0;
 					for (LocalDate itr : LocalDateIteratorFactory.createLocalDateIterable("RRULE:" + rrule, localdate,
 							false)) {
+						if (numberEventsRepetition > MAX_EVENTS_REPETITION)
+							break;
 						Event newEvent = new Event(title, description, location, Event.getDate(itr.toDate().getTime()),
 								dtend, inithour, initminute, endhour, endminute, allDay);
 						newEvent.setRepeat(true);
 						EventsManager.addEvent(newEvent);
+						numberEventsRepetition++;
+						daysDifference = Long.parseLong(eventEndDate) - itr.toDate().getTime();
 
-						daysDiference = Long.parseLong(cursor.getString(CALENDAR_DTEND)) - itr.toDate().getTime();
-
-						if (daysDiference > EventsManager.ONEDAY_IN_MILLIECONDS) {
+						if (daysDifference > EventsManager.ONEDAY_IN_MILLIECONDS) {
 							int count = 0;
 
-							while (daysDiference > EventsManager.ONEDAY_IN_MILLIECONDS) {
+							while (daysDifference > EventsManager.ONEDAY_IN_MILLIECONDS) {
 								dtstart = Event.getDate(itr.toDate().getTime() - EventsManager.ONEDAY_IN_MILLIECONDS
 										* count);
-								daysDiference -= EventsManager.ONEDAY_IN_MILLIECONDS;
+								daysDifference -= EventsManager.ONEDAY_IN_MILLIECONDS;
 								count++;
 
 								Event newIntermediateEvent = new Event(title, description, location, Event.getDate(itr
 										.toDate().getTime()), dtend, inithour, initminute, endhour, endminute, allDay);
 								EventsManager.addEvent(newIntermediateEvent);
-
 							}
 						}
-
 					}
 				} catch (NumberFormatException e) {
 					e.printStackTrace();
@@ -149,7 +155,6 @@ public class RefreshScheduleEventsData implements Runnable {
 					e.printStackTrace();
 				}
 			}
-
 			cursor.moveToNext();
 		}
 		cursor.close();
