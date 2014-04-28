@@ -1,5 +1,7 @@
 package today;
 
+import java.util.Calendar;
+
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
@@ -161,5 +163,15 @@ public class NewEventRepetitionDialogFragment extends DialogFragment {
 
 		LinearLayout linearLayout = (LinearLayout) inflater.inflate(id, null);
 		typeIntervalContent.addView(linearLayout);
+
+		/** Put the actual date in the button */
+		Button date = (Button) linearLayout.findViewById(R.id.neweventrepetititon_until_button_date);
+
+		int year = Calendar.getInstance().get(Calendar.YEAR);
+		int month = Calendar.getInstance().get(Calendar.MONTH) + 1;
+		int day = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
+
+		date.setHint(day + "/" + month + "/" + year);
+
 	}
 }
