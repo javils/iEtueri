@@ -60,6 +60,7 @@ public class Event implements Comparable<Event> {
 		this.endHour = endHour;
 		this.endMinute = endMinute;
 		this.allDay = allday;
+		this.repeat = false;
 	}
 
 	/* Get and set name methods */
@@ -180,10 +181,17 @@ public class Event implements Comparable<Event> {
 			calInit.set(Calendar.HOUR, (int) initHour);
 			calInit.set(Calendar.MINUTE, (int) initMinute);
 
-			dateEnd = date.parse(end);
-			calEnd.setTime(dateEnd);
-			calEnd.set(Calendar.HOUR, (int) endHour);
-			calEnd.set(Calendar.MINUTE, (int) endMinute);
+			if (end != null) {
+				dateEnd = date.parse(end);
+				calEnd.setTime(dateEnd);
+				calEnd.set(Calendar.HOUR, (int) endHour);
+				calEnd.set(Calendar.MINUTE, (int) endMinute);
+			} else {
+				dateEnd = date.parse(init);
+				calEnd.setTime(dateEnd);
+				calEnd.set(Calendar.HOUR, (int) initHour);
+				calEnd.set(Calendar.MINUTE, (int) initMinute);
+			}
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
@@ -192,13 +200,13 @@ public class Event implements Comparable<Event> {
 		long endMilliseconds = calEnd.getTimeInMillis();
 		long nowMilliseconds = Calendar.getInstance().getTimeInMillis();
 
-		/** Diference into init and end with now. */
+		/** Difference into init and end with now. */
 		long diffInitNow = initMilliseconds - nowMilliseconds;
 		long diffEndNow = endMilliseconds - nowMilliseconds;
 
 		if (diffInitNow < 0 && diffEndNow < 0)
 			return "Completada";
-		else if (diffInitNow < 0 && diffEndNow > 0)
+		else if (diffInitNow < 0 && diffEndNow >= 0)
 			return "En transcurso";
 		else {
 			String hourInit = String.valueOf(initHour);
@@ -209,6 +217,7 @@ public class Event implements Comparable<Event> {
 			/** Change 0 values for 00 to format */
 			if (allDay)
 				return "Todo el dia";
+
 			if (initHour == 0)
 				hourInit = "00";
 			if (initMinute == 0)
@@ -217,6 +226,9 @@ public class Event implements Comparable<Event> {
 				hourEnd = "00";
 			if (endMinute == 0)
 				minuteEnd = "00";
+
+			if (repeat)
+				return hourInit + ":" + minuteInit;
 
 			return hourInit + ":" + minuteInit + " - " + hourEnd + ":" + minuteEnd;
 		}

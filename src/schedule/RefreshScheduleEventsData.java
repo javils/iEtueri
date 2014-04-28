@@ -69,15 +69,22 @@ public class RefreshScheduleEventsData implements Runnable {
 			int initminute = calendar.get(Calendar.MINUTE);
 
 			/** End minute and hour */
-			calendar.setTimeInMillis(Long.parseLong(cursor.getString(CALENDAR_DTEND)));
-			int endhour = calendar.get(Calendar.HOUR_OF_DAY);
-			int endminute = calendar.get(Calendar.MINUTE);
+			int endhour = 0;
+			int endminute = 0;
+			if (cursor.getString(CALENDAR_DTEND) != null) {
+				calendar.setTimeInMillis(Long.parseLong(cursor.getString(CALENDAR_DTEND)));
+				endhour = calendar.get(Calendar.HOUR_OF_DAY);
+				endminute = calendar.get(Calendar.MINUTE);
+			}
 
 			/** Get all data of event */
 			String title = cursor.getString(CALENDAR_TITLE);
 			String description = cursor.getString(CALENDAR_DESCRIPTION);
 			String dtstart = Event.getDate(Long.parseLong(cursor.getString(CALENDAR_DTSTART)));
-			String dtend = Event.getDate(Long.parseLong(cursor.getString(CALENDAR_DTEND)));
+			String dtend = null;
+			if (cursor.getString(CALENDAR_DTEND) != null)
+				dtend = Event.getDate(Long.parseLong(cursor.getString(CALENDAR_DTEND)));
+
 			String rrule = cursor.getString(CALENDAR_RRULE);
 			String location = cursor.getString(CALENDAR_EVENT_LOCATION);
 			boolean allDay = (cursor.getInt(CALENDAR_ALLDAY) == 0) ? false : true;
@@ -114,6 +121,7 @@ public class RefreshScheduleEventsData implements Runnable {
 							false)) {
 						Event newEvent = new Event(title, description, location, Event.getDate(itr.toDate().getTime()),
 								dtend, inithour, initminute, endhour, endminute, allDay);
+						newEvent.setRepeat(true);
 						EventsManager.addEvent(newEvent);
 
 						daysDiference = Long.parseLong(cursor.getString(CALENDAR_DTEND)) - itr.toDate().getTime();
