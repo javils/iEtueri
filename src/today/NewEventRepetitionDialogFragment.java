@@ -17,7 +17,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
-import android.widget.Toast;
 
 import com.javils.ietueri.R;
 
@@ -82,7 +81,6 @@ public class NewEventRepetitionDialogFragment extends DialogFragment {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				handler.setHint(typeOfRepetition.getSelectedItem().toString());
-				Toast.makeText(getActivity(), getString(R.string.new_event_repetition_done), Toast.LENGTH_SHORT).show();
 			}
 		});
 
@@ -157,7 +155,7 @@ public class NewEventRepetitionDialogFragment extends DialogFragment {
 			break;
 		}
 
-		/** No layout, so out! */
+		/** No glayout, so out! */
 		if (id == 0)
 			return;
 
@@ -165,13 +163,16 @@ public class NewEventRepetitionDialogFragment extends DialogFragment {
 		typeIntervalContent.addView(linearLayout);
 
 		/** Put the actual date in the button */
-		Button date = (Button) linearLayout.findViewById(R.id.neweventrepetititon_until_button_date);
 
-		int year = Calendar.getInstance().get(Calendar.YEAR);
-		int month = Calendar.getInstance().get(Calendar.MONTH) + 1;
-		int day = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
+		if (id == R.layout.dialog_new_event_interval_until) {
+			Button date = (Button) linearLayout.findViewById(R.id.neweventrepetititon_until_button_date);
 
-		date.setHint(day + "/" + month + "/" + year);
+			int year = Calendar.getInstance().get(Calendar.YEAR);
+			int month = Calendar.getInstance().get(Calendar.MONTH) + 1;
+			int day = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
+
+			date.setHint(day + "/" + month + "/" + year);
+		}
 
 	}
 }
