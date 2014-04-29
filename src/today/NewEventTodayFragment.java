@@ -15,6 +15,7 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.ContentResolver;
 import android.content.ContentValues;
+import android.content.Intent;
 import android.os.Bundle;
 import android.provider.CalendarContract.Events;
 import android.view.LayoutInflater;
@@ -37,7 +38,9 @@ public class NewEventTodayFragment extends Fragment implements OnClickButtonXml 
 	private Button toHour;
 	private CheckBox allDay;
 	private EditText description;
-	private Button repetition;
+
+	/** Code for the repetition */
+	public static final int REPETITION_CODE = 1;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -52,7 +55,6 @@ public class NewEventTodayFragment extends Fragment implements OnClickButtonXml 
 		toHour = (Button) view.findViewById(R.id.newevent_today_to_hour);
 		allDay = (CheckBox) view.findViewById(R.id.newevent_today_allday);
 		description = (EditText) view.findViewById(R.id.newevent_today_description);
-		repetition = (Button) view.findViewById(R.id.newevent_today_repetition);
 
 		// Init from/to hour button
 		Calendar calendar = Calendar.getInstance();
@@ -91,6 +93,7 @@ public class NewEventTodayFragment extends Fragment implements OnClickButtonXml 
 	public void showRepetitionDialog(View view) {
 		NewEventRepetitionDialogFragment repetitionFragment = new NewEventRepetitionDialogFragment();
 		repetitionFragment.setHandler((Button) view);
+		repetitionFragment.setTargetFragment(this, REPETITION_CODE);
 		repetitionFragment.show(getFragmentManager(), "newEventRepetitionDialog");
 	}
 
@@ -218,5 +221,36 @@ public class NewEventTodayFragment extends Fragment implements OnClickButtonXml 
 		super.onAttach(activity);
 		((MainActivity) activity).onSectionAttached(getArguments()
 				.getInt(NavigationDrawerController.ARG_SECTION_NUMBER));
+	}
+
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (resultCode == REPETITION_CODE) {
+			long typeRepetition = data.getLongExtra(NewEventRepetitionDialogFragment.KEY_TYPE_REPEAT,
+					NewEventRepetitionDialogFragment.REPEAT_ONCE);
+			int count = data.getIntExtra(NewEventRepetitionDialogFragment.KEY_COUNT, 1);
+
+			boolean[] weekDays = null;
+			if (data.hasExtra(NewEventRepetitionDialogFragment.KEY_WEEK_DAYS))
+				weekDays = data.getBooleanArrayExtra(NewEventRepetitionDialogFragment.KEY_WEEK_DAYS);
+
+			int optionMonth = -1;
+			if (data.hasExtra(NewEventRepetitionDialogFragment.KEY_MONTH_TIME))
+				optionMonth = data.getIntExtra(NewEventRepetitionDialogFragment.KEY_MONTH_TIME, -1);
+
+			long typeInterval = data.getLongExtra(NewEventRepetitionDialogFragment.KEY_TYPE_INTERVAL,
+					NewEventRepetitionDialogFragment.INTERVAL_FOREVER);
+
+			String untilDate = null;
+			if (data.hasExtra(NewEventRepetitionDialogFragment.KEY_UNTIL_DATE))
+				untilDate = data.getStringExtra(NewEventRepetitionDialogFragment.KEY_UNTIL_DATE);
+
+			int eventCount = -1;
+			if (data.hasExtra(NewEventRepetitionDialogFragment.KEY_COUNT_EVENT))
+				eventCount = data.getIntExtra(NewEventRepetitionDialogFragment.KEY_COUNT_EVENT, 1);
+
+			Event.createRRule(typeRepetition, count, weekDays, optionMonth, typeInterval, untilDate, eventCount);
+
+		}
 	}
 }

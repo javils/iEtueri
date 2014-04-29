@@ -6,6 +6,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
+import today.NewEventRepetitionDialogFragment;
+
 /**
  * This class is a container of the event's data
  * 
@@ -40,6 +42,24 @@ public class Event implements Comparable<Event> {
 
 	/** Description of the event */
 	private String description;
+
+	/** Freq constants */
+	public static final String FREQ_DAILY = "DAILY";
+	public static final String FREQ_WEEKLY = "WEEKLY";
+	public static final String FREQ_MONTHLY = "MONTHLY";
+	public static final String FREQ_YEARLY = "YEARLY";
+
+	/** byday constants */
+	public static final String BYDAY_MONDAY = "MO";
+	public static final String BYDAY_TUESDAY = "TU";
+	public static final String BYDAY_WEDNESDAY = "WE";
+	public static final String BYDAY_THURSDAY = "TH";
+	public static final String BYDAY_FRIDAY = "FR";
+	public static final String BYDAY_SATURDAY = "SA";
+	public static final String BYDAY_SUNDAY = "SU";
+
+	public static final String[] typesByDay = { BYDAY_MONDAY, BYDAY_TUESDAY, BYDAY_WEDNESDAY, BYDAY_THURSDAY,
+			BYDAY_FRIDAY, BYDAY_SATURDAY, BYDAY_SUNDAY };
 
 	/** Constructor */
 	public Event(String name, String place) {
@@ -264,5 +284,45 @@ public class Event implements Comparable<Event> {
 		instanceEvent.set(instanceYear, instanceMonth, instanceDay);
 
 		return instanceEvent.compareTo(otherEvent);
+	}
+
+	public static String createRRule(long typeRepetition, int count, boolean[] weekDays, int optionMonth,
+			long typeInterval, String untilDate, int eventCount) {
+		String result = "RRULE:";
+		String freq = "FREQ:";
+		String interval = "INTERVAL:";
+		String byDay = "";
+
+		/** typeRepetition, freq */
+		switch ((int) typeRepetition) {
+		case NewEventRepetitionDialogFragment.REPEAT_ONCE:
+			freq = "";
+			break;
+		case NewEventRepetitionDialogFragment.REPEAT_DAYLY:
+			freq += FREQ_DAILY + ";";
+			break;
+		case NewEventRepetitionDialogFragment.REPEAT_WEEKLY:
+			freq += FREQ_WEEKLY + ";";
+			break;
+		case NewEventRepetitionDialogFragment.REPEAT_MONTH:
+			freq += FREQ_MONTHLY + ";";
+			break;
+		}
+
+		/** interval */
+		interval += count + ";";
+
+		/** ByDay */
+		if (weekDays != null) {
+			byDay = "BYDAY=";
+			for (int i = 0; i < weekDays.length; i++) {
+				if (weekDays[i] == true)
+					byDay += typesByDay[i] + ",";
+			}
+		}
+
+		// TODO: More Work Here, need interpret all of the arguments passed and
+		// make sense with these.
+		return null;
 	}
 }
