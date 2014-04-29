@@ -27,7 +27,9 @@
             android:layout_width="43dp"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:inputType="number" >
+            android:inputType="number"
+            android:text="1" >
+
         </EditText>
 
         <TextView
