@@ -34,7 +34,7 @@ public class RefreshScheduleEventsData implements Runnable {
 	public static final int CALENDAR_ALLDAY = 7;
 
 	/** Max number of repetitions of a event */
-	public static final int MAX_EVENTS_REPETITION = 500;
+	public static final int MAX_EVENTS_REPETITION = 100;
 
 	/** Context for get the ContentResolver */
 	private Context context;
