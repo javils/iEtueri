@@ -7,6 +7,7 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.view.Menu;
@@ -23,6 +24,7 @@ public class MainActivity extends Activity implements NavigationDrawerCallbacks 
 	private CharSequence title;
 
 	private static OnClickButtonXml fragment;
+	private static Fragment currentFragment;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +53,7 @@ public class MainActivity extends Activity implements NavigationDrawerCallbacks 
 		// update the main content by replacing fragments
 		FragmentManager fragmentManager = getFragmentManager();
 		Fragment newFragment = NavigationDrawerController.newInstance(position + 1);
+		currentFragment = newFragment;
 		if (newFragment instanceof OnClickButtonXml)
 			MainActivity.fragment = (OnClickButtonXml) newFragment;
 		fragmentManager.beginTransaction().replace(R.id.navigation_drawer_container, newFragment).commit();
@@ -117,6 +120,7 @@ public class MainActivity extends Activity implements NavigationDrawerCallbacks 
 			FragmentManager fragmentManager = getFragmentManager();
 			Fragment newFragment = NavigationDrawerController
 					.newInstance(NavigationDrawerController.SECTION_NUMBER_NEW_EVENT_TODAY);
+			currentFragment = newFragment;
 			if (newFragment instanceof OnClickButtonXml)
 				MainActivity.fragment = (OnClickButtonXml) newFragment;
 			fragmentManager.beginTransaction().replace(R.id.navigation_drawer_container, newFragment).commit();
@@ -136,6 +140,12 @@ public class MainActivity extends Activity implements NavigationDrawerCallbacks 
 	public void onClickButton(View view) {
 		if (fragment != null)
 			fragment.onClickXml(view);
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (currentFragment != null)
+			currentFragment.onActivityResult(requestCode, resultCode, data);
 	}
 
 }
