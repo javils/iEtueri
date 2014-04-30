@@ -18,6 +18,7 @@ import android.content.ContentValues;
 import android.content.Intent;
 import android.os.Bundle;
 import android.provider.CalendarContract.Events;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,6 +39,9 @@ public class NewEventTodayFragment extends Fragment implements OnClickButtonXml 
 	private Button toHour;
 	private CheckBox allDay;
 	private EditText description;
+
+	private EventRepetition eventRepetition;
+	private String rrule;
 
 	/** Code for the repetition */
 	public static final int REPETITION_CODE = 1;
@@ -74,6 +78,9 @@ public class NewEventTodayFragment extends Fragment implements OnClickButtonXml 
 		int day = calendar.get(Calendar.DAY_OF_MONTH);
 		fromDate.setHint("" + day + "/" + month + "/" + year);
 		toDate.setHint("" + day + "/" + month + "/" + year);
+
+		eventRepetition = new EventRepetition();
+		rrule = "";
 
 		return view;
 	}
@@ -137,6 +144,14 @@ public class NewEventTodayFragment extends Fragment implements OnClickButtonXml 
 					initMinute, endHour, endMinute, eventAllDay);
 			EventsManager.addEvent(newEvent);
 
+			/** Create the rrule */
+
+			Log.i("ASDASDASD", "" + eventRepetition.count);
+			Toast.makeText(getActivity(), "" + eventRepetition.count, Toast.LENGTH_SHORT).show();
+			rrule = newEvent.createRRule(eventRepetition.typeRepetition, eventRepetition.count,
+					eventRepetition.weekDays, eventRepetition.optionMonth, eventRepetition.typeInterval,
+					eventRepetition.untilDate, eventRepetition.eventCount);
+
 			/** Get milliseconds for dtstart */
 			Calendar calendar = Calendar.getInstance();
 			calendar.set(Calendar.YEAR, initYear);
@@ -160,6 +175,9 @@ public class NewEventTodayFragment extends Fragment implements OnClickButtonXml 
 			cv.put(Events.TITLE, eventName);
 			cv.put(Events.DTSTART, dtstart);
 			cv.put(Events.DTEND, dtend);
+			Log.i("RRULE", rrule);
+
+			cv.put(Events.RRULE, rrule);
 			cv.put(Events.EVENT_LOCATION, eventPlace);
 			cv.put(Events.ALL_DAY, eventAllDay);
 			cv.put(Events.DESCRIPTION, eventDescription);
@@ -226,31 +244,42 @@ public class NewEventTodayFragment extends Fragment implements OnClickButtonXml 
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (resultCode == REPETITION_CODE) {
-			long typeRepetition = data.getLongExtra(NewEventRepetitionDialogFragment.KEY_TYPE_REPEAT,
+
+			eventRepetition.typeRepetition = data.getLongExtra(NewEventRepetitionDialogFragment.KEY_TYPE_REPEAT,
 					NewEventRepetitionDialogFragment.REPEAT_ONCE);
-			int count = data.getIntExtra(NewEventRepetitionDialogFragment.KEY_COUNT, 1);
 
-			boolean[] weekDays = null;
+			eventRepetition.count = data.getIntExtra(NewEventRepetitionDialogFragment.KEY_COUNT, 1);
+			Toast.makeText(getActivity(), "AS" + eventRepetition.count, Toast.LENGTH_SHORT).show();
+
+			eventRepetition.weekDays = null;
 			if (data.hasExtra(NewEventRepetitionDialogFragment.KEY_WEEK_DAYS))
-				weekDays = data.getBooleanArrayExtra(NewEventRepetitionDialogFragment.KEY_WEEK_DAYS);
+				eventRepetition.weekDays = data.getBooleanArrayExtra(NewEventRepetitionDialogFragment.KEY_WEEK_DAYS);
 
-			int optionMonth = -1;
+			eventRepetition.optionMonth = 0;
 			if (data.hasExtra(NewEventRepetitionDialogFragment.KEY_MONTH_TIME))
-				optionMonth = data.getIntExtra(NewEventRepetitionDialogFragment.KEY_MONTH_TIME, -1);
+				eventRepetition.optionMonth = data.getIntExtra(NewEventRepetitionDialogFragment.KEY_MONTH_TIME, 0);
 
-			long typeInterval = data.getLongExtra(NewEventRepetitionDialogFragment.KEY_TYPE_INTERVAL,
+			eventRepetition.typeInterval = data.getLongExtra(NewEventRepetitionDialogFragment.KEY_TYPE_INTERVAL,
 					NewEventRepetitionDialogFragment.INTERVAL_FOREVER);
 
-			String untilDate = null;
+			eventRepetition.untilDate = null;
 			if (data.hasExtra(NewEventRepetitionDialogFragment.KEY_UNTIL_DATE))
-				untilDate = data.getStringExtra(NewEventRepetitionDialogFragment.KEY_UNTIL_DATE);
+				eventRepetition.untilDate = data.getStringExtra(NewEventRepetitionDialogFragment.KEY_UNTIL_DATE);
 
-			int eventCount = -1;
+			eventRepetition.eventCount = -1;
 			if (data.hasExtra(NewEventRepetitionDialogFragment.KEY_COUNT_EVENT))
-				eventCount = data.getIntExtra(NewEventRepetitionDialogFragment.KEY_COUNT_EVENT, 1);
-
-			Event.createRRule(typeRepetition, count, weekDays, optionMonth, typeInterval, untilDate, eventCount);
+				eventRepetition.eventCount = data.getIntExtra(NewEventRepetitionDialogFragment.KEY_COUNT_EVENT, 1);
 
 		}
+	}
+
+	class EventRepetition {
+		public long typeRepetition;
+		public int count;
+		public boolean[] weekDays;
+		public int optionMonth;
+		public long typeInterval;
+		public String untilDate;
+		public int eventCount;
 	}
 }
