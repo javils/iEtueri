@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.Locale;
 
 import today.NewEventRepetitionDialogFragment;
+import android.util.Log;
 
 /**
  * This class is a container of the event's data
@@ -286,43 +287,102 @@ public class Event implements Comparable<Event> {
 		return instanceEvent.compareTo(otherEvent);
 	}
 
-	public static String createRRule(long typeRepetition, int count, boolean[] weekDays, int optionMonth,
-			long typeInterval, String untilDate, int eventCount) {
-		String result = "RRULE:";
-		String freq = "FREQ:";
-		String interval = "INTERVAL:";
+	public String createRRule(long typeRepetition, int count, boolean[] weekDays, int optionMonth, long typeInterval,
+			String untilDate, int eventCount) {
+		String result = "";
+		String freq = "FREQ=";
+		String interval = "INTERVAL=";
 		String byDay = "";
+		String byMonthDay = "";
+		String until = "";
+		String intervalCount = "";
 
 		/** typeRepetition, freq */
 		switch ((int) typeRepetition) {
 		case NewEventRepetitionDialogFragment.REPEAT_ONCE:
-			freq = "";
-			break;
+			return "";
 		case NewEventRepetitionDialogFragment.REPEAT_DAYLY:
-			freq += FREQ_DAILY + ";";
+			freq += FREQ_DAILY;
 			break;
 		case NewEventRepetitionDialogFragment.REPEAT_WEEKLY:
-			freq += FREQ_WEEKLY + ";";
+			freq += FREQ_WEEKLY;
 			break;
 		case NewEventRepetitionDialogFragment.REPEAT_MONTH:
-			freq += FREQ_MONTHLY + ";";
+			freq += FREQ_MONTHLY;
+		case NewEventRepetitionDialogFragment.REPEAT_YEARLY:
+			freq += FREQ_YEARLY;
 			break;
 		}
 
 		/** interval */
-		interval += count + ";";
+		interval += count;
 
 		/** ByDay */
 		if (weekDays != null) {
 			byDay = "BYDAY=";
 			for (int i = 0; i < weekDays.length; i++) {
-				if (weekDays[i] == true)
+				if (weekDays[i] == true) {
+					Log.i("ASDASDASD", "" + weekDays[i]);
 					byDay += typesByDay[i] + ",";
+				}
+			}
+		}
+		// TODO: Don't work yet
+		if (optionMonth != 0) {
+			if (optionMonth == NewEventRepetitionDialogFragment.MONTH_SAME_DAY) {
+				/** Split the day of init */
+				String day = init.split("/")[0];
+				byMonthDay = "BYMONTHDAY=" + day;
+			} else {
+				byDay = "BYDAY=MO";
 			}
 		}
 
-		// TODO: More Work Here, need interpret all of the arguments passed and
-		// make sense with these.
-		return null;
+		switch ((int) typeInterval) {
+		case NewEventRepetitionDialogFragment.INTERVAL_FOREVER:
+			until = "";
+			break;
+		// TODO: Don't work yet
+		case NewEventRepetitionDialogFragment.INTERVAL_UNTIL:
+			String[] sUntilDate = untilDate.split("/");
+			int untilDay = Integer.valueOf(sUntilDate[0]);
+			int untilMonth = Integer.valueOf(sUntilDate[1]);
+			int untilYear = Integer.valueOf(sUntilDate[2]);
+
+			Calendar calendar = Calendar.getInstance();
+			calendar.set(Calendar.YEAR, untilYear);
+			calendar.set(Calendar.MONTH, untilMonth - 1);
+			calendar.set(Calendar.DAY_OF_MONTH, untilDay);
+
+			until = "UNTIL=" + calendar.getTimeInMillis();
+			break;
+		case NewEventRepetitionDialogFragment.INTERVAL_COUNT:
+			intervalCount = "COUNT=" + eventCount;
+			break;
+		}
+
+		/** Make the rrule with all data in the correct order */
+
+		if (!freq.isEmpty())
+			result += freq + ";";
+
+		result += interval + ";";
+
+		if (!intervalCount.isEmpty())
+			result += intervalCount + ";";
+
+		if (!until.isEmpty())
+			result += until + ";";
+
+		if (!byMonthDay.isEmpty())
+			result += byMonthDay + ";";
+
+		if (!byDay.isEmpty() && !byDay.equals("BYDAY=")) {
+			result += byDay;
+			result = result.substring(0, result.length() - 1);
+			result += ";";
+		}
+
+		return result;
 	}
 }
