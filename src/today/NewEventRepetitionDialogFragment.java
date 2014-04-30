@@ -71,6 +71,7 @@ public class NewEventRepetitionDialogFragment extends DialogFragment {
 	public static final int REPEAT_DAYLY = 1;
 	public static final int REPEAT_WEEKLY = 2;
 	public static final int REPEAT_MONTH = 3;
+	public static final int REPEAT_YEARLY = 4;
 
 	/** Constants for month view */
 	public static final int MONTH_SAME_DAY = 1;
@@ -257,7 +258,7 @@ public class NewEventRepetitionDialogFragment extends DialogFragment {
 		case REPEAT_WEEKLY:
 			boolean[] days = new boolean[NUMBER_OF_DAYS];
 			for (int i = 0; i < NUMBER_OF_DAYS; i++)
-				days[i] = weekDays[i].isSelected();
+				days[i] = weekDays[i].isChecked();
 			intent.putExtra(KEY_WEEK_DAYS, days);
 			break;
 		case REPEAT_MONTH:
@@ -275,7 +276,7 @@ public class NewEventRepetitionDialogFragment extends DialogFragment {
 
 		switch ((int) typeOfFrequency.getSelectedItemId()) {
 		case INTERVAL_UNTIL:
-			intent.putExtra(KEY_UNTIL_DATE, dateUntil.getText().toString());
+			intent.putExtra(KEY_UNTIL_DATE, dateUntil.getHint().toString());
 			break;
 		case INTERVAL_COUNT:
 			intent.putExtra(KEY_COUNT_EVENT, Integer.valueOf(countUntil.getText().toString()));
