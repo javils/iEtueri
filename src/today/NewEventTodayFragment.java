@@ -146,8 +146,6 @@ public class NewEventTodayFragment extends Fragment implements OnClickButtonXml 
 
 			/** Create the rrule */
 
-			Log.i("ASDASDASD", "" + eventRepetition.count);
-			Toast.makeText(getActivity(), "" + eventRepetition.count, Toast.LENGTH_SHORT).show();
 			rrule = newEvent.createRRule(eventRepetition.typeRepetition, eventRepetition.count,
 					eventRepetition.weekDays, eventRepetition.optionMonth, eventRepetition.typeInterval,
 					eventRepetition.untilDate, eventRepetition.eventCount);
@@ -249,7 +247,6 @@ public class NewEventTodayFragment extends Fragment implements OnClickButtonXml 
 					NewEventRepetitionDialogFragment.REPEAT_ONCE);
 
 			eventRepetition.count = data.getIntExtra(NewEventRepetitionDialogFragment.KEY_COUNT, 1);
-			Toast.makeText(getActivity(), "AS" + eventRepetition.count, Toast.LENGTH_SHORT).show();
 
 			eventRepetition.weekDays = null;
 			if (data.hasExtra(NewEventRepetitionDialogFragment.KEY_WEEK_DAYS))
