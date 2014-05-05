@@ -7,7 +7,6 @@ import java.util.Date;
 import java.util.Locale;
 
 import today.NewEventRepetitionDialogFragment;
-import android.util.Log;
 
 /**
  * This class is a container of the event's data
@@ -309,6 +308,7 @@ public class Event implements Comparable<Event> {
 			break;
 		case NewEventRepetitionDialogFragment.REPEAT_MONTH:
 			freq += FREQ_MONTHLY;
+			break;
 		case NewEventRepetitionDialogFragment.REPEAT_YEARLY:
 			freq += FREQ_YEARLY;
 			break;
@@ -321,10 +321,9 @@ public class Event implements Comparable<Event> {
 		if (weekDays != null) {
 			byDay = "BYDAY=";
 			for (int i = 0; i < weekDays.length; i++) {
-				if (weekDays[i] == true) {
-					Log.i("ASDASDASD", "" + weekDays[i]);
+				if (weekDays[i] == true)
 					byDay += typesByDay[i] + ",";
-				}
+
 			}
 		}
 		// TODO: Don't work yet
