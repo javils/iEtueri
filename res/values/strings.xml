@@ -51,4 +51,10 @@
         <item>Para un numero de eventos</item>
     </string-array>
 
+    <!-- COURSES STRINGS -->
+    <string name="title_courses_new_course">Nuevo Curso</string>
+    <string name="new_course_name_course">Nombre Curso</string>
+    <string name="new_course_init">Inicio</string>
+    <string name="new_course_end">Fin</string>
+    <string name="title_course_new_course">Nuevo Curso</string>
 </resources>

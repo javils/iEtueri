@@ -82,6 +82,9 @@ public class MainActivity extends Activity implements NavigationDrawerCallbacks 
 		case NavigationDrawerController.SECTION_NUMBER_NEW_EVENT_TODAY:
 			title = getString(R.string.title_today_new_event);
 			break;
+		case NavigationDrawerController.SECTION_NUMBER_NEW_COURSE:
+			title = getString(R.string.title_course_new_course);
+			break;
 		}
 	}
 
@@ -95,6 +98,10 @@ public class MainActivity extends Activity implements NavigationDrawerCallbacks 
 			/** Today Menu */
 			if (title.equals(getString(R.string.title_today)))
 				getMenuInflater().inflate(R.menu.menu_today, menu);
+
+			/** Courses Menu */
+			if (title.equals(getString(R.string.title_course)))
+				getMenuInflater().inflate(R.menu.menu_courses, menu);
 
 			ActionBar actionBar = getActionBar();
 			actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
@@ -126,6 +133,20 @@ public class MainActivity extends Activity implements NavigationDrawerCallbacks 
 			fragmentManager.beginTransaction().replace(R.id.navigation_drawer_container, newFragment).commit();
 
 			return true;
+		}
+
+		/** Course Menu */
+		if (id == R.id.menu_courses_menu_new) {
+			FragmentManager fragmentManager = getFragmentManager();
+			Fragment newFragment = NavigationDrawerController
+					.newInstance(NavigationDrawerController.SECTION_NUMBER_NEW_COURSE);
+			currentFragment = newFragment;
+			if (newFragment instanceof OnClickButtonXml)
+				MainActivity.fragment = (OnClickButtonXml) newFragment;
+			fragmentManager.beginTransaction().replace(R.id.navigation_drawer_container, newFragment).commit();
+
+			return true;
+
 		}
 
 		// TODO: Add handle action for each item in the action bar here.

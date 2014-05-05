@@ -7,6 +7,7 @@ import android.app.Fragment;
 import android.os.Bundle;
 import android.widget.Toast;
 import courses.CoursesFragment;
+import courses.NewCourseFragment;
 
 /**
  * Class for controller Views of the Navigation Fragment.
@@ -26,6 +27,7 @@ public class NavigationDrawerController {
 
 	/** Secondary Views */
 	public static final int SECTION_NUMBER_NEW_EVENT_TODAY = 7;
+	public static final int SECTION_NUMBER_NEW_COURSE = 8;
 
 	/** The fragment argument representing the section number for this fragment. */
 	public static final String ARG_SECTION_NUMBER = "section_number";
@@ -72,6 +74,9 @@ public class NavigationDrawerController {
 			break;
 		case SECTION_NUMBER_NEW_EVENT_TODAY: // NEW EVENT TODAY SECTION
 			newFragment = new NewEventTodayFragment();
+			break;
+		case SECTION_NUMBER_NEW_COURSE: // NEW COURSE TODAY SECTION
+			newFragment = new NewCourseFragment();
 			break;
 		default:
 			Toast.makeText(newFragment.getActivity(), "If you are here, then crash!", Toast.LENGTH_SHORT).show();
