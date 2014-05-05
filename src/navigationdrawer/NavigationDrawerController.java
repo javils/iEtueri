@@ -6,6 +6,7 @@ import today.TodayFragment;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.widget.Toast;
+import courses.CoursesFragment;
 
 /**
  * Class for controller Views of the Navigation Fragment.
@@ -65,6 +66,7 @@ public class NavigationDrawerController {
 		case SECTION_NUMBER_EXAMS: // EXAMS SECTION
 			break;
 		case SECTION_NUMBER_COURSES: // COURSES SECTION
+			newFragment = new CoursesFragment();
 			break;
 		case SECTION_NUMBER_SUBJECTS: // SUBJECTS SECTION
 			break;

@@ -18,7 +18,7 @@ import android.widget.ListView;
 
 import com.javils.ietueri.R;
 
-/** This class if for Today View */
+/** This class is for Today View */
 public class TodayFragment extends Fragment {
 
 	/** Views */
