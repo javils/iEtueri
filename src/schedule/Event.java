@@ -326,14 +326,14 @@ public class Event implements Comparable<Event> {
 
 			}
 		}
-		// TODO: Don't work yet
+
 		if (optionMonth != 0) {
 			if (optionMonth == NewEventRepetitionDialogFragment.MONTH_SAME_DAY) {
 				/** Split the day of init */
 				String day = init.split("/")[0];
 				byMonthDay = "BYMONTHDAY=" + day;
 			} else {
-				byDay = "BYDAY=MO";
+				byDay = "BYDAY=1MO";
 			}
 		}
 
@@ -374,7 +374,8 @@ public class Event implements Comparable<Event> {
 
 		if (!byDay.isEmpty() && !byDay.equals("BYDAY=")) {
 			result += byDay;
-			result = result.substring(0, result.length() - 1);
+			if (result.endsWith(","))
+				result = result.substring(0, result.length() - 1);
 			result += ";";
 		}
 

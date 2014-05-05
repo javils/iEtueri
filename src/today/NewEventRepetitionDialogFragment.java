@@ -21,6 +21,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.Spinner;
 
 import com.javils.ietueri.R;
@@ -191,7 +192,7 @@ public class NewEventRepetitionDialogFragment extends DialogFragment {
 		if (id == 0)
 			return;
 
-		LinearLayout linearLayout = (LinearLayout) inflater.inflate(id, null);
+		final LinearLayout linearLayout = (LinearLayout) inflater.inflate(id, null);
 		typeRepetitionContent.addView(linearLayout);
 
 		if (id == R.layout.dialog_new_event_repetition_weekly) {
@@ -207,7 +208,13 @@ public class NewEventRepetitionDialogFragment extends DialogFragment {
 
 		if (id == R.layout.dialog_new_event_repetition_month) {
 			monthOptions = (RadioGroup) linearLayout.findViewById(R.id.neweventrepetition_radiogroup_month);
-			monthOptionSelected = (RadioButton) linearLayout.findViewById(monthOptions.getCheckedRadioButtonId());
+			monthOptions.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+				@Override
+				public void onCheckedChanged(RadioGroup group, int checkedId) {
+					monthOptionSelected = (RadioButton) linearLayout.findViewById(checkedId);
+
+				}
+			});
 		}
 	}
 
