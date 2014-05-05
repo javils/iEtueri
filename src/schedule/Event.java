@@ -342,19 +342,15 @@ public class Event implements Comparable<Event> {
 		case NewEventRepetitionDialogFragment.INTERVAL_FOREVER:
 			until = "";
 			break;
-		// TODO: Don't work yet
 		case NewEventRepetitionDialogFragment.INTERVAL_UNTIL:
 			String[] sUntilDate = untilDate.split("/");
 			int untilDay = Integer.valueOf(sUntilDate[0]);
 			int untilMonth = Integer.valueOf(sUntilDate[1]);
 			int untilYear = Integer.valueOf(sUntilDate[2]);
+			String sUntilDay = untilDay < 9 ? "0" + untilDay : "" + untilDay;
+			String sUntilMonth = untilMonth < 9 ? "0" + untilMonth : "" + untilMonth;
 
-			Calendar calendar = Calendar.getInstance();
-			calendar.set(Calendar.YEAR, untilYear);
-			calendar.set(Calendar.MONTH, untilMonth - 1);
-			calendar.set(Calendar.DAY_OF_MONTH, untilDay);
-
-			until = "UNTIL=" + calendar.getTimeInMillis();
+			until = "UNTIL=" + untilYear + "" + sUntilMonth + "" + sUntilDay + "T" + "000000Z";
 			break;
 		case NewEventRepetitionDialogFragment.INTERVAL_COUNT:
 			intervalCount = "COUNT=" + eventCount;
