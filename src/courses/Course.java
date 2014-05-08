@@ -26,6 +26,12 @@ public class Course {
 		this.average = 0.0f;
 	}
 
+	public Course(String courseName, int numberOfSubjects, double average) {
+		this.courseName = courseName;
+		this.numberOfSubjects = numberOfSubjects;
+		this.average = average;
+	}
+
 	public Course(String courseName, int numberOfSubjects, double average, String date) {
 		this.courseName = courseName;
 		this.date = date;
