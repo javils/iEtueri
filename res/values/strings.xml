@@ -57,4 +57,6 @@
     <string name="new_course_init">Inicio</string>
     <string name="new_course_end">Fin</string>
     <string name="title_course_new_course">Nuevo Curso</string>
+    <!-- DETAIL COURSES -->
+    <string name="title_course_detail_course">Detalles Curso</string>
 </resources>

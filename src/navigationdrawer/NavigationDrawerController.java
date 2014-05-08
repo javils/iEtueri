@@ -6,6 +6,7 @@ import today.TodayFragment;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.widget.Toast;
+import courses.CourseDetailFragment;
 import courses.CoursesFragment;
 import courses.NewCourseFragment;
 
@@ -28,6 +29,7 @@ public class NavigationDrawerController {
 	/** Secondary Views */
 	public static final int SECTION_NUMBER_NEW_EVENT_TODAY = 7;
 	public static final int SECTION_NUMBER_NEW_COURSE = 8;
+	public static final int SECTION_NUMBER_DETAIL_COURSE = 9;
 
 	/** The fragment argument representing the section number for this fragment. */
 	public static final String ARG_SECTION_NUMBER = "section_number";
@@ -50,7 +52,7 @@ public class NavigationDrawerController {
 
 	/**
 	 * Choose the correct fragment in each case, this is for not create only the
-	 * View, we need create ALL the fragment for not break cyclelife of the
+	 * View, we need create ALL the fragment for not break lifecycle of the
 	 * Activity and Fragment
 	 */
 	public static Fragment chooseFragment(int section) {
@@ -77,6 +79,9 @@ public class NavigationDrawerController {
 			break;
 		case SECTION_NUMBER_NEW_COURSE: // NEW COURSE TODAY SECTION
 			newFragment = new NewCourseFragment();
+			break;
+		case SECTION_NUMBER_DETAIL_COURSE: // DETAIL COURSE TODAY SECTION
+			newFragment = new CourseDetailFragment();
 			break;
 		default:
 			Toast.makeText(newFragment.getActivity(), "If you are here, then crash!", Toast.LENGTH_SHORT).show();

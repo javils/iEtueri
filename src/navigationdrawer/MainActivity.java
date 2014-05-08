@@ -85,6 +85,9 @@ public class MainActivity extends Activity implements NavigationDrawerCallbacks 
 		case NavigationDrawerController.SECTION_NUMBER_NEW_COURSE:
 			title = getString(R.string.title_course_new_course);
 			break;
+		case NavigationDrawerController.SECTION_NUMBER_DETAIL_COURSE:
+			title = getString(R.string.title_course_detail_course);
+			break;
 		}
 	}
 

@@ -69,7 +69,7 @@ public class CoursesAdapter extends ArrayAdapter<Course> {
 
 		// Fill the structure of the item
 		text = (TextView) view.findViewById(R.id.courses_list_item_course_name);
-		text.setText("• " + course.getCourseName());
+		text.setText("" + course.getCourseName());
 		text = (TextView) view.findViewById(R.id.courses_list_item_number_subjects);
 		text.setText(course.getNumberOfSubjects() + (course.getNumberOfSubjects() > 1 ? " asignaturas" : " asignatura"));
 		text = (TextView) view.findViewById(R.id.courses_list_item_course_average);
