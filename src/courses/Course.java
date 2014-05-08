@@ -6,6 +6,9 @@ package courses;
  * @author Javier Luque Sanabria
  */
 public class Course {
+	/** Id of course */
+	private int id;
+
 	/** Name of the course */
 	private String courseName;
 
@@ -15,13 +18,20 @@ public class Course {
 	/** Average of all subjects in the course */
 	private double average;
 
-	/** Date of the course */
-	private String date;
+	/** Init Date of the course */
+	private String initDate;
+
+	/** End date of the course */
+	private String endDate;
+
+	/** subjects ids */
+	private String subjectsIds;
 
 	/** Constructor */
-	public Course(String courseName, String date) {
+	public Course(String courseName, String initDate, String endDate) {
 		this.courseName = courseName;
-		this.date = date;
+		this.initDate = initDate;
+		this.endDate = endDate;
 		this.numberOfSubjects = 0;
 		this.average = 0.0f;
 	}
@@ -32,11 +42,23 @@ public class Course {
 		this.average = average;
 	}
 
-	public Course(String courseName, int numberOfSubjects, double average, String date) {
+	public Course(String courseName, int numberOfSubjects, double average, String initDate, String endDate) {
 		this.courseName = courseName;
-		this.date = date;
+		this.initDate = initDate;
+		this.endDate = endDate;
 		this.numberOfSubjects = numberOfSubjects;
 		this.average = average;
+	}
+
+	public Course(int id, String courseName, int numberOfSubjects, double average, String initDate, String endDate,
+			String subjectsIds) {
+		this.setId(id);
+		this.courseName = courseName;
+		this.initDate = initDate;
+		this.endDate = endDate;
+		this.numberOfSubjects = numberOfSubjects;
+		this.average = average;
+		this.setSubjectsIds(subjectsIds);
 	}
 
 	/* Get and set courseName methods */
@@ -66,13 +88,40 @@ public class Course {
 		this.average = average;
 	}
 
-	/* Get and set the date of the course */
-	public String getDate() {
-		return date;
+	/* Get and set the init date of the course */
+	public String getInitDate() {
+		return initDate;
 	}
 
-	public void setDate(String date) {
-		this.date = date;
+	public void setInitDate(String initDate) {
+		this.initDate = initDate;
+	}
+
+	/* Get and set the end date of the course */
+	public String getEndDate() {
+		return endDate;
+	}
+
+	public void setEndDate(String endDate) {
+		this.endDate = endDate;
+	}
+
+	/* Get and set the sbjects ids */
+	public String getSubjectsIds() {
+		return subjectsIds;
+	}
+
+	public void setSubjectsIds(String subjectsIds) {
+		this.subjectsIds = subjectsIds;
+	}
+
+	/* Get and set the id of the course */
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
 	}
 
 }
