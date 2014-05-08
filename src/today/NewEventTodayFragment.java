@@ -190,8 +190,6 @@ public class NewEventTodayFragment extends Fragment implements OnClickButtonXml 
 			MainActivity.setOnClickFragment(newFragment);
 		fragmentManager.beginTransaction().replace(R.id.navigation_drawer_container, newFragment).commit();
 
-		// first, call onPrepareOptionsMenu() for reset the ActionBar
-		getActivity().invalidateOptionsMenu();
 	}
 
 	/** Cancel the new event and back to Today View */
@@ -201,9 +199,6 @@ public class NewEventTodayFragment extends Fragment implements OnClickButtonXml 
 		if (newFragment instanceof OnClickButtonXml)
 			MainActivity.setOnClickFragment(newFragment);
 		fragmentManager.beginTransaction().replace(R.id.navigation_drawer_container, newFragment).commit();
-
-		// first, call onPrepareOptionsMenu() for reset the ActionBar
-		getActivity().invalidateOptionsMenu();
 
 	}
 

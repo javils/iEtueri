@@ -69,9 +69,6 @@ public class NewCourseFragment extends Fragment implements OnClickButtonXml {
 			MainActivity.setOnClickFragment(newFragment);
 		fragmentManager.beginTransaction().replace(R.id.navigation_drawer_container, newFragment).commit();
 
-		// first, call onPrepareOptionsMenu() for reset the ActionBar
-		getActivity().invalidateOptionsMenu();
-
 	}
 
 	private void addNewCourse() {
@@ -97,8 +94,6 @@ public class NewCourseFragment extends Fragment implements OnClickButtonXml {
 				MainActivity.setOnClickFragment(newFragment);
 			fragmentManager.beginTransaction().replace(R.id.navigation_drawer_container, newFragment).commit();
 
-			// first, call onPrepareOptionsMenu() for reset the ActionBar
-			getActivity().invalidateOptionsMenu();
 		}
 	}
 

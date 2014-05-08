@@ -60,6 +60,10 @@ public class MainActivity extends Activity implements NavigationDrawerCallbacks 
 	}
 
 	public void onSectionAttached(int section) {
+
+		// first, call onPrepareOptionsMenu() for reset the ActionBar
+		invalidateOptionsMenu();
+
 		switch (section) {
 		case NavigationDrawerController.SECTION_NUMBER_TODAY:
 			title = getString(R.string.title_today);
@@ -121,9 +125,6 @@ public class MainActivity extends Activity implements NavigationDrawerCallbacks 
 		// Handle action bar item clicks here.
 
 		int id = item.getItemId();
-
-		// first, call onPrepareOptionsMenu() for reset the ActionBar
-		invalidateOptionsMenu();
 
 		/** Today Menu */
 		if (id == R.id.menu_today_menu_new) {
