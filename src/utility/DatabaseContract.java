@@ -17,7 +17,8 @@ public final class DatabaseContract {
 		public static final String COLUMN_NAME_COURSE_NAME = "courseName";
 		public static final String COLUMN_NAME_NUMBER_OF_SUBJECTS = "numberOfSubjects";
 		public static final String COLUMN_NAME_AVERAGE = "average";
-		public static final String COLUMN_NAME_DATE = "date";
+		public static final String COLUMN_NAME_INIT_DATE = "dateInit";
+		public static final String COLUMN_NAME_END_DATE = "dateEnd";
 		public static final String COLUMN_NAME_SUBJECTS_IDS = "subjectsIds";
 	}
 
@@ -111,8 +112,8 @@ public final class DatabaseContract {
 	 * 
 	 */
 	public static class TypesVariables {
-		public static final String TYPE_INT_10_AUTOINCREMENT = " int(10) NOT NULL AUTO_INCREMENT";
-		public static final String TYPE_INT_10 = " int(10) NOT NULL";
+		public static final String TYPE_INT_10_AUTOINCREMENT = " integer PRIMARY KEY AUTOINCREMENT";
+		public static final String TYPE_INT_10 = " integer NOT NULL";
 		public static final String TYPE_VARCHAR_20 = " varchar(20) NOT NULL";
 		public static final String TYPE_VARCHAR_40 = " varchar(40) NOT NULL";
 		public static final String TYPE_FLOAT_10 = " float(10) NOT NULL";
@@ -120,7 +121,6 @@ public final class DatabaseContract {
 		public static final String TYPE_HOUR = " varchar(5) NOT NULL";
 		public static final String TYPE_TEXT = " text";
 		public static final String TYPE_BOOLEAN = " boolean NOT NULL";
-		public static final String PRIMARY_KEY = " PRIMARY KEY(`_id`)";
 	}
 
 }
