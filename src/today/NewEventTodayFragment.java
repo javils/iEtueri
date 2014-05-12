@@ -18,7 +18,6 @@ import android.content.ContentValues;
 import android.content.Intent;
 import android.os.Bundle;
 import android.provider.CalendarContract.Events;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -173,9 +172,9 @@ public class NewEventTodayFragment extends Fragment implements OnClickButtonXml 
 			cv.put(Events.TITLE, eventName);
 			cv.put(Events.DTSTART, dtstart);
 			cv.put(Events.DTEND, dtend);
-			Log.i("RRULE", rrule);
 
-			cv.put(Events.RRULE, rrule);
+			if (!rrule.isEmpty())
+				cv.put(Events.RRULE, rrule);
 			cv.put(Events.EVENT_LOCATION, eventPlace);
 			cv.put(Events.ALL_DAY, eventAllDay);
 			cv.put(Events.DESCRIPTION, eventDescription);
