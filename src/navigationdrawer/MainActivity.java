@@ -110,6 +110,10 @@ public class MainActivity extends Activity implements NavigationDrawerCallbacks 
 			if (title.equals(getString(R.string.title_course)))
 				getMenuInflater().inflate(R.menu.menu_courses, menu);
 
+			/** Detail Courses Menu */
+			if (title.equals(getString(R.string.title_course_detail_course)))
+				getMenuInflater().inflate(R.menu.menu_detail_course, menu);
+
 			ActionBar actionBar = getActionBar();
 			actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
 			actionBar.setDisplayShowTitleEnabled(true);
@@ -150,7 +154,6 @@ public class MainActivity extends Activity implements NavigationDrawerCallbacks 
 			fragmentManager.beginTransaction().replace(R.id.navigation_drawer_container, newFragment).commit();
 
 			return true;
-
 		}
 
 		// TODO: Add handle action for each item in the action bar here.

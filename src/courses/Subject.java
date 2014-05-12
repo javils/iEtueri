@@ -22,6 +22,12 @@ public class Subject {
 	/** Note necessary for pass the subject */
 	private float noteNecessary;
 
+	/** Number of task in the subject */
+	private int numberOfTasks;
+
+	/** NUmber of exams in the subjects */
+	private int numberOfExams;
+
 	/* Get and set of the subject name */
 	public String getName() {
 		return name;
@@ -65,5 +71,23 @@ public class Subject {
 
 	public void setNoteNecessary(float noteNecessary) {
 		this.noteNecessary = noteNecessary;
+	}
+
+	/* Get and set the number of tasks */
+	public int getNumberOfTasks() {
+		return numberOfTasks;
+	}
+
+	public void setNumberOfTasks(int numberOfTasks) {
+		this.numberOfTasks = numberOfTasks;
+	}
+
+	/* Get and set the number of exams */
+	public int getNumberOfExams() {
+		return numberOfExams;
+	}
+
+	public void setNumberOfExams(int numberOfExams) {
+		this.numberOfExams = numberOfExams;
 	}
 }
