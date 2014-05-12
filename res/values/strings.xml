@@ -59,4 +59,10 @@
     <string name="title_course_new_course">Nuevo Curso</string>
     <!-- DETAIL COURSES -->
     <string name="title_course_detail_course">Detalles Curso</string>
+    <!-- NEW SUBJECT -->
+    <string name="title_course_new_subject">Nueva Asignatura</string>
+    <string name="note">Nota</string>
+    <string name="teacher">Profesor</string>
+    <string name="classroom">Aula</string>
+    <string name="subject">Asignatura</string>
 </resources>
