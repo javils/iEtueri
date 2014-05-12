@@ -1,5 +1,6 @@
 package navigationdrawer;
 
+import schedule.CalendarManager;
 import schedule.EventsManager;
 import schedule.RefreshScheduleEventsData;
 import utility.OnClickButtonXml;
@@ -10,6 +11,7 @@ import android.app.FragmentManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -37,13 +39,17 @@ public class MainActivity extends Activity implements NavigationDrawerCallbacks 
 		navigationDrawerFragment.setUp(R.id.navigation_drawer, (DrawerLayout) findViewById(R.id.drawer_layout));
 
 		title = getTitle();
-		// TODO: Excute only in the first execution
-		// CalendarManager.createCalendar(getApplicationContext());
 
 		new Thread(new RefreshScheduleEventsData(getApplicationContext())).start();
 
 		while (EventsManager.isThreadfinish() == false) {
 			// TODO: Make animation with progressbar or something else.
+		}
+		// TODO: Excute only in the first execution
+		// CalendarManager.deleteCalendar(getApplicationContext());
+		if (CalendarManager.ID == -1) {
+			CalendarManager.createCalendar(getApplicationContext());
+			Log.i("ASDASDASD", "" + CalendarManager.ID);
 		}
 
 	}
@@ -91,6 +97,9 @@ public class MainActivity extends Activity implements NavigationDrawerCallbacks 
 			break;
 		case NavigationDrawerController.SECTION_NUMBER_DETAIL_COURSE:
 			title = getString(R.string.title_course_detail_course);
+			break;
+		case NavigationDrawerController.SECTION_NUMBER_NEW_SUBJECT:
+			title = getString(R.string.title_course_new_subject);
 			break;
 		}
 	}
@@ -154,6 +163,19 @@ public class MainActivity extends Activity implements NavigationDrawerCallbacks 
 			fragmentManager.beginTransaction().replace(R.id.navigation_drawer_container, newFragment).commit();
 
 			return true;
+		}
+
+		if (id == R.id.menu_detail_courses_menu_new) {
+			FragmentManager fragmentManager = getFragmentManager();
+			Fragment newFragment = NavigationDrawerController
+					.newInstance(NavigationDrawerController.SECTION_NUMBER_NEW_SUBJECT);
+			currentFragment = newFragment;
+			if (newFragment instanceof OnClickButtonXml)
+				MainActivity.fragment = (OnClickButtonXml) newFragment;
+			fragmentManager.beginTransaction().replace(R.id.navigation_drawer_container, newFragment).commit();
+
+			return true;
+
 		}
 
 		// TODO: Add handle action for each item in the action bar here.

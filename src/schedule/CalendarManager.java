@@ -1,6 +1,7 @@
 package schedule;
 
 import android.content.ContentResolver;
+import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
 import android.net.Uri;
@@ -11,6 +12,7 @@ public class CalendarManager {
 
 	public static final String CALENDAR_NAME = "iEtueri Calendar";
 	public static final String ACCOUNT_TYPE = "com.google.com";
+	public static Uri CALENDAR_URI;
 	public static int ID = -1;
 
 	public static Uri buildCalUri() {
@@ -23,10 +25,23 @@ public class CalendarManager {
 	/** Create the calendar in the database */
 	public static void createCalendar(Context ctx) {
 		ContentResolver cr = ctx.getContentResolver();
-		final ContentValues cv = buildNewCalContentValues();
+		ContentValues cv = buildNewCalContentValues();
 		Uri calUri = buildCalUri();
 		// insert the calendar into the database
-		cr.insert(calUri, cv);
+		Uri newUri = cr.insert(calUri, cv);
+		ID = Integer.parseInt(newUri.getLastPathSegment());
+		// TODO: Need save the URI in the database.
+		CALENDAR_URI = newUri;
+	}
+
+	/** Permanently deletes our calendar from database (along with all events) */
+	public static void deleteCalendar(Context ctx) {
+		ContentResolver cr = ctx.getContentResolver();
+		final ContentValues cv = new ContentValues();
+		cv.put(Calendars.DELETED, 1);
+		cv.put(Calendars.VISIBLE, 0);
+		Uri calUri = ContentUris.withAppendedId(buildCalUri(), ID);
+		cr.update(calUri, cv, null, null);
 	}
 
 	/** Creates the values the new calendar will have */
@@ -42,6 +57,7 @@ public class CalendarManager {
 		cv.put(Calendars.CALENDAR_ACCESS_LEVEL, Calendars.CAL_ACCESS_OWNER);
 		cv.put(Calendars.OWNER_ACCOUNT, "javiluke93@gmail.com");
 		cv.put(Calendars.VISIBLE, 1);
+		cv.put(Calendars.DELETED, 0);
 		cv.put(Calendars.SYNC_EVENTS, 1);
 		return cv;
 	}

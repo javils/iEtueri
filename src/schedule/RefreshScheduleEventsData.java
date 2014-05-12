@@ -12,6 +12,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.provider.CalendarContract;
 import android.provider.CalendarContract.Calendars;
+import android.util.Log;
 
 import com.google.ical.compat.jodatime.LocalDateIteratorFactory;
 
@@ -58,6 +59,12 @@ public class RefreshScheduleEventsData implements Runnable {
 
 		/** Check all dates in the Cursor */
 		for (int i = 0; i < cursor.getCount(); ++i) {
+			Log.i("CALENDAR_ID", "" + cursor.getString(CALENDAR_CALENDAR_ID));
+			Log.i("ID", "" + CalendarManager.ID);
+
+			if (checkCalendarDeleted(cursor.getString(CALENDAR_CALENDAR_ID)))
+				continue;
+
 			String[] date = Event.getDate(Long.parseLong(cursor.getString(CALENDAR_DTSTART))).split("-");
 			int year = Integer.valueOf(date[0]);
 			int month = Integer.valueOf(date[1]);
@@ -82,6 +89,14 @@ public class RefreshScheduleEventsData implements Runnable {
 
 			/** Get all data of event */
 			String title = cursor.getString(CALENDAR_TITLE);
+
+			if (title != null && title.equals("Nuevo Evento"))
+				try {
+					Thread.sleep(2000);
+				} catch (InterruptedException e1) {
+					e1.printStackTrace();
+				}
+
 			String description = cursor.getString(CALENDAR_DESCRIPTION);
 			String dtstart = Event.getDate(Long.parseLong(cursor.getString(CALENDAR_DTSTART)));
 			String dtend = null;
@@ -166,7 +181,8 @@ public class RefreshScheduleEventsData implements Runnable {
 	}
 
 	public void checkCalendarID() {
-		final String[] EVENT_PROJECTION = new String[] { Calendars._ID, Calendars.CALENDAR_DISPLAY_NAME, };
+		final String[] EVENT_PROJECTION = new String[] { Calendars._ID, Calendars.CALENDAR_DISPLAY_NAME,
+				Calendars.DELETED };
 
 		// The indices for the projection array above.
 		final int CALENDAR_ID_INDEX = 0;
@@ -174,12 +190,48 @@ public class RefreshScheduleEventsData implements Runnable {
 		Cursor cur = null;
 		ContentResolver cr = context.getContentResolver();
 		Uri uri = Calendars.CONTENT_URI;
-		String selection = "(" + Calendars.CALENDAR_DISPLAY_NAME + " = ?)";
-		String[] selectionArgs = new String[] { CalendarManager.CALENDAR_NAME };
+		String selection = "(" + Calendars.CALENDAR_DISPLAY_NAME + " = ? AND " + Calendars.DELETED + "=?)";
+		String[] selectionArgs = new String[] { CalendarManager.CALENDAR_NAME, "0" };
 		// Submit the query and get a Cursor object back.
 		cur = cr.query(uri, EVENT_PROJECTION, selection, selectionArgs, null);
 		cur.moveToFirst();
-		CalendarManager.ID = cur.getInt(CALENDAR_ID_INDEX);
+		while (cur.isAfterLast() == false) {
+			CalendarManager.ID = cur.getInt(CALENDAR_ID_INDEX);
+			cur.moveToNext();
+		}
 		cur.close();
+	}
+
+	public boolean checkCalendarDeleted(String Id) {
+		final String[] EVENT_PROJECTION = new String[] { Calendars._ID, Calendars.DELETED };
+
+		if (CalendarManager.ID == Integer.valueOf(Id))
+			return false;
+
+		// The indices for the projection array above.
+		final int CALENDAR_DELETED_INDEX = 1;
+		Cursor cur = null;
+		ContentResolver cr = context.getContentResolver();
+		Uri uri = Calendars.CONTENT_URI;
+		String selection = "(" + Calendars._ID + " = ? AND " + Calendars.DELETED + "= ?)";
+		String[] selectionArgs = new String[] { Id, "1" };
+		// Submit the query and get a Cursor object back.
+		cur = cr.query(uri, EVENT_PROJECTION, selection, selectionArgs, null);
+
+		cur.moveToFirst();
+
+		if (cur.isAfterLast()) {
+			cur.close();
+			return false;
+		}
+
+		if (cur.getInt(CALENDAR_DELETED_INDEX) == 1) {
+			cur.close();
+			return true;
+		}
+
+		cur.close();
+
+		return false;
 	}
 }
