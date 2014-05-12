@@ -13,7 +13,7 @@
         android:layout_marginTop="5dp" >
 
         <TextView
-            android:id="@+id/text_newsubject_subject"
+            android:id="@+id/subject_list_item_subject_name"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="0.5"
@@ -29,13 +29,13 @@
         android:layout_marginTop="5dp" >
 
         <TextView
-            android:id="@+id/text_newsubject_average"
+            android:id="@+id/subject_list_item_subject_average"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="0.2" />
 
         <TextView
-            android:id="@+id/text_newsubject_note_necessary"
+            android:id="@+id/subject_list_item_subject_note_necessary"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="0.1"/>
@@ -50,13 +50,13 @@
         android:layout_marginRight="25dp" >
 
         <TextView
-            android:id="@+id/text_newsubject_tasks"
+            android:id="@+id/subject_list_item_subject_number_tasks"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="0.2" />
 
         <TextView
-            android:id="@+id/text_newsubject_exams"
+            android:id="@+id/subject_list_item_subject_number_exams"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="0.1" />
