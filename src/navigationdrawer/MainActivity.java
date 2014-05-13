@@ -11,7 +11,6 @@ import android.app.FragmentManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -47,10 +46,8 @@ public class MainActivity extends Activity implements NavigationDrawerCallbacks 
 		}
 		// TODO: Excute only in the first execution
 		// CalendarManager.deleteCalendar(getApplicationContext());
-		if (CalendarManager.ID == -1) {
+		if (CalendarManager.ID == -1)
 			CalendarManager.createCalendar(getApplicationContext());
-			Log.i("ASDASDASD", "" + CalendarManager.ID);
-		}
 
 	}
 
