@@ -12,7 +12,6 @@ public class CalendarManager {
 
 	public static final String CALENDAR_NAME = "iEtueri Calendar";
 	public static final String ACCOUNT_TYPE = "com.google.com";
-	public static Uri CALENDAR_URI;
 	public static int ID = -1;
 
 	public static Uri buildCalUri() {
@@ -30,8 +29,6 @@ public class CalendarManager {
 		// insert the calendar into the database
 		Uri newUri = cr.insert(calUri, cv);
 		ID = Integer.parseInt(newUri.getLastPathSegment());
-		// TODO: Need save the URI in the database.
-		CALENDAR_URI = newUri;
 	}
 
 	/** Permanently deletes our calendar from database (along with all events) */

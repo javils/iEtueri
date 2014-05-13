@@ -12,7 +12,6 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.provider.CalendarContract;
 import android.provider.CalendarContract.Calendars;
-import android.util.Log;
 
 import com.google.ical.compat.jodatime.LocalDateIteratorFactory;
 
@@ -59,11 +58,10 @@ public class RefreshScheduleEventsData implements Runnable {
 
 		/** Check all dates in the Cursor */
 		for (int i = 0; i < cursor.getCount(); ++i) {
-			Log.i("CALENDAR_ID", "" + cursor.getString(CALENDAR_CALENDAR_ID));
-			Log.i("ID", "" + CalendarManager.ID);
-
-			if (checkCalendarDeleted(cursor.getString(CALENDAR_CALENDAR_ID)))
+			if (checkCalendarDeleted(cursor.getString(CALENDAR_CALENDAR_ID))) {
+				cursor.moveToNext();
 				continue;
+			}
 
 			String[] date = Event.getDate(Long.parseLong(cursor.getString(CALENDAR_DTSTART))).split("-");
 			int year = Integer.valueOf(date[0]);
