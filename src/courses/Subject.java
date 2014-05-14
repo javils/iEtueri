@@ -28,6 +28,13 @@ public class Subject {
 	/** NUmber of exams in the subjects */
 	private int numberOfExams;
 
+	public Subject(String subjectName, String average, int numberExams, int numberHomework) {
+		this.name = subjectName;
+		this.note = Float.parseFloat(average);
+		this.numberOfExams = numberExams;
+		this.numberOfTasks = numberHomework;
+	}
+
 	/* Get and set of the subject name */
 	public String getName() {
 		return name;
