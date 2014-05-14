@@ -187,6 +187,7 @@ public class NewEventTodayFragment extends Fragment implements OnClickButtonXml 
 		Fragment newFragment = NavigationDrawerController.newInstance(NavigationDrawerController.SECTION_NUMBER_TODAY);
 		if (newFragment instanceof OnClickButtonXml)
 			MainActivity.setOnClickFragment(newFragment);
+		MainActivity.setCurrentFragment(newFragment);
 		fragmentManager.beginTransaction().replace(R.id.navigation_drawer_container, newFragment).commit();
 
 	}
@@ -197,6 +198,7 @@ public class NewEventTodayFragment extends Fragment implements OnClickButtonXml 
 		Fragment newFragment = NavigationDrawerController.newInstance(NavigationDrawerController.SECTION_NUMBER_TODAY);
 		if (newFragment instanceof OnClickButtonXml)
 			MainActivity.setOnClickFragment(newFragment);
+		MainActivity.setCurrentFragment(newFragment);
 		fragmentManager.beginTransaction().replace(R.id.navigation_drawer_container, newFragment).commit();
 
 	}

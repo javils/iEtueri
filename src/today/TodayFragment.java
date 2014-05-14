@@ -41,7 +41,7 @@ public class TodayFragment extends Fragment {
 
 			EventsManager.setAdapter(adapter);
 
-			ArrayList<Event> events = EventsManager.find(year, month, day);
+			ArrayList<Event> events = EventsManager.find(getActivity(), year, month, day);
 			if (events != null)
 				EventsManager.getAdapter().setItems(events);
 

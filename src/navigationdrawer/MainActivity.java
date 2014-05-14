@@ -17,6 +17,9 @@ import android.view.View;
 
 import com.javils.ietueri.R;
 
+import courses.CourseDetailFragment;
+import courses.NewSubjectFragment;
+
 public class MainActivity extends Activity implements NavigationDrawerCallbacks {
 
 	// Fragment managing the behaviors, interactions and presentation of the
@@ -162,10 +165,12 @@ public class MainActivity extends Activity implements NavigationDrawerCallbacks 
 			return true;
 		}
 
+		/** New Subject Menu */
 		if (id == R.id.menu_detail_courses_menu_new) {
 			FragmentManager fragmentManager = getFragmentManager();
 			Fragment newFragment = NavigationDrawerController
 					.newInstance(NavigationDrawerController.SECTION_NUMBER_NEW_SUBJECT);
+			((NewSubjectFragment) newFragment).setCourse(((CourseDetailFragment) currentFragment).getCourse());
 			currentFragment = newFragment;
 			if (newFragment instanceof OnClickButtonXml)
 				MainActivity.fragment = (OnClickButtonXml) newFragment;
@@ -182,6 +187,11 @@ public class MainActivity extends Activity implements NavigationDrawerCallbacks 
 	public static void setOnClickFragment(Fragment fragment) {
 		if (fragment instanceof OnClickButtonXml)
 			MainActivity.fragment = (OnClickButtonXml) fragment;
+	}
+
+	public static void setCurrentFragment(Fragment fragment) {
+		if (fragment != null)
+			MainActivity.currentFragment = fragment;
 	}
 
 	public void onClickButton(View view) {
