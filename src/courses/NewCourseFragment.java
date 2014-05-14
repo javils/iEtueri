@@ -67,6 +67,7 @@ public class NewCourseFragment extends Fragment implements OnClickButtonXml {
 				.newInstance(NavigationDrawerController.SECTION_NUMBER_COURSES);
 		if (newFragment instanceof OnClickButtonXml)
 			MainActivity.setOnClickFragment(newFragment);
+		MainActivity.setCurrentFragment(newFragment);
 		fragmentManager.beginTransaction().replace(R.id.navigation_drawer_container, newFragment).commit();
 
 	}
@@ -92,6 +93,7 @@ public class NewCourseFragment extends Fragment implements OnClickButtonXml {
 					.newInstance(NavigationDrawerController.SECTION_NUMBER_COURSES);
 			if (newFragment instanceof OnClickButtonXml)
 				MainActivity.setOnClickFragment(newFragment);
+			MainActivity.setCurrentFragment(newFragment);
 			fragmentManager.beginTransaction().replace(R.id.navigation_drawer_container, newFragment).commit();
 
 		}

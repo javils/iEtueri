@@ -64,6 +64,7 @@ public class CoursesFragment extends Fragment {
 						.newInstance(NavigationDrawerController.SECTION_NUMBER_DETAIL_COURSE);
 				if (newFragment instanceof OnClickButtonXml)
 					MainActivity.setOnClickFragment(newFragment);
+				MainActivity.setCurrentFragment(newFragment);
 				((CourseDetailFragment) newFragment).setCourse(course);
 				fragmentManager.beginTransaction().replace(R.id.navigation_drawer_container, newFragment).commit();
 			}
@@ -123,6 +124,13 @@ public class CoursesFragment extends Fragment {
 		Course newCourse = new Course(id, name, numberOfSubjects, average, initDate, endDate, subjectsIds);
 
 		return newCourse;
+	}
+
+	@Override
+	public void onStop() {
+		super.onStop();
+		db.close();
+		dbHelper.close();
 	}
 
 	@Override
