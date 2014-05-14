@@ -26,13 +26,13 @@
         android:layout_height="wrap_content"
         android:ems="10"
         android:hint="@string/teacher" />
-
+    
     <EditText
-        android:id="@+id/new_subject_classroom"
+        android:id="@+id/new_subject_credits"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:hint="@string/classroom"/>
+        android:hint="@string/credits"/>
     
     <EditText
         android:id="@+id/new_subject_note"
