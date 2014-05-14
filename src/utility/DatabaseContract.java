@@ -100,7 +100,7 @@ public final class DatabaseContract {
 	public static class Schedules implements BaseColumns {
 		public static final String TABLE_NAME = "schedules";
 		public static final String COLUMN_NAME_SUBJECT_ID = "subjectId";
-		public static final String COLUMN_NAME_HOUR_INIT = "hourEnd";
+		public static final String COLUMN_NAME_HOUR_INIT = "hourInit";
 		public static final String COLUMN_NAME_HOUR_END = "hourEnd";
 		public static final String COLUMN_NAME_DAYS_OF_CALENDAR = "daysOfCalendar";
 	}

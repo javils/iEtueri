@@ -1,5 +1,7 @@
 package utility;
 
+import java.io.File;
+
 import utility.DatabaseContract.TypesVariables;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
@@ -66,23 +68,24 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 			+ DatabaseContract.Schedules.COLUMN_NAME_HOUR_END + TypesVariables.TYPE_HOUR + ","
 			+ DatabaseContract.Schedules.COLUMN_NAME_DAYS_OF_CALENDAR + TypesVariables.TYPE_TEXT + "); ";
 
-	private static final String SQL_CREATE_TABLES = SQL_CREATE_TABLE_COURSES + SQL_CREATE_TABLE_SUBJECTS
-			+ SQL_CREATE_TABLE_EXAMS + SQL_CREATE_TABLE_HOMEWORK + SQL_CREATE_TABLE_PONDERATIONS
-			+ SQL_CREATE_TABLE_SCHEDULES;
-
 	public DatabaseHelper(Context context) {
 		super(context, DatabaseContract.DB_NAME, null, DatabaseContract.DB_VERSION);
 	}
 
 	@Override
 	public void onCreate(SQLiteDatabase db) {
-		db.execSQL(SQL_CREATE_TABLES);
+		db.execSQL(SQL_CREATE_TABLE_COURSES);
+		db.execSQL(SQL_CREATE_TABLE_SUBJECTS);
+		db.execSQL(SQL_CREATE_TABLE_EXAMS);
+		db.execSQL(SQL_CREATE_TABLE_HOMEWORK);
+		db.execSQL(SQL_CREATE_TABLE_PONDERATIONS);
+		db.execSQL(SQL_CREATE_TABLE_SCHEDULES);
 
 	}
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-
+		SQLiteDatabase.deleteDatabase(new File(DatabaseContract.DB_NAME));
+		onCreate(db);
 	}
-
 }
