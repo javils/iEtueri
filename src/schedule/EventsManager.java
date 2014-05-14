@@ -7,6 +7,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
+import android.content.Context;
 import android.net.Uri;
 import android.provider.CalendarContract;
 import android.provider.CalendarContract.Calendars;
@@ -62,7 +63,7 @@ public class EventsManager {
 	}
 
 	/** Find events with the same start year, month, and day */
-	public static ArrayList<Event> find(int year, int month, int dayOfMonth) {
+	public static ArrayList<Event> find(Context context, int year, int month, int dayOfMonth) {
 		// TODO: Use Threads
 		ArrayList<Event> result = new ArrayList<Event>();
 		Calendar cal = Calendar.getInstance();
@@ -72,6 +73,11 @@ public class EventsManager {
 			if (events.get(i).getInit().equals(Event.getDate(cal.getTimeInMillis())))
 				result.add(events.get(i));
 			else {
+				if (events.size() == 0)
+					new Thread(new RefreshScheduleEventsData(context)).start();
+				while (EventsManager.isThreadfinish() == false) {
+					// TODO: Make animation with progressbar or something else.
+				}
 				String[] sDate = events.get(i).getInit().split("-");
 				int eventYear = Integer.parseInt(sDate[0]);
 				int eventMonth = Integer.parseInt(sDate[1]);
