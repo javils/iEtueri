@@ -18,6 +18,8 @@ public class DetailSubjectFragment extends Fragment implements OnClickButtonXml 
 	private ViewGroup listHomeworks;
 	private ViewGroup listExams;
 
+	private Subject subject;
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_detail_subjects, container, false);
@@ -44,5 +46,13 @@ public class DetailSubjectFragment extends Fragment implements OnClickButtonXml 
 		case R.id.detail_subject_new_homework:
 			break;
 		}
+	}
+
+	public Subject getSubject() {
+		return subject;
+	}
+
+	public void setSubject(Subject subject) {
+		this.subject = subject;
 	}
 }

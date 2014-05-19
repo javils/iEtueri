@@ -7,6 +7,12 @@ package courses;
  * 
  */
 public class Subject {
+	/** Id of the subject */
+	private int id;
+
+	/** Id of the course */
+	private int courseId;
+
 	/** Name of the subject */
 	private String name;
 
@@ -25,14 +31,46 @@ public class Subject {
 	/** Number of task in the subject */
 	private int numberOfTasks;
 
-	/** NUmber of exams in the subjects */
+	/** Number of exams in the subjects */
 	private int numberOfExams;
+
+	/** Homework ids */
+	private String homeworkId;
+
+	/** Exam ids */
+	private String examsId;
+
+	public Subject(int id, int courseId, String subjectName, String homeworkId, String examsId) {
+		this.id = id;
+		this.courseId = courseId;
+		this.name = subjectName;
+		this.setHomeworkId(homeworkId);
+		this.setExamsId(examsId);
+	}
 
 	public Subject(String subjectName, String average, int numberExams, int numberHomework) {
 		this.name = subjectName;
 		this.note = Float.parseFloat(average);
 		this.numberOfExams = numberExams;
 		this.numberOfTasks = numberHomework;
+	}
+
+	/* Get and set of the id of the subject */
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	/* Get and set of subject's course id */
+	public int getCourseId() {
+		return courseId;
+	}
+
+	public void setCourseId(int courseId) {
+		this.courseId = courseId;
 	}
 
 	/* Get and set of the subject name */
@@ -96,5 +134,23 @@ public class Subject {
 
 	public void setNumberOfExams(int numberOfExams) {
 		this.numberOfExams = numberOfExams;
+	}
+
+	/* Get and set homeworkid */
+	public String getHomeworkId() {
+		return homeworkId;
+	}
+
+	public void setHomeworkId(String homeworkId) {
+		this.homeworkId = homeworkId;
+	}
+
+	/* Get and set examsid */
+	public String getExamsId() {
+		return examsId;
+	}
+
+	public void setExamsId(String examsId) {
+		this.examsId = examsId;
 	}
 }

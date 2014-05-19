@@ -19,6 +19,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.javils.ietueri.R;
 
@@ -49,12 +50,15 @@ public class CourseDetailFragment extends Fragment {
 
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				TextView subjectName = (TextView) view.findViewById(R.id.subject_list_item_subject_name);
+				Subject currentSubject = getSubjectInDB(subjectName.getText().toString());
 				FragmentManager fragmentManager = getFragmentManager();
 				Fragment newFragment = NavigationDrawerController
 						.newInstance(NavigationDrawerController.SECTION_NUMBER_DETAIL_SUBJECT);
 				if (newFragment instanceof OnClickButtonXml)
 					MainActivity.setOnClickFragment(newFragment);
 				MainActivity.setCurrentFragment(newFragment);
+				((DetailSubjectFragment) newFragment).setSubject(currentSubject);
 				fragmentManager.beginTransaction().replace(R.id.navigation_drawer_container, newFragment).commit();
 
 			}
@@ -107,6 +111,29 @@ public class CourseDetailFragment extends Fragment {
 		}
 
 		return result;
+	}
+
+	private Subject getSubjectInDB(String subjectName) {
+		dbHelper = new DatabaseHelper(getActivity());
+		db = dbHelper.getReadableDatabase();
+
+		String[] projection = { DatabaseContract.Subjects._ID, DatabaseContract.Subjects.COLUMN_NAME_HOMEWORK_ID,
+				DatabaseContract.Subjects.COLUMN_NAME_EXAMS_ID };
+
+		String selection = DatabaseContract.Subjects.COLUMN_NAME_SUBJECT_NAME + "= ?";
+		String[] args = { subjectName };
+
+		Cursor cur = db.query(DatabaseContract.Subjects.TABLE_NAME, projection, selection, args, null, null,
+				DatabaseContract.Subjects._ID + " DESC");
+
+		cur.moveToFirst();
+		int id = cur.getInt(cur.getColumnIndexOrThrow(DatabaseContract.Subjects._ID));
+		String homeworkId = cur.getString(cur.getColumnIndexOrThrow(DatabaseContract.Subjects.COLUMN_NAME_HOMEWORK_ID));
+		String examsId = cur.getString(cur.getColumnIndexOrThrow(DatabaseContract.Subjects.COLUMN_NAME_EXAMS_ID));
+
+		Subject currentSubject = new Subject(id, course.getId(), subjectName, homeworkId, examsId);
+
+		return currentSubject;
 	}
 
 	public void setCourse(Course course) {

@@ -121,9 +121,9 @@ public class CoursesFragment extends Fragment {
 		String subjectsIds = cur
 				.getString(cur.getColumnIndexOrThrow(DatabaseContract.Courses.COLUMN_NAME_SUBJECTS_IDS));
 
-		Course newCourse = new Course(id, name, numberOfSubjects, average, initDate, endDate, subjectsIds);
+		Course currentCourse = new Course(id, name, numberOfSubjects, average, initDate, endDate, subjectsIds);
 
-		return newCourse;
+		return currentCourse;
 	}
 
 	@Override
