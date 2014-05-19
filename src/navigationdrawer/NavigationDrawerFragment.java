@@ -92,8 +92,8 @@ public class NavigationDrawerFragment extends Fragment {
 		drawerList.add(new DrawerList(R.drawable.schedule_button, R.string.title_schedule));
 		drawerList.add(new DrawerList(R.drawable.homework_button, R.string.title_homework));
 		drawerList.add(new DrawerList(R.drawable.exams_button, R.string.title_exam));
-		drawerList.add(new DrawerList(R.drawable.today_button, R.string.title_course));
-		drawerList.add(new DrawerList(R.drawable.today_button, R.string.title_subject));
+		drawerList.add(new DrawerList(R.drawable.ic_courses, R.string.title_course));
+		drawerList.add(new DrawerList(R.drawable.ic_subject, R.string.title_subject));
 
 		// Fill all the ListView with the values of drawerList
 		DrawerListAdapter adapter = new DrawerListAdapter(getActivity(), R.layout.drawer_list_item, drawerList);
