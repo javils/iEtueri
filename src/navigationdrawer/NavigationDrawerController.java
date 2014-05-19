@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.widget.Toast;
 import courses.CourseDetailFragment;
 import courses.CoursesFragment;
+import courses.DetailSubjectFragment;
 import courses.NewCourseFragment;
 import courses.NewSubjectFragment;
 
@@ -32,6 +33,7 @@ public class NavigationDrawerController {
 	public static final int SECTION_NUMBER_NEW_COURSE = 8;
 	public static final int SECTION_NUMBER_DETAIL_COURSE = 9;
 	public static final int SECTION_NUMBER_NEW_SUBJECT = 10;
+	public static final int SECTION_NUMBER_DETAIL_SUBJECT = 11;
 
 	/** The fragment argument representing the section number for this fragment. */
 	public static final String ARG_SECTION_NUMBER = "section_number";
@@ -88,6 +90,9 @@ public class NavigationDrawerController {
 		case SECTION_NUMBER_NEW_SUBJECT: // NEW SUBJECT NUMBER
 			newFragment = new NewSubjectFragment();
 			break;
+		case SECTION_NUMBER_DETAIL_SUBJECT: // DETAIL SUBJECT
+			newFragment = new DetailSubjectFragment();
+			break;
 		default:
 			Toast.makeText(newFragment.getActivity(), "If you are here, then crash!", Toast.LENGTH_SHORT).show();
 			break;
@@ -95,4 +100,5 @@ public class NavigationDrawerController {
 
 		return newFragment;
 	}
+
 }

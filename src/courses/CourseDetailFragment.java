@@ -6,14 +6,18 @@ import navigationdrawer.MainActivity;
 import navigationdrawer.NavigationDrawerController;
 import utility.DatabaseContract;
 import utility.DatabaseHelper;
+import utility.OnClickButtonXml;
 import android.app.Activity;
 import android.app.Fragment;
+import android.app.FragmentManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 
 import com.javils.ietueri.R;
@@ -41,6 +45,20 @@ public class CourseDetailFragment extends Fragment {
 			listSubjects.setAdapter(adapter);
 		}
 
+		listSubjects.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				FragmentManager fragmentManager = getFragmentManager();
+				Fragment newFragment = NavigationDrawerController
+						.newInstance(NavigationDrawerController.SECTION_NUMBER_DETAIL_SUBJECT);
+				if (newFragment instanceof OnClickButtonXml)
+					MainActivity.setOnClickFragment(newFragment);
+				MainActivity.setCurrentFragment(newFragment);
+				fragmentManager.beginTransaction().replace(R.id.navigation_drawer_container, newFragment).commit();
+
+			}
+		});
 		return view;
 	}
 
