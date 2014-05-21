@@ -11,6 +11,7 @@ import courses.CoursesFragment;
 import courses.DetailSubjectFragment;
 import courses.NewCourseFragment;
 import courses.NewSubjectFragment;
+import exams.NewExamFragment;
 
 /**
  * Class for controller Views of the Navigation Fragment.
@@ -34,6 +35,7 @@ public class NavigationDrawerController {
 	public static final int SECTION_NUMBER_DETAIL_COURSE = 9;
 	public static final int SECTION_NUMBER_NEW_SUBJECT = 10;
 	public static final int SECTION_NUMBER_DETAIL_SUBJECT = 11;
+	public static final int SECTION_NUMBER_NEW_EXAM = 12;
 
 	/** The fragment argument representing the section number for this fragment. */
 	public static final String ARG_SECTION_NUMBER = "section_number";
@@ -92,6 +94,9 @@ public class NavigationDrawerController {
 			break;
 		case SECTION_NUMBER_DETAIL_SUBJECT: // DETAIL SUBJECT
 			newFragment = new DetailSubjectFragment();
+			break;
+		case SECTION_NUMBER_NEW_EXAM: // NEW EXAM
+			newFragment = new NewExamFragment();
 			break;
 		default:
 			Toast.makeText(newFragment.getActivity(), "If you are here, then crash!", Toast.LENGTH_SHORT).show();

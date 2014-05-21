@@ -64,10 +64,14 @@
     <string name="note">Nota</string>
     <string name="teacher">Profesor</string>
     <string name="credits">Creditos</string>
-    <string name="classroom">Aula</string>
     <string name="subject">Asignatura</string>
     <!-- DETAIL SUBJECT -->
     <string name="title_subject_detail_subject">Detalles Asignatura</string>
     <string name="new_homework">Nueva Tarea</string>
     <string name="new_exam">Nuevo Examén</string>
+    <!-- NEW EXAM -->
+    <string name="new_exam_name">Nombre del Examen</string>
+    <string name="new_exam_date">Fecha:</string>
+    <string name="new_exam_hour">Hora:</string>
+    <string name="new_exam_note">Nota</string>
 </resources>
