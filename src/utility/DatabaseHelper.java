@@ -1,7 +1,5 @@
 package utility;
 
-import java.io.File;
-
 import utility.DatabaseContract.TypesVariables;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
@@ -48,7 +46,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 			+ DatabaseContract.Exams._ID + DatabaseContract.TypesVariables.TYPE_INT_10_AUTOINCREMENT + ","
 			+ DatabaseContract.Exams.COLUMN_NAME_SUBJECT_ID + "," + TypesVariables.TYPE_INT_10 + ","
 			+ DatabaseContract.Exams.COLUMN_NAME_EXAM_NAME + TypesVariables.TYPE_VARCHAR_20 + ","
-			+ DatabaseContract.Exams.COLUMN_NAME_END_DATE + TypesVariables.TYPE_DATE + ","
+			+ DatabaseContract.Exams.COLUMN_NAME_END_DATE + TypesVariables.TYPE_VARCHAR_40 + ","
 			+ DatabaseContract.Exams.COLUMN_NAME_NOTE + TypesVariables.TYPE_FLOAT_10 + ","
 			+ DatabaseContract.Exams.COLUMN_NAME_NOTE_NECESSARY + TypesVariables.TYPE_FLOAT_10 + ","
 			+ DatabaseContract.Exams.COLUMN_NAME_DONE + TypesVariables.TYPE_BOOLEAN + ","
@@ -85,7 +83,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-		SQLiteDatabase.deleteDatabase(new File(DatabaseContract.DB_NAME));
+		// SQLiteDatabase.deleteDatabase(new File(DatabaseContract.DB_NAME));
 		onCreate(db);
 	}
 }
