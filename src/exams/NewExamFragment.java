@@ -98,7 +98,7 @@ public class NewExamFragment extends Fragment implements OnClickButtonXml {
 	public void cancelExam() {
 		FragmentManager fragmentManager = getFragmentManager();
 		Fragment newFragment = NavigationDrawerController
-				.newInstance(NavigationDrawerController.SECTION_NUMBER_DETAIL_COURSE);
+				.newInstance(NavigationDrawerController.SECTION_NUMBER_DETAIL_SUBJECT);
 		if (newFragment instanceof OnClickButtonXml)
 			MainActivity.setOnClickFragment(newFragment);
 		MainActivity.setCurrentFragment(newFragment);
@@ -114,22 +114,26 @@ public class NewExamFragment extends Fragment implements OnClickButtonXml {
 			ContentValues values = new ContentValues();
 			values.put(DatabaseContract.Exams.COLUMN_NAME_EXAM_NAME, examName.getText().toString());
 			date.setText(date.getText().toString().replaceAll("/", "-"));
-			values.put(DatabaseContract.Exams.COLUMN_NAME_END_DATE, fromHour.getText().toString() + "-"
-					+ toHour.getText().toString() + "-" + date.getText().toString());
-			int inote = 0;
+			values.put(DatabaseContract.Exams.COLUMN_NAME_END_DATE, fromHour.getHint().toString() + "-"
+					+ toHour.getHint().toString() + "-" + date.getHint().toString());
+			float inote = 0;
 			if (!note.getText().toString().isEmpty())
-				inote = Integer.valueOf(note.getText().toString());
+				inote = Float.valueOf(note.getText().toString());
 			values.put(DatabaseContract.Exams.COLUMN_NAME_NOTE, inote);
-			values.put(DatabaseContract.Exams.COLUMN_NAME_NOTE_NECESSARY, 0);
+			values.put(DatabaseContract.Exams.COLUMN_NAME_NOTE_NECESSARY, 0.0);
 			values.put(DatabaseContract.Exams.COLUMN_NAME_DONE, false);
-			values.put(DatabaseContract.Exams.COLUMN_NAME_PONDERATION, "");
+			values.put(DatabaseContract.Exams.COLUMN_NAME_PONDERATION, -1);
 			values.put(DatabaseContract.Exams.COLUMN_NAME_SUBJECT_ID, subject.getId());
 
 			db.insert(DatabaseContract.Exams.TABLE_NAME, null, values);
 
 			values.clear();
 			subject.setNumberOfExams(subject.getNumberOfExams() + 1);
-			// subject.setExamsId(examsId);
+			subject.setExamsId(subject.getExamsId() + ";"
+					+ DatabaseHelper.getCountRow(db, DatabaseContract.Exams.TABLE_NAME));
+			values.put(DatabaseContract.Subjects.COLUMN_NAME_EXAMS_ID, subject.getExamsId());
+			String[] args = { String.valueOf(subject.getId()) };
+			db.update(DatabaseContract.Subjects.TABLE_NAME, values, DatabaseContract.Subjects._ID + "=?", args);
 
 			/** Back to Courses view */
 			FragmentManager fragmentManager = getFragmentManager();

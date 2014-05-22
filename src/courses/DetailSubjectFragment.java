@@ -66,6 +66,9 @@ public class DetailSubjectFragment extends Fragment implements OnClickButtonXml 
 
 			cur.moveToFirst();
 
+			if (argsExamsIds[i].isEmpty())
+				continue;
+
 			int examId = Integer.parseInt(argsExamsIds[i]);
 			String examName = cur.getString(cur.getColumnIndexOrThrow(DatabaseContract.Exams.COLUMN_NAME_EXAM_NAME));
 			int subjectId = subject.getId();

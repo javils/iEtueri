@@ -113,7 +113,7 @@ public final class DatabaseContract {
 	 */
 	public static class TypesVariables {
 		public static final String TYPE_INT_10_AUTOINCREMENT = " integer PRIMARY KEY AUTOINCREMENT";
-		public static final String TYPE_INT_10 = " integer NOT NULL";
+		public static final String TYPE_INT_10 = " integer";
 		public static final String TYPE_VARCHAR_20 = " varchar(20) NOT NULL";
 		public static final String TYPE_VARCHAR_40 = " varchar(40) NOT NULL";
 		public static final String TYPE_FLOAT_10 = " float(10) NOT NULL";

@@ -1,5 +1,6 @@
 package exams;
 
+
 public class Exam {
 
 	/** Id of the exam */
@@ -32,7 +33,6 @@ public class Exam {
 		this.setInitHour(data[0]);
 		this.setEndHour(data[1]);
 		this.end = data[2];
-		this.end = end;
 		this.name = name;
 		this.note = note;
 	}

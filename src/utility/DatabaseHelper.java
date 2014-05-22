@@ -2,6 +2,7 @@ package utility;
 
 import utility.DatabaseContract.TypesVariables;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
@@ -85,5 +86,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 		// SQLiteDatabase.deleteDatabase(new File(DatabaseContract.DB_NAME));
 		onCreate(db);
+	}
+
+	public static int getCountRow(SQLiteDatabase db, String tableName) {
+		String countQuery = "SELECT * FROM " + tableName;
+		Cursor cursor = db.rawQuery(countQuery, null);
+		int cnt = cursor.getCount();
+		cursor.close();
+		return cnt;
 	}
 }
