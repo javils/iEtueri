@@ -1,5 +1,7 @@
 package courses;
 
+import homework.NewHomeworkFragment;
+
 import java.util.ArrayList;
 
 import navigationdrawer.MainActivity;
@@ -91,11 +93,12 @@ public class DetailSubjectFragment extends Fragment implements OnClickButtonXml 
 
 	@Override
 	public void onClickXml(View view) {
+		FragmentManager fragmentManager = getFragmentManager();
+		Fragment newFragment = new Fragment();
 		switch (view.getId()) {
 		case R.id.detail_subject_new_exam:
-			FragmentManager fragmentManager = getFragmentManager();
-			Fragment newFragment = NavigationDrawerController
-					.newInstance(NavigationDrawerController.SECTION_NUMBER_NEW_EXAM);
+
+			newFragment = NavigationDrawerController.newInstance(NavigationDrawerController.SECTION_NUMBER_NEW_EXAM);
 			if (newFragment instanceof OnClickButtonXml)
 				MainActivity.setOnClickFragment(newFragment);
 			MainActivity.setCurrentFragment(newFragment);
@@ -103,6 +106,13 @@ public class DetailSubjectFragment extends Fragment implements OnClickButtonXml 
 			fragmentManager.beginTransaction().replace(R.id.navigation_drawer_container, newFragment).commit();
 			break;
 		case R.id.detail_subject_new_homework:
+			newFragment = NavigationDrawerController
+					.newInstance(NavigationDrawerController.SECTION_NUMBER_NEW_HOMEWORK);
+			if (newFragment instanceof OnClickButtonXml)
+				MainActivity.setOnClickFragment(newFragment);
+			MainActivity.setCurrentFragment(newFragment);
+			((NewHomeworkFragment) newFragment).setSubject(subject);
+			fragmentManager.beginTransaction().replace(R.id.navigation_drawer_container, newFragment).commit();
 			break;
 		}
 	}

@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true" >
+
+	<RelativeLayout 
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content" >
+	
+	    <LinearLayout
+	        android:id="@+id/newhomework_form"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:orientation="vertical"
+	        android:paddingLeft="15dp"
+	        android:paddingRight="15dp"
+	        android:paddingTop="10dp" >
+	
+	        <EditText
+	            android:id="@+id/newhomework_homework_name"
+	            android:layout_width="match_parent"
+	            android:layout_height="wrap_content"
+	            android:ems="10"
+	            android:hint="@string/new_homework_name" >
+	        </EditText>
+
+	        <EditText
+	            android:id="@+id/newhomework_description"
+	            android:layout_width="match_parent"
+	            android:layout_height="wrap_content"
+	            android:ems="10"
+	            android:hint="@string/new_homework_description"
+	            android:inputType="textMultiLine" >
+
+	            <requestFocus />
+	        </EditText>
+	
+	        <TextView
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:paddingLeft="5dp"
+	            android:paddingTop="15dp"
+	            android:text="@string/new_homework_date"
+	            android:textAppearance="?android:attr/textAppearanceSmall" />	      
+	
+            <Button
+                android:id="@+id/newhomework_end_date"
+                style="?android:attr/buttonBarButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:background="@drawable/button_style"
+                android:minHeight="28dip"
+                android:minWidth="44dip"
+                android:onClick="onClickButton" />
+	
+	        <TextView
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:paddingLeft="5dp"
+	            android:paddingTop="15dp"
+	            android:text="@string/new_homework_hour"
+	            android:textAppearance="?android:attr/textAppearanceSmall" />
+	
+	        <LinearLayout
+	            android:layout_width="match_parent"
+	            android:layout_height="wrap_content"
+	            android:paddingTop="-5dp" >
+	
+	            <Button
+	                android:id="@+id/newhomework_from_hour"
+	                style="?android:attr/buttonBarButtonStyle"
+	                android:layout_width="wrap_content"
+	                android:layout_height="wrap_content"
+	                android:layout_weight="0.5"
+	                android:background="@drawable/button_style"
+	                android:minHeight="28dip"
+	                android:minWidth="44dip"
+	                android:onClick="onClickButton" />
+	
+	            <Button
+	                android:id="@+id/newhomework_to_hour"
+	                style="?android:attr/buttonBarButtonStyle"
+	                android:layout_width="wrap_content"
+	                android:layout_height="wrap_content"
+	                android:layout_weight="0.5"
+	                android:background="@drawable/button_style"
+	                android:minHeight="28dip"
+	                android:onClick="onClickButton" />
+	        </LinearLayout>
+
+	        <TextView
+	            android:id="@+id/textView1"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:text="@string/new_homework_priority" />
+	        
+	        <Button
+	            android:id="@+id/newhomework_priority"
+	            style="?android:attr/buttonBarButtonStyle"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:layout_gravity="center_horizontal"
+	            android:background="@drawable/button_style"
+	            android:minHeight="28dip"
+	            android:hint="@string/normal_priority"
+	            android:onClick="onClickButton" />
+	
+	        <EditText
+	            android:id="@+id/newhomework_note"
+	            android:layout_width="match_parent"
+	            android:layout_height="wrap_content"
+	            android:ems="10"
+	       		android:inputType="textMultiLine"
+	            android:hint="@string/new_homework_note" />
+	       
+	    </LinearLayout>
+	    
+	    <LinearLayout
+	         android:layout_width="match_parent"
+	         android:layout_height="wrap_content"
+	         android:layout_alignParentBottom="true"
+	         android:layout_below="@+id/newhomework_form"
+	         android:orientation="horizontal" >
+			
+		     <Button
+		        android:id="@+id/newhomework_cancel"
+		        style="?android:attr/borderlessButtonStyle"
+		        android:layout_width="0dp"
+		        android:layout_height="wrap_content"
+		        android:layout_gravity="bottom"
+		        android:layout_weight="0.5"
+		        android:background="@drawable/button_style"
+		        android:drawableLeft="@drawable/ic_action_cancel"
+		        android:onClick="onClickButton"
+		        android:text="@string/cancel" />
+		
+		     <Button
+		        android:id="@+id/newhomework_acept"
+		        style="?android:attr/borderlessButtonStyle"
+		        android:layout_width="0dp"
+		        android:layout_height="wrap_content"
+		        android:layout_gravity="bottom"
+		        android:layout_weight="0.5"
+		        android:background="@drawable/button_style"
+		        android:drawableLeft="@drawable/ic_action_accept"
+		        android:onClick="onClickButton"
+		        android:text="@string/done" />
+			
+		</LinearLayout>
+	
+	</RelativeLayout>
+
+</ScrollView>
