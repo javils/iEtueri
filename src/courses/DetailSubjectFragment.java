@@ -1,5 +1,6 @@
 package courses;
 
+import homework.Homework;
 import homework.NewHomeworkFragment;
 
 import java.util.ArrayList;
@@ -28,7 +29,7 @@ import exams.NewExamFragment;
 
 public class DetailSubjectFragment extends Fragment implements OnClickButtonXml {
 
-	private ViewGroup listHomeworks;
+	private ViewGroup listHomework;
 	private ViewGroup listExams;
 
 	private DatabaseHelper dbHelper;
@@ -41,13 +42,18 @@ public class DetailSubjectFragment extends Fragment implements OnClickButtonXml 
 		View view = inflater.inflate(R.layout.fragment_detail_subjects, container, false);
 
 		/** Get the instances of the views */
-		listHomeworks = (LinearLayout) view.findViewById(R.id.layout_list_homeworks);
+		listHomework = (LinearLayout) view.findViewById(R.id.layout_list_homeworks);
 		listExams = (LinearLayout) view.findViewById(R.id.layout_list_exams);
 
 		ArrayList<Exam> exams = getExamsOfSubject();
 
 		for (int i = 0; i < exams.size(); i++)
 			addExamToList(exams.get(i));
+
+		ArrayList<Homework> homework = getHomeworkOfSubject();
+
+		for (int i = 0; i < homework.size(); i++)
+			addHomeworkToList(homework.get(i));
 
 		return view;
 	}
@@ -78,6 +84,42 @@ public class DetailSubjectFragment extends Fragment implements OnClickButtonXml 
 			float note = cur.getFloat(cur.getColumnIndexOrThrow(DatabaseContract.Exams.COLUMN_NAME_NOTE));
 
 			result.add(new Exam(examId, subjectId, examName, endDate, note));
+		}
+
+		return result;
+
+	}
+
+	private ArrayList<Homework> getHomeworkOfSubject() {
+		ArrayList<Homework> result = new ArrayList<Homework>();
+		dbHelper = new DatabaseHelper(getActivity());
+		db = dbHelper.getReadableDatabase();
+
+		String[] argsHomeworkIds = subject.getHomeworkId().split(";");
+		String[] projection = { DatabaseContract.Homework.COLUMN_NAME_HOMEWORK_NAME,
+				DatabaseContract.Homework.COLUMN_NAME_END_DATE, DatabaseContract.Homework.COLUMN_NAME_NOTE,
+				DatabaseContract.Homework.COLUMN_NAME_DESCRIPTION };
+
+		for (int i = 0; i < argsHomeworkIds.length; i++) {
+			String[] args = { argsHomeworkIds[i] };
+			Cursor cur = db.query(DatabaseContract.Homework.TABLE_NAME, projection, DatabaseContract.Homework._ID
+					+ "= ?", args, null, null, DatabaseContract.Homework._ID + " DESC");
+
+			cur.moveToFirst();
+
+			if (argsHomeworkIds[i].isEmpty())
+				continue;
+
+			int homeworkId = Integer.parseInt(argsHomeworkIds[i]);
+			String homeworkName = cur.getString(cur
+					.getColumnIndexOrThrow(DatabaseContract.Homework.COLUMN_NAME_HOMEWORK_NAME));
+			int subjectId = subject.getId();
+			String endDate = cur.getString(cur.getColumnIndexOrThrow(DatabaseContract.Homework.COLUMN_NAME_END_DATE));
+			float note = cur.getFloat(cur.getColumnIndexOrThrow(DatabaseContract.Homework.COLUMN_NAME_NOTE));
+			String description = cur.getString(cur
+					.getColumnIndexOrThrow(DatabaseContract.Homework.COLUMN_NAME_DESCRIPTION));
+
+			result.add(new Homework(homeworkId, subjectId, description, homeworkName, endDate, note));
 		}
 
 		return result;
@@ -139,5 +181,18 @@ public class DetailSubjectFragment extends Fragment implements OnClickButtonXml 
 		text = (TextView) linearLayout.findViewById(R.id.detail_subject_exams_note);
 		text.setText("" + exam.getNote());
 		listExams.addView(linearLayout);
+	}
+
+	public void addHomeworkToList(Homework homework) {
+		int id = R.layout.subject_detail_homework_item;
+		LayoutInflater inflater = getActivity().getLayoutInflater();
+		final LinearLayout linearLayout = (LinearLayout) inflater.inflate(id, null);
+		TextView text = (TextView) linearLayout.findViewById(R.id.detail_subject_homework_name);
+		text.setText(homework.getName());
+		text = (TextView) linearLayout.findViewById(R.id.detail_subject_homework_enddate);
+		text.setText(homework.getEnd());
+		text = (TextView) linearLayout.findViewById(R.id.detail_subject_homework_note);
+		text.setText("" + homework.getNote());
+		listHomework.addView(linearLayout);
 	}
 }

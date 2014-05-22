@@ -36,6 +36,7 @@ public class NewHomeworkFragment extends Fragment implements OnClickButtonXml {
 	private Button toHour;
 	private Button priority;
 	private EditText note;
+	private EditText description;
 
 	private Subject subject;
 
@@ -44,6 +45,10 @@ public class NewHomeworkFragment extends Fragment implements OnClickButtonXml {
 
 	/** Code for the priority */
 	public static final int PRIORITY_CODE = 2;
+
+	public static final int HIGH_PRIORITY = 0;
+	public static final int NORMAL_PRIORITY = 1;
+	public static final int LOW_PRIORITY = 2;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -58,6 +63,8 @@ public class NewHomeworkFragment extends Fragment implements OnClickButtonXml {
 		fromHour = (Button) view.findViewById(R.id.newhomework_from_hour);
 		toHour = (Button) view.findViewById(R.id.newhomework_to_hour);
 		note = (EditText) view.findViewById(R.id.newhomework_note);
+		description = (EditText) view.findViewById(R.id.newhomework_description);
+		priority = (Button) view.findViewById(R.id.newhomework_priority);
 
 		Calendar calendar = Calendar.getInstance();
 
@@ -121,32 +128,43 @@ public class NewHomeworkFragment extends Fragment implements OnClickButtonXml {
 		fragmentManager.beginTransaction().replace(R.id.navigation_drawer_container, newFragment).commit();
 	}
 
+	public int getPrority() {
+		int result = NORMAL_PRIORITY;
+		if (priority.getHint().toString().equals(getString(R.string.high_priority)))
+			result = HIGH_PRIORITY;
+		else if (priority.getHint().toString().equals(getString(R.string.low_priority)))
+			result = LOW_PRIORITY;
+
+		return result;
+	}
+
 	public void addNewHomework() {
 		if (homeworkName.getText().toString().isEmpty())
 			Toast.makeText(getActivity(), "No hay nombre de tarea. Por favor rellenalo.", Toast.LENGTH_SHORT).show();
 		else {
 			/** Fill the database with the data */
 			ContentValues values = new ContentValues();
-			values.put(DatabaseContract.Exams.COLUMN_NAME_EXAM_NAME, homeworkName.getText().toString());
+			values.put(DatabaseContract.Homework.COLUMN_NAME_HOMEWORK_NAME, homeworkName.getText().toString());
 			date.setText(date.getText().toString().replaceAll("/", "-"));
-			values.put(DatabaseContract.Exams.COLUMN_NAME_END_DATE, fromHour.getHint().toString() + "-"
+			values.put(DatabaseContract.Homework.COLUMN_NAME_END_DATE, fromHour.getHint().toString() + "-"
 					+ toHour.getHint().toString() + "-" + date.getHint().toString());
 			float inote = 0;
 			if (!note.getText().toString().isEmpty())
 				inote = Float.valueOf(note.getText().toString());
-			values.put(DatabaseContract.Exams.COLUMN_NAME_NOTE, inote);
-			values.put(DatabaseContract.Exams.COLUMN_NAME_NOTE_NECESSARY, 0.0);
-			values.put(DatabaseContract.Exams.COLUMN_NAME_DONE, false);
-			values.put(DatabaseContract.Exams.COLUMN_NAME_PONDERATION, -1);
-			values.put(DatabaseContract.Exams.COLUMN_NAME_SUBJECT_ID, subject.getId());
+			values.put(DatabaseContract.Homework.COLUMN_NAME_NOTE, inote);
+			values.put(DatabaseContract.Homework.COLUMN_NAME_PRIORITY, getPrority());
+			values.put(DatabaseContract.Homework.COLUMN_NAME_DONE, false);
+			values.put(DatabaseContract.Homework.COLUMN_NAME_PONDERATION, " ");
+			values.put(DatabaseContract.Homework.COLUMN_NAME_SUBJECT_ID, subject.getId());
+			values.put(DatabaseContract.Homework.COLUMN_NAME_DESCRIPTION, description.getText().toString());
 
-			db.insert(DatabaseContract.Exams.TABLE_NAME, null, values);
+			db.insert(DatabaseContract.Homework.TABLE_NAME, null, values);
 
 			values.clear();
-			subject.setNumberOfExams(subject.getNumberOfExams() + 1);
-			subject.setExamsId(subject.getExamsId() + ";"
-					+ DatabaseHelper.getCountRow(db, DatabaseContract.Exams.TABLE_NAME));
-			values.put(DatabaseContract.Subjects.COLUMN_NAME_EXAMS_ID, subject.getExamsId());
+			subject.setNumberOfTasks(subject.getNumberOfTasks() + 1);
+			subject.setHomeworkId(subject.getHomeworkId() + ";"
+					+ DatabaseHelper.getCountRow(db, DatabaseContract.Homework.TABLE_NAME));
+			values.put(DatabaseContract.Subjects.COLUMN_NAME_HOMEWORK_ID, subject.getHomeworkId());
 			String[] args = { String.valueOf(subject.getId()) };
 			db.update(DatabaseContract.Subjects.TABLE_NAME, values, DatabaseContract.Subjects._ID + "=?", args);
 

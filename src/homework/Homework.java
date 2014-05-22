@@ -13,6 +13,9 @@ public class Homework {
 	 */
 	private String end;
 
+	/** Description of the homework */
+	private String description;
+
 	/** Date of the initHour; */
 	private String initHour;
 
@@ -25,9 +28,10 @@ public class Homework {
 	/** Subject of the exam */
 	private int subjectId;
 
-	public Homework(int homeworkId, int subjectId, String name, String end, float note) {
+	public Homework(int homeworkId, int subjectId, String description, String name, String end, float note) {
 		this.setId(homeworkId);
 		this.subjectId = subjectId;
+		this.setDescription(description);
 		String[] data = end.split("-");
 		this.setInitHour(data[0]);
 		this.setEndHour(data[1]);
@@ -60,6 +64,14 @@ public class Homework {
 
 	public void setEnd(String end) {
 		this.end = end;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
 	public String getInitHour() {
