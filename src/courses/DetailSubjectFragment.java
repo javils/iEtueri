@@ -14,12 +14,15 @@ import utility.OnClickButtonXml;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -96,13 +99,15 @@ public class DetailSubjectFragment extends Fragment implements OnClickButtonXml,
 		ArrayList<Homework> result = new ArrayList<Homework>();
 		dbHelper = new DatabaseHelper(getActivity());
 		db = dbHelper.getReadableDatabase();
-
+		Log.i("GETHOMEWORK", subject.getHomeworkId());
 		String[] argsHomeworkIds = subject.getHomeworkId().split(";");
 		String[] projection = { DatabaseContract.Homework.COLUMN_NAME_HOMEWORK_NAME,
 				DatabaseContract.Homework.COLUMN_NAME_END_DATE, DatabaseContract.Homework.COLUMN_NAME_NOTE,
 				DatabaseContract.Homework.COLUMN_NAME_DESCRIPTION, DatabaseContract.Homework.COLUMN_NAME_PRIORITY };
 
 		for (int i = 0; i < argsHomeworkIds.length; i++) {
+			if (argsHomeworkIds[i].isEmpty())
+				continue;
 			String[] args = { argsHomeworkIds[i] };
 			Cursor cur = db.query(DatabaseContract.Homework.TABLE_NAME, projection, DatabaseContract.Homework._ID
 					+ "= ?", args, null, null, null);
@@ -198,7 +203,7 @@ public class DetailSubjectFragment extends Fragment implements OnClickButtonXml,
 	public void addHomeworkToList(Homework homework) {
 		int id = R.layout.subject_detail_homework_item;
 		LayoutInflater inflater = getActivity().getLayoutInflater();
-		LinearLayout linearLayout = (LinearLayout) inflater.inflate(id, null);
+		final LinearLayout linearLayout = (LinearLayout) inflater.inflate(id, null);
 		TextView text = (TextView) linearLayout.findViewById(R.id.detail_subject_homework_name);
 		text.setText(homework.getName());
 		text = (TextView) linearLayout.findViewById(R.id.detail_subject_homework_enddate);
@@ -212,7 +217,55 @@ public class DetailSubjectFragment extends Fragment implements OnClickButtonXml,
 		text = (TextView) linearLayout.findViewById(R.id.detail_subject_homework_homeworkId);
 		text.setText("" + homework.getId());
 
+		linearLayout.setOnLongClickListener(new OnLongClickListener() {
+
+			@Override
+			public boolean onLongClick(View v) {
+				dbHelper = new DatabaseHelper(getActivity());
+				db = dbHelper.getWritableDatabase();
+				TextView tIdHomework = (TextView) v.findViewById(R.id.detail_subject_homework_homeworkId);
+				db.delete(DatabaseContract.Homework.TABLE_NAME,
+						DatabaseContract.Homework._ID + "=" + tIdHomework.getText(), null);
+
+				/** Quit the homework id on subject */
+				String[] projection = { DatabaseContract.Subjects.COLUMN_NAME_HOMEWORK_ID };
+
+				String[] argsId = { String.valueOf(subject.getId()) };
+				Cursor cur = db.query(DatabaseContract.Subjects.TABLE_NAME, projection, DatabaseContract.Subjects._ID
+						+ "= ?", argsId, null, null, DatabaseContract.Subjects._ID + " DESC");
+
+				cur.moveToFirst();
+				String sHomeworkIds = cur.getString(cur
+						.getColumnIndexOrThrow(DatabaseContract.Subjects.COLUMN_NAME_HOMEWORK_ID));
+
+				Log.i("ASDASDASD", sHomeworkIds);
+				String[] homeworkIds = sHomeworkIds.split(";");
+				String result = new String();
+				for (int i = 0; i < homeworkIds.length; i++) {
+					if (homeworkIds[i].isEmpty())
+						continue;
+
+					if (!homeworkIds[i].equals(tIdHomework.getText()))
+						result = homeworkIds[i] + ";";
+				}
+
+				subject.setHomeworkId(result);
+				subject.setNumberOfTasks(subject.getNumberOfTasks() - 1);
+				Log.i("ASDASDASD", result);
+				/** Update with the new values */
+				ContentValues values = new ContentValues();
+				values.put(DatabaseContract.Subjects.COLUMN_NAME_HOMEWORK_ID, result);
+				db.update(DatabaseContract.Subjects.TABLE_NAME, values,
+						DatabaseContract.Subjects._ID + "=" + subject.getId(), null);
+
+				if (v != null)
+					v.setVisibility(View.GONE);
+				return false;
+			}
+		});
+
 		linearLayout.setOnClickListener(this);
+
 	}
 
 	@Override
