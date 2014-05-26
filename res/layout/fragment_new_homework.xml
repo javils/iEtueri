@@ -23,6 +23,7 @@
 	            android:layout_height="wrap_content"
 	            android:ems="10"
 	            android:hint="@string/new_homework_name" >
+	            <requestFocus />
 	        </EditText>
 
 	        <EditText
@@ -32,8 +33,6 @@
 	            android:ems="10"
 	            android:hint="@string/new_homework_description"
 	            android:inputType="textMultiLine" >
-
-	            <requestFocus />
 	        </EditText>
 	
 	        <TextView
@@ -112,8 +111,8 @@
 	            android:layout_width="match_parent"
 	            android:layout_height="wrap_content"
 	            android:ems="10"
-	       		android:inputType="textMultiLine"
-	            android:hint="@string/new_homework_note" />
+	            android:hint="@string/new_homework_note"
+	            android:inputType="number" />
 	       
 	    </LinearLayout>
 	    
