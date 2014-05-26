@@ -4,6 +4,7 @@ import homework.Homework;
 import homework.NewHomeworkFragment;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 import navigationdrawer.MainActivity;
 import navigationdrawer.NavigationDrawerController;
@@ -98,12 +99,12 @@ public class DetailSubjectFragment extends Fragment implements OnClickButtonXml 
 		String[] argsHomeworkIds = subject.getHomeworkId().split(";");
 		String[] projection = { DatabaseContract.Homework.COLUMN_NAME_HOMEWORK_NAME,
 				DatabaseContract.Homework.COLUMN_NAME_END_DATE, DatabaseContract.Homework.COLUMN_NAME_NOTE,
-				DatabaseContract.Homework.COLUMN_NAME_DESCRIPTION };
+				DatabaseContract.Homework.COLUMN_NAME_DESCRIPTION, DatabaseContract.Homework.COLUMN_NAME_PRIORITY };
 
 		for (int i = 0; i < argsHomeworkIds.length; i++) {
 			String[] args = { argsHomeworkIds[i] };
 			Cursor cur = db.query(DatabaseContract.Homework.TABLE_NAME, projection, DatabaseContract.Homework._ID
-					+ "= ?", args, null, null, DatabaseContract.Homework._ID + " DESC");
+					+ "= ?", args, null, null, null);
 
 			cur.moveToFirst();
 
@@ -118,10 +119,11 @@ public class DetailSubjectFragment extends Fragment implements OnClickButtonXml 
 			float note = cur.getFloat(cur.getColumnIndexOrThrow(DatabaseContract.Homework.COLUMN_NAME_NOTE));
 			String description = cur.getString(cur
 					.getColumnIndexOrThrow(DatabaseContract.Homework.COLUMN_NAME_DESCRIPTION));
-
-			result.add(new Homework(homeworkId, subjectId, description, homeworkName, endDate, note));
+			int priority = cur.getInt(cur.getColumnIndexOrThrow(DatabaseContract.Homework.COLUMN_NAME_PRIORITY));
+			result.add(new Homework(homeworkId, subjectId, description, homeworkName, endDate, note, priority));
 		}
 
+		Collections.sort(result);
 		return result;
 
 	}
@@ -179,7 +181,8 @@ public class DetailSubjectFragment extends Fragment implements OnClickButtonXml 
 		text = (TextView) linearLayout.findViewById(R.id.detail_subject_exams_hour);
 		text.setText(exam.getInitHour() + " - " + exam.getEndHour());
 		text = (TextView) linearLayout.findViewById(R.id.detail_subject_exams_note);
-		text.setText("" + exam.getNote());
+		if (exam.getNote() != 0)
+			text.setText("" + exam.getNote());
 		listExams.addView(linearLayout);
 	}
 

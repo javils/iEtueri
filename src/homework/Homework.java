@@ -1,10 +1,10 @@
 package homework;
 
-public class Homework {
+public class Homework implements Comparable<Homework> {
 
 	/** Id of the homework */
 	private int id;
-	/** Name of the homewokr */
+	/** Name of the homework */
 	private String name;
 
 	/**
@@ -22,13 +22,16 @@ public class Homework {
 	/** Date of the endHour; */
 	private String endHour;
 
-	/** Note of the exam */
+	/** Note of the homework */
 	private float note;
 
-	/** Subject of the exam */
+	/** Subject of the homework */
 	private int subjectId;
 
-	public Homework(int homeworkId, int subjectId, String description, String name, String end, float note) {
+	/** Priority of the homework */
+	private int priority;
+
+	public Homework(int homeworkId, int subjectId, String description, String name, String end, float note, int priority) {
 		this.setId(homeworkId);
 		this.subjectId = subjectId;
 		this.setDescription(description);
@@ -38,6 +41,7 @@ public class Homework {
 		this.end = data[2];
 		this.name = name;
 		this.note = note;
+		this.priority = priority;
 	}
 
 	public int getId() {
@@ -108,4 +112,8 @@ public class Homework {
 		this.subjectId = subjectId;
 	}
 
+	@Override
+	public int compareTo(Homework another) {
+		return this.priority - another.priority;
+	}
 }
