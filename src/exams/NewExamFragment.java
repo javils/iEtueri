@@ -36,7 +36,7 @@ public class NewExamFragment extends Fragment implements OnClickButtonXml {
 	private EditText note;
 
 	private Subject subject;
-
+	private Exam examToEdit;
 	private DatabaseHelper dbHelper;
 	private SQLiteDatabase db;
 
@@ -53,6 +53,14 @@ public class NewExamFragment extends Fragment implements OnClickButtonXml {
 		fromHour = (Button) view.findViewById(R.id.newexam_from_hour);
 		toHour = (Button) view.findViewById(R.id.newexam_to_hour);
 		note = (EditText) view.findViewById(R.id.newexam_note);
+
+		if (examToEdit != null) {
+			examName.setText(examToEdit.getName());
+			date.setText(examToEdit.getEnd());
+			fromHour.setText(examToEdit.getInitHour());
+			toHour.setText(examToEdit.getEndHour());
+			note.setText("" + examToEdit.getNote());
+		}
 
 		Calendar calendar = Calendar.getInstance();
 
@@ -90,7 +98,10 @@ public class NewExamFragment extends Fragment implements OnClickButtonXml {
 			cancelExam();
 			break;
 		case R.id.newexam_acept:
-			addNewExam();
+			if (examToEdit == null)
+				addNewExam();
+			else
+				updateExam();
 			break;
 		}
 	}
@@ -147,6 +158,39 @@ public class NewExamFragment extends Fragment implements OnClickButtonXml {
 		}
 	}
 
+	public void updateExam() {
+		if (examName.getText().toString().isEmpty())
+			Toast.makeText(getActivity(), "No hay nombre de examen. Por favor rellenalo.", Toast.LENGTH_SHORT).show();
+		else {
+			/** Fill the database with the data */
+			ContentValues values = new ContentValues();
+			values.put(DatabaseContract.Exams.COLUMN_NAME_EXAM_NAME, examName.getText().toString());
+			date.setText(date.getText().toString().replaceAll("/", "-"));
+			values.put(DatabaseContract.Exams.COLUMN_NAME_END_DATE, fromHour.getHint().toString() + "-"
+					+ toHour.getHint().toString() + "-" + date.getHint().toString());
+			float inote = 0;
+			if (!note.getText().toString().isEmpty())
+				inote = Float.valueOf(note.getText().toString());
+			values.put(DatabaseContract.Exams.COLUMN_NAME_NOTE, inote);
+			values.put(DatabaseContract.Exams.COLUMN_NAME_NOTE_NECESSARY, 0.0);
+			values.put(DatabaseContract.Exams.COLUMN_NAME_DONE, false);
+			values.put(DatabaseContract.Exams.COLUMN_NAME_PONDERATION, -1);
+
+			String[] id = { "" + examToEdit.getId() };
+			db.update(DatabaseContract.Exams.TABLE_NAME, values, DatabaseContract.Exams._ID + "=?", id);
+
+			/** Back to Courses view */
+			FragmentManager fragmentManager = getFragmentManager();
+			Fragment newFragment = NavigationDrawerController
+					.newInstance(NavigationDrawerController.SECTION_NUMBER_DETAIL_SUBJECT);
+			if (newFragment instanceof OnClickButtonXml)
+				MainActivity.setOnClickFragment(newFragment);
+			MainActivity.setCurrentFragment(newFragment);
+			((DetailSubjectFragment) newFragment).setSubject(subject);
+			fragmentManager.beginTransaction().replace(R.id.navigation_drawer_container, newFragment).commit();
+		}
+	}
+
 	public void showTimePickerDialog(View view) {
 		TimePickerDialogFragment timeFragment = new TimePickerDialogFragment();
 		timeFragment.setHandler((Button) view);
@@ -165,5 +209,13 @@ public class NewExamFragment extends Fragment implements OnClickButtonXml {
 
 	public void setSubject(Subject subject) {
 		this.subject = subject;
+	}
+
+	public Exam getExamToEdit() {
+		return examToEdit;
+	}
+
+	public void setExamToEdit(Exam examToEdit) {
+		this.examToEdit = examToEdit;
 	}
 }
