@@ -111,7 +111,7 @@
 	            android:layout_height="wrap_content"
 	            android:ems="10"
 	            android:hint="@string/new_homework_note"
-	            android:inputType="number" />
+	            android:inputType="numberDecimal" />
 	       
 	    </LinearLayout>
 	    

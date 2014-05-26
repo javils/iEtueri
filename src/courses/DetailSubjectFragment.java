@@ -219,6 +219,8 @@ public class DetailSubjectFragment extends Fragment implements OnClickButtonXml,
 	public void onClick(View v) {
 		dbHelper = new DatabaseHelper(getActivity());
 		db = dbHelper.getReadableDatabase();
+		FragmentManager fragmentManager = getFragmentManager();
+		Fragment newFragment = new Fragment();
 
 		switch (v.getId()) {
 		case R.layout.subject_detail_exam_item:
@@ -241,9 +243,7 @@ public class DetailSubjectFragment extends Fragment implements OnClickButtonXml,
 
 			Exam examToEdit = new Exam(examId, subjectId, examName, endDate, note);
 
-			FragmentManager fragmentManager = getFragmentManager();
-			Fragment newFragment = NavigationDrawerController
-					.newInstance(NavigationDrawerController.SECTION_NUMBER_NEW_EXAM);
+			newFragment = NavigationDrawerController.newInstance(NavigationDrawerController.SECTION_NUMBER_NEW_EXAM);
 			if (newFragment instanceof OnClickButtonXml)
 				MainActivity.setOnClickFragment(newFragment);
 			MainActivity.setCurrentFragment(newFragment);
@@ -253,8 +253,41 @@ public class DetailSubjectFragment extends Fragment implements OnClickButtonXml,
 
 			break;
 		case R.layout.subject_detail_homework_item:
+			TextView ttIdView = (TextView) v.findViewById(R.id.detail_subject_homework_homeworkId);
+			String idHomework = ttIdView.getText().toString();
+			String[] argsHomeworkId = { idHomework };
+			String[] tprojection = { DatabaseContract.Homework.COLUMN_NAME_HOMEWORK_NAME,
+					DatabaseContract.Homework.COLUMN_NAME_END_DATE, DatabaseContract.Homework.COLUMN_NAME_NOTE,
+					DatabaseContract.Homework.COLUMN_NAME_DESCRIPTION, DatabaseContract.Homework.COLUMN_NAME_PRIORITY };
+
+			Cursor cur2 = db.query(DatabaseContract.Homework.TABLE_NAME, tprojection, DatabaseContract.Homework._ID
+					+ "= ?", argsHomeworkId, null, null, DatabaseContract.Homework._ID + " DESC");
+
+			cur2.moveToFirst();
+
+			String homeworkName = cur2.getString(cur2
+					.getColumnIndexOrThrow(DatabaseContract.Homework.COLUMN_NAME_HOMEWORK_NAME));
+			int subjectIdHome = subject.getId();
+			String endDateHome = cur2.getString(cur2
+					.getColumnIndexOrThrow(DatabaseContract.Homework.COLUMN_NAME_END_DATE));
+			float noteHom = cur2.getFloat(cur2.getColumnIndexOrThrow(DatabaseContract.Homework.COLUMN_NAME_NOTE));
+			String description = cur2.getString(cur2
+					.getColumnIndexOrThrow(DatabaseContract.Homework.COLUMN_NAME_DESCRIPTION));
+			int priority = cur2.getInt(cur2.getColumnIndexOrThrow(DatabaseContract.Homework.COLUMN_NAME_PRIORITY));
+			Homework homeworkToEdit = new Homework(Integer.parseInt(idHomework), subjectIdHome, description,
+					homeworkName, endDateHome, noteHom, priority);
+
+			newFragment = NavigationDrawerController
+					.newInstance(NavigationDrawerController.SECTION_NUMBER_NEW_HOMEWORK);
+			if (newFragment instanceof OnClickButtonXml)
+				MainActivity.setOnClickFragment(newFragment);
+			MainActivity.setCurrentFragment(newFragment);
+			((NewHomeworkFragment) newFragment).setSubject(subject);
+			((NewHomeworkFragment) newFragment).setHomeworkToEdit(homeworkToEdit);
+			fragmentManager.beginTransaction().replace(R.id.navigation_drawer_container, newFragment).commit();
 			break;
 		}
 
 	}
+
 }

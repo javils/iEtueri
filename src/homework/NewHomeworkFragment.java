@@ -40,6 +40,8 @@ public class NewHomeworkFragment extends Fragment implements OnClickButtonXml {
 
 	private Subject subject;
 
+	private Homework homeworkToEdit;
+
 	private DatabaseHelper dbHelper;
 	private SQLiteDatabase db;
 
@@ -65,6 +67,25 @@ public class NewHomeworkFragment extends Fragment implements OnClickButtonXml {
 		note = (EditText) view.findViewById(R.id.newhomework_note);
 		description = (EditText) view.findViewById(R.id.newhomework_description);
 		priority = (Button) view.findViewById(R.id.newhomework_priority);
+
+		if (homeworkToEdit != null) {
+			homeworkName.setText(homeworkToEdit.getName());
+			date.setHint(homeworkToEdit.getEnd());
+			fromHour.setHint(homeworkToEdit.getInitHour());
+			toHour.setHint(homeworkToEdit.getEndHour());
+			note.setText("" + homeworkToEdit.getNote());
+			description.setText(homeworkToEdit.getDescription());
+			String sPriority = getString(R.string.normal_priority);
+			switch (homeworkToEdit.getPriority()) {
+			case HIGH_PRIORITY:
+				sPriority = getString(R.string.high_priority);
+				break;
+			case LOW_PRIORITY:
+				sPriority = getString(R.string.low_priority);
+				break;
+			}
+			priority.setHint(sPriority);
+		}
 
 		Calendar calendar = Calendar.getInstance();
 
@@ -105,7 +126,10 @@ public class NewHomeworkFragment extends Fragment implements OnClickButtonXml {
 			cancelHomework();
 			break;
 		case R.id.newhomework_acept:
-			addNewHomework();
+			if (homeworkToEdit == null)
+				addNewHomework();
+			else
+				updateHomework();
 			break;
 		}
 	}
@@ -180,6 +204,41 @@ public class NewHomeworkFragment extends Fragment implements OnClickButtonXml {
 		}
 	}
 
+	public void updateHomework() {
+		if (homeworkName.getText().toString().isEmpty())
+			Toast.makeText(getActivity(), "No hay nombre de tarea. Por favor rellenalo.", Toast.LENGTH_SHORT).show();
+		else {
+			/** Fill the database with the data */
+			ContentValues values = new ContentValues();
+			values.put(DatabaseContract.Homework.COLUMN_NAME_HOMEWORK_NAME, homeworkName.getText().toString());
+			date.setText(date.getText().toString().replaceAll("/", "-"));
+			values.put(DatabaseContract.Homework.COLUMN_NAME_END_DATE, fromHour.getHint().toString() + "-"
+					+ toHour.getHint().toString() + "-" + date.getHint().toString());
+			float inote = 0;
+			if (!note.getText().toString().isEmpty())
+				inote = Float.valueOf(note.getText().toString());
+			values.put(DatabaseContract.Homework.COLUMN_NAME_NOTE, inote);
+			values.put(DatabaseContract.Homework.COLUMN_NAME_PRIORITY, getPrority());
+			values.put(DatabaseContract.Homework.COLUMN_NAME_DONE, false);
+			values.put(DatabaseContract.Homework.COLUMN_NAME_PONDERATION, " ");
+			values.put(DatabaseContract.Homework.COLUMN_NAME_SUBJECT_ID, subject.getId());
+			values.put(DatabaseContract.Homework.COLUMN_NAME_DESCRIPTION, description.getText().toString());
+
+			String[] id = { "" + homeworkToEdit.getId() };
+			db.update(DatabaseContract.Homework.TABLE_NAME, values, DatabaseContract.Homework._ID + "=?", id);
+
+			/** Back to Courses view */
+			FragmentManager fragmentManager = getFragmentManager();
+			Fragment newFragment = NavigationDrawerController
+					.newInstance(NavigationDrawerController.SECTION_NUMBER_DETAIL_SUBJECT);
+			if (newFragment instanceof OnClickButtonXml)
+				MainActivity.setOnClickFragment(newFragment);
+			MainActivity.setCurrentFragment(newFragment);
+			((DetailSubjectFragment) newFragment).setSubject(subject);
+			fragmentManager.beginTransaction().replace(R.id.navigation_drawer_container, newFragment).commit();
+		}
+	}
+
 	public void showTimePickerDialog(View view) {
 		TimePickerDialogFragment timeFragment = new TimePickerDialogFragment();
 		timeFragment.setHandler((Button) view);
@@ -198,5 +257,13 @@ public class NewHomeworkFragment extends Fragment implements OnClickButtonXml {
 
 	public void setSubject(Subject subject) {
 		this.subject = subject;
+	}
+
+	public Homework getHomeworkToEdit() {
+		return homeworkToEdit;
+	}
+
+	public void setHomeworkToEdit(Homework homeworkToEdit) {
+		this.homeworkToEdit = homeworkToEdit;
 	}
 }

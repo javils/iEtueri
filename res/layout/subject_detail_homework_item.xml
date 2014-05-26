@@ -6,8 +6,7 @@
     android:paddingBottom="5dp"
     android:paddingLeft="25dp"
     android:paddingTop="10dp"
-    android:clickable="true"
-    android:focusableInTouchMode="true" >
+    android:clickable="true" >
     <requestFocus />
 
     <LinearLayout

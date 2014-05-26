@@ -112,6 +112,15 @@ public class Homework implements Comparable<Homework> {
 		this.subjectId = subjectId;
 	}
 
+	/* Get and set the priority */
+	public int getPriority() {
+		return priority;
+	}
+
+	public void setPriority(int priority) {
+		this.priority = priority;
+	}
+
 	@Override
 	public int compareTo(Homework another) {
 		return this.priority - another.priority;

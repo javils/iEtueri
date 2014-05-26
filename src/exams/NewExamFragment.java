@@ -56,9 +56,9 @@ public class NewExamFragment extends Fragment implements OnClickButtonXml {
 
 		if (examToEdit != null) {
 			examName.setText(examToEdit.getName());
-			date.setText(examToEdit.getEnd());
-			fromHour.setText(examToEdit.getInitHour());
-			toHour.setText(examToEdit.getEndHour());
+			date.setHint(examToEdit.getEnd());
+			fromHour.setHint(examToEdit.getInitHour());
+			toHour.setHint(examToEdit.getEndHour());
 			note.setText("" + examToEdit.getNote());
 		}
 
