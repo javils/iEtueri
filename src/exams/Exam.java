@@ -1,6 +1,5 @@
 package exams;
 
-
 public class Exam {
 
 	/** Id of the exam */
@@ -9,7 +8,7 @@ public class Exam {
 	private String name;
 
 	/**
-	 * Date of the end of the exam in hh:mm-hh:mm-yyyy-MM-dd format(inithour,
+	 * Date of the end of the exam in hh:mm-hh:mm-yyyy/MM/dd format(inithour,
 	 * endhour, date)
 	 */
 	private String end;

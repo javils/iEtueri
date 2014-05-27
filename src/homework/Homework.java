@@ -8,7 +8,7 @@ public class Homework implements Comparable<Homework> {
 	private String name;
 
 	/**
-	 * Date of the end of the homework in hh:mm-hh:mm-yyyy-MM-dd
+	 * Date of the end of the homework in hh:mm-hh:mm/yyyy/MM/dd
 	 * format(inithour, endhour, date)
 	 */
 	private String end;
