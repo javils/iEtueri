@@ -234,7 +234,7 @@ public class DetailSubjectFragment extends Fragment implements OnClickButtonXml,
 
 				if (v != null)
 					v.setVisibility(View.GONE);
-				return false;
+				return true;
 			}
 		});
 
@@ -298,7 +298,7 @@ public class DetailSubjectFragment extends Fragment implements OnClickButtonXml,
 
 				if (v != null)
 					v.setVisibility(View.GONE);
-				return false;
+				return true;
 			}
 		});
 
@@ -308,8 +308,6 @@ public class DetailSubjectFragment extends Fragment implements OnClickButtonXml,
 
 	@Override
 	public void onClick(View v) {
-		if (v.getVisibility() == View.GONE)
-			return;
 		dbHelper = new DatabaseHelper(getActivity());
 		db = dbHelper.getReadableDatabase();
 		FragmentManager fragmentManager = getFragmentManager();
@@ -381,6 +379,9 @@ public class DetailSubjectFragment extends Fragment implements OnClickButtonXml,
 			break;
 		}
 
-	}
+		/** Close the database */
+		db.close();
+		dbHelper.close();
 
+	}
 }

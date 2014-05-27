@@ -70,6 +70,10 @@ public class NewCourseFragment extends Fragment implements OnClickButtonXml {
 		MainActivity.setCurrentFragment(newFragment);
 		fragmentManager.beginTransaction().replace(R.id.navigation_drawer_container, newFragment).commit();
 
+		/** Close the database */
+		db.close();
+		dbHelper.close();
+
 	}
 
 	private void addNewCourse() {
@@ -96,6 +100,9 @@ public class NewCourseFragment extends Fragment implements OnClickButtonXml {
 			MainActivity.setCurrentFragment(newFragment);
 			fragmentManager.beginTransaction().replace(R.id.navigation_drawer_container, newFragment).commit();
 
+			/** Close the database */
+			db.close();
+			dbHelper.close();
 		}
 	}
 
@@ -122,4 +129,5 @@ public class NewCourseFragment extends Fragment implements OnClickButtonXml {
 		((MainActivity) activity).onSectionAttached(getArguments()
 				.getInt(NavigationDrawerController.ARG_SECTION_NUMBER));
 	}
+
 }

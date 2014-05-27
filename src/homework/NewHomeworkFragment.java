@@ -150,6 +150,10 @@ public class NewHomeworkFragment extends Fragment implements OnClickButtonXml {
 		MainActivity.setCurrentFragment(newFragment);
 		((DetailSubjectFragment) newFragment).setSubject(subject);
 		fragmentManager.beginTransaction().replace(R.id.navigation_drawer_container, newFragment).commit();
+
+		/** Close the database */
+		db.close();
+		dbHelper.close();
 	}
 
 	public int getPrority() {
@@ -201,6 +205,10 @@ public class NewHomeworkFragment extends Fragment implements OnClickButtonXml {
 			MainActivity.setCurrentFragment(newFragment);
 			((DetailSubjectFragment) newFragment).setSubject(subject);
 			fragmentManager.beginTransaction().replace(R.id.navigation_drawer_container, newFragment).commit();
+
+			/** Close the database */
+			db.close();
+			dbHelper.close();
 		}
 	}
 
@@ -236,6 +244,10 @@ public class NewHomeworkFragment extends Fragment implements OnClickButtonXml {
 			MainActivity.setCurrentFragment(newFragment);
 			((DetailSubjectFragment) newFragment).setSubject(subject);
 			fragmentManager.beginTransaction().replace(R.id.navigation_drawer_container, newFragment).commit();
+
+			/** Close the database */
+			db.close();
+			dbHelper.close();
 		}
 	}
 
