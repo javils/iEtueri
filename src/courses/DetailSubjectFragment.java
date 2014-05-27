@@ -194,6 +194,50 @@ public class DetailSubjectFragment extends Fragment implements OnClickButtonXml,
 
 		listExams.addView(linearLayout);
 
+		linearLayout.setOnLongClickListener(new OnLongClickListener() {
+
+			@Override
+			public boolean onLongClick(View v) {
+				dbHelper = new DatabaseHelper(getActivity());
+				db = dbHelper.getWritableDatabase();
+				TextView tIdExam = (TextView) v.findViewById(R.id.detail_subject_exams_examId);
+				String idExam = tIdExam.getText().toString();
+				db.delete(DatabaseContract.Exams.TABLE_NAME, DatabaseContract.Exams._ID + "=" + idExam, null);
+
+				/** Quit the exam id on subject */
+				String[] projection = { DatabaseContract.Subjects.COLUMN_NAME_EXAMS_ID };
+
+				String[] argsId = { String.valueOf(subject.getId()) };
+				Cursor cur = db.query(DatabaseContract.Subjects.TABLE_NAME, projection, DatabaseContract.Subjects._ID
+						+ "= ?", argsId, null, null, null);
+
+				cur.moveToFirst();
+				String sExamsIds = cur.getString(cur
+						.getColumnIndexOrThrow(DatabaseContract.Subjects.COLUMN_NAME_EXAMS_ID));
+				String[] examIds = sExamsIds.split(";");
+				String result = new String();
+				for (int i = 0; i < examIds.length; i++) {
+					if (examIds[i].isEmpty())
+						continue;
+
+					if (!examIds[i].equals(idExam))
+						result += examIds[i] + ";";
+				}
+
+				subject.setExamsId(result);
+				subject.setNumberOfExams(subject.getNumberOfExams() - 1);
+				/** Update with the new values */
+				ContentValues values = new ContentValues();
+				values.put(DatabaseContract.Subjects.COLUMN_NAME_EXAMS_ID, result);
+				db.update(DatabaseContract.Subjects.TABLE_NAME, values,
+						DatabaseContract.Subjects._ID + "=" + subject.getId(), null);
+
+				if (v != null)
+					v.setVisibility(View.GONE);
+				return false;
+			}
+		});
+
 		linearLayout.setOnClickListener(this);
 	}
 
