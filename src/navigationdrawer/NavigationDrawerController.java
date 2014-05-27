@@ -13,6 +13,7 @@ import courses.CoursesFragment;
 import courses.DetailSubjectFragment;
 import courses.NewCourseFragment;
 import courses.NewSubjectFragment;
+import exams.ExamsFragment;
 import exams.NewExamFragment;
 
 /**
@@ -78,6 +79,7 @@ public class NavigationDrawerController {
 			newFragment = new HomeworkFragment();
 			break;
 		case SECTION_NUMBER_EXAMS: // EXAMS SECTION
+			newFragment = new ExamsFragment();
 			break;
 		case SECTION_NUMBER_COURSES: // COURSES SECTION
 			newFragment = new CoursesFragment();
