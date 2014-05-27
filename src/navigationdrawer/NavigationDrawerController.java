@@ -12,6 +12,7 @@ import courses.CoursesFragment;
 import courses.DetailSubjectFragment;
 import courses.NewCourseFragment;
 import courses.NewSubjectFragment;
+import exams.HomeworkFragment;
 import exams.NewExamFragment;
 
 /**
@@ -25,7 +26,7 @@ public class NavigationDrawerController {
 	/** Constants that represent the sections of the Navigation */
 	public static final int SECTION_NUMBER_TODAY = 1;
 	public static final int SECTION_NUMBER_SCHEDULE = 2;
-	public static final int SECTION_NUMBER_HOMEWORKS = 3;
+	public static final int SECTION_NUMBER_HOMEWORK = 3;
 	public static final int SECTION_NUMBER_EXAMS = 4;
 	public static final int SECTION_NUMBER_COURSES = 5;
 	public static final int SECTION_NUMBER_SUBJECTS = 6;
@@ -73,7 +74,8 @@ public class NavigationDrawerController {
 		case SECTION_NUMBER_SCHEDULE: // SCHEDULE SECTION
 			newFragment = new ScheduleFragment();
 			break;
-		case SECTION_NUMBER_HOMEWORKS: // HOMEWORKS SECTION
+		case SECTION_NUMBER_HOMEWORK: // HOMEWORKS SECTION
+			newFragment = new HomeworkFragment();
 			break;
 		case SECTION_NUMBER_EXAMS: // EXAMS SECTION
 			break;
