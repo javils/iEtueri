@@ -95,4 +95,19 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		cursor.close();
 		return cnt;
 	}
+
+	public static int getNextId(SQLiteDatabase db, String tableName) {
+		int id = 0;
+		final String MY_QUERY = "SELECT MAX(_id) AS _id FROM " + tableName;
+		Cursor mCursor = db.rawQuery(MY_QUERY, null);
+		try {
+			if (mCursor.getCount() > 0) {
+				mCursor.moveToFirst();
+				id = mCursor.getInt(0);
+			}
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+		return id;
+	}
 }

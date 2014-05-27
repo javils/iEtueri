@@ -18,7 +18,6 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -99,23 +98,21 @@ public class DetailSubjectFragment extends Fragment implements OnClickButtonXml,
 		ArrayList<Homework> result = new ArrayList<Homework>();
 		dbHelper = new DatabaseHelper(getActivity());
 		db = dbHelper.getReadableDatabase();
-		Log.i("GETHOMEWORK", subject.getHomeworkId());
+
 		String[] argsHomeworkIds = subject.getHomeworkId().split(";");
 		String[] projection = { DatabaseContract.Homework.COLUMN_NAME_HOMEWORK_NAME,
 				DatabaseContract.Homework.COLUMN_NAME_END_DATE, DatabaseContract.Homework.COLUMN_NAME_NOTE,
 				DatabaseContract.Homework.COLUMN_NAME_DESCRIPTION, DatabaseContract.Homework.COLUMN_NAME_PRIORITY };
 
 		for (int i = 0; i < argsHomeworkIds.length; i++) {
-			if (argsHomeworkIds[i].isEmpty())
+			if (argsHomeworkIds[i].trim().isEmpty())
 				continue;
+
 			String[] args = { argsHomeworkIds[i] };
 			Cursor cur = db.query(DatabaseContract.Homework.TABLE_NAME, projection, DatabaseContract.Homework._ID
 					+ "= ?", args, null, null, null);
 
 			cur.moveToFirst();
-
-			if (argsHomeworkIds[i].isEmpty())
-				continue;
 
 			int homeworkId = Integer.parseInt(argsHomeworkIds[i]);
 			String homeworkName = cur.getString(cur
@@ -224,34 +221,31 @@ public class DetailSubjectFragment extends Fragment implements OnClickButtonXml,
 				dbHelper = new DatabaseHelper(getActivity());
 				db = dbHelper.getWritableDatabase();
 				TextView tIdHomework = (TextView) v.findViewById(R.id.detail_subject_homework_homeworkId);
-				db.delete(DatabaseContract.Homework.TABLE_NAME,
-						DatabaseContract.Homework._ID + "=" + tIdHomework.getText(), null);
+				String idHomework = tIdHomework.getText().toString();
+				db.delete(DatabaseContract.Homework.TABLE_NAME, DatabaseContract.Homework._ID + "=" + idHomework, null);
 
 				/** Quit the homework id on subject */
 				String[] projection = { DatabaseContract.Subjects.COLUMN_NAME_HOMEWORK_ID };
 
 				String[] argsId = { String.valueOf(subject.getId()) };
 				Cursor cur = db.query(DatabaseContract.Subjects.TABLE_NAME, projection, DatabaseContract.Subjects._ID
-						+ "= ?", argsId, null, null, DatabaseContract.Subjects._ID + " DESC");
+						+ "= ?", argsId, null, null, null);
 
 				cur.moveToFirst();
 				String sHomeworkIds = cur.getString(cur
 						.getColumnIndexOrThrow(DatabaseContract.Subjects.COLUMN_NAME_HOMEWORK_ID));
-
-				Log.i("ASDASDASD", sHomeworkIds);
 				String[] homeworkIds = sHomeworkIds.split(";");
 				String result = new String();
 				for (int i = 0; i < homeworkIds.length; i++) {
 					if (homeworkIds[i].isEmpty())
 						continue;
 
-					if (!homeworkIds[i].equals(tIdHomework.getText()))
-						result = homeworkIds[i] + ";";
+					if (!homeworkIds[i].equals(idHomework))
+						result += homeworkIds[i] + ";";
 				}
 
 				subject.setHomeworkId(result);
 				subject.setNumberOfTasks(subject.getNumberOfTasks() - 1);
-				Log.i("ASDASDASD", result);
 				/** Update with the new values */
 				ContentValues values = new ContentValues();
 				values.put(DatabaseContract.Subjects.COLUMN_NAME_HOMEWORK_ID, result);
@@ -270,6 +264,8 @@ public class DetailSubjectFragment extends Fragment implements OnClickButtonXml,
 
 	@Override
 	public void onClick(View v) {
+		if (v.getVisibility() == View.GONE)
+			return;
 		dbHelper = new DatabaseHelper(getActivity());
 		db = dbHelper.getReadableDatabase();
 		FragmentManager fragmentManager = getFragmentManager();

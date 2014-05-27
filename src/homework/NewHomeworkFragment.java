@@ -186,8 +186,8 @@ public class NewHomeworkFragment extends Fragment implements OnClickButtonXml {
 
 			values.clear();
 			subject.setNumberOfTasks(subject.getNumberOfTasks() + 1);
-			subject.setHomeworkId(subject.getHomeworkId() + ";"
-					+ DatabaseHelper.getCountRow(db, DatabaseContract.Homework.TABLE_NAME));
+			subject.setHomeworkId(subject.getHomeworkId()
+					+ DatabaseHelper.getNextId(db, DatabaseContract.Homework.TABLE_NAME) + ";");
 			values.put(DatabaseContract.Subjects.COLUMN_NAME_HOMEWORK_ID, subject.getHomeworkId());
 			String[] args = { String.valueOf(subject.getId()) };
 			db.update(DatabaseContract.Subjects.TABLE_NAME, values, DatabaseContract.Subjects._ID + "=?", args);
