@@ -65,6 +65,7 @@ public class HomeworkFragment extends Fragment {
 					.getColumnIndexOrThrow(DatabaseContract.Homework.COLUMN_NAME_DESCRIPTION));
 			int priority = cur.getInt(cur.getColumnIndexOrThrow(DatabaseContract.Homework.COLUMN_NAME_PRIORITY));
 			result.add(new Homework(homeworkId, subjectId, description, homeworkName, endDate, note, priority));
+			cur.moveToNext();
 		}
 
 		Collections.sort(result);
