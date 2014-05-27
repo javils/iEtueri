@@ -1,5 +1,6 @@
 package navigationdrawer;
 
+import homework.HomeworkFragment;
 import homework.NewHomeworkFragment;
 import schedule.ScheduleFragment;
 import today.NewEventTodayFragment;
@@ -12,7 +13,6 @@ import courses.CoursesFragment;
 import courses.DetailSubjectFragment;
 import courses.NewCourseFragment;
 import courses.NewSubjectFragment;
-import exams.HomeworkFragment;
 import exams.NewExamFragment;
 
 /**
