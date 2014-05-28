@@ -129,6 +129,14 @@ public class MainActivity extends Activity implements NavigationDrawerCallbacks 
 			if (title.equals(getString(R.string.title_course_detail_course)))
 				getMenuInflater().inflate(R.menu.menu_detail_course, menu);
 
+			/** Homework menu */
+			if (title.equals(getString(R.string.title_homework)))
+				getMenuInflater().inflate(R.menu.menu_homework, menu);
+
+			/** Exams Menu */
+			if (title.equals(getString(R.string.title_exam)))
+				getMenuInflater().inflate(R.menu.menu_exams, menu);
+
 			ActionBar actionBar = getActionBar();
 			actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
 			actionBar.setDisplayShowTitleEnabled(true);
@@ -183,7 +191,38 @@ public class MainActivity extends Activity implements NavigationDrawerCallbacks 
 			fragmentManager.beginTransaction().replace(R.id.navigation_drawer_container, newFragment).commit();
 
 			return true;
+		}
+		// TODO: In the future, add the posibility of add homework and exams in
+		// the respective view's.
+		/** Homework menu */
+		if (id == R.id.menu_homework_new) {
+			/*
+			 * FragmentManager fragmentManager = getFragmentManager(); Fragment
+			 * newFragment = NavigationDrawerController
+			 * .newInstance(NavigationDrawerController
+			 * .SECTION_NUMBER_NEW_HOMEWORK); currentFragment = newFragment; if
+			 * (newFragment instanceof OnClickButtonXml) MainActivity.fragment =
+			 * (OnClickButtonXml) newFragment;
+			 * fragmentManager.beginTransaction()
+			 * .replace(R.id.navigation_drawer_container, newFragment).commit();
+			 * 
+			 * return true;
+			 */
+		}
 
+		/** Exam menu */
+		if (id == R.id.menu_exam_new) {
+			/*
+			 * FragmentManager fragmentManager = getFragmentManager(); Fragment
+			 * newFragment = NavigationDrawerController
+			 * .newInstance(NavigationDrawerController.SECTION_NUMBER_NEW_EXAM);
+			 * currentFragment = newFragment; if (newFragment instanceof
+			 * OnClickButtonXml) MainActivity.fragment = (OnClickButtonXml)
+			 * newFragment; fragmentManager.beginTransaction().replace(R.id.
+			 * navigation_drawer_container, newFragment).commit();
+			 * 
+			 * return true;
+			 */
 		}
 
 		// TODO: Add handle action for each item in the action bar here.
