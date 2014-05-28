@@ -4,6 +4,7 @@ import homework.HomeworkFragment;
 import homework.NewHomeworkFragment;
 import schedule.ScheduleFragment;
 import subject.DetailSubjectFragment;
+import subject.NewSubjectFragment;
 import today.NewEventTodayFragment;
 import today.TodayFragment;
 import android.app.Fragment;
@@ -12,7 +13,6 @@ import android.widget.Toast;
 import courses.CourseDetailFragment;
 import courses.CoursesFragment;
 import courses.NewCourseFragment;
-import courses.NewSubjectFragment;
 import exams.ExamsFragment;
 import exams.NewExamFragment;
 

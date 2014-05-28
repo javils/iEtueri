@@ -1,4 +1,4 @@
-package courses;
+package subject;
 
 import navigationdrawer.MainActivity;
 import navigationdrawer.NavigationDrawerController;
@@ -18,6 +18,9 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.javils.ietueri.R;
+
+import courses.Course;
+import courses.CourseDetailFragment;
 
 public class NewSubjectFragment extends Fragment implements OnClickButtonXml {
 

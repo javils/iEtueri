@@ -3,6 +3,7 @@ package navigationdrawer;
 import schedule.CalendarManager;
 import schedule.EventsManager;
 import schedule.RefreshScheduleEventsData;
+import subject.NewSubjectFragment;
 import utility.OnClickButtonXml;
 import android.app.ActionBar;
 import android.app.Activity;
@@ -18,7 +19,6 @@ import android.view.View;
 import com.javils.ietueri.R;
 
 import courses.CourseDetailFragment;
-import courses.NewSubjectFragment;
 
 public class MainActivity extends Activity implements NavigationDrawerCallbacks {
 
