@@ -1,4 +1,4 @@
-package courses;
+package subject;
 
 /**
  * This class represent a container os subjects

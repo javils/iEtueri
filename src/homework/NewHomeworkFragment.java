@@ -4,6 +4,8 @@ import java.util.Calendar;
 
 import navigationdrawer.MainActivity;
 import navigationdrawer.NavigationDrawerController;
+import subject.DetailSubjectFragment;
+import subject.Subject;
 import utility.DatabaseContract;
 import utility.DatabaseHelper;
 import utility.DatePickerDialogFragment;
@@ -24,9 +26,6 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.javils.ietueri.R;
-
-import courses.DetailSubjectFragment;
-import courses.Subject;
 
 public class NewHomeworkFragment extends Fragment implements OnClickButtonXml {
 

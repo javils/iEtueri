@@ -4,6 +4,9 @@ import java.util.ArrayList;
 
 import navigationdrawer.MainActivity;
 import navigationdrawer.NavigationDrawerController;
+import subject.DetailSubjectFragment;
+import subject.Subject;
+import subject.SubjectListAdapter;
 import utility.DatabaseContract;
 import utility.DatabaseHelper;
 import utility.OnClickButtonXml;

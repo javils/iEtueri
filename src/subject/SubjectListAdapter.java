@@ -1,4 +1,4 @@
-package courses;
+package subject;
 
 import java.util.ArrayList;
 import java.util.List;

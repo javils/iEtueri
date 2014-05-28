@@ -1,4 +1,4 @@
-package courses;
+package subject;
 
 import homework.Homework;
 import homework.NewHomeworkFragment;
