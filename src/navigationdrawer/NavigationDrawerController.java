@@ -5,6 +5,7 @@ import homework.NewHomeworkFragment;
 import schedule.ScheduleFragment;
 import subject.DetailSubjectFragment;
 import subject.NewSubjectFragment;
+import subject.SubjectFragment;
 import today.NewEventTodayFragment;
 import today.TodayFragment;
 import android.app.Fragment;
@@ -85,6 +86,7 @@ public class NavigationDrawerController {
 			newFragment = new CoursesFragment();
 			break;
 		case SECTION_NUMBER_SUBJECTS: // SUBJECTS SECTION
+			newFragment = new SubjectFragment();
 			break;
 		case SECTION_NUMBER_NEW_EVENT_TODAY: // NEW EVENT TODAY SECTION
 			newFragment = new NewEventTodayFragment();
