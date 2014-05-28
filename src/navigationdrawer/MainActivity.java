@@ -130,12 +130,16 @@ public class MainActivity extends Activity implements NavigationDrawerCallbacks 
 				getMenuInflater().inflate(R.menu.menu_detail_course, menu);
 
 			/** Homework menu */
-			if (title.equals(getString(R.string.title_homework)))
-				getMenuInflater().inflate(R.menu.menu_homework, menu);
+			/*
+			 * if (title.equals(getString(R.string.title_homework)))
+			 * getMenuInflater().inflate(R.menu.menu_homework, menu);
+			 */
 
 			/** Exams Menu */
-			if (title.equals(getString(R.string.title_exam)))
-				getMenuInflater().inflate(R.menu.menu_exams, menu);
+			/*
+			 * if (title.equals(getString(R.string.title_exam)))
+			 * getMenuInflater().inflate(R.menu.menu_exams, menu);
+			 */
 
 			ActionBar actionBar = getActionBar();
 			actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
