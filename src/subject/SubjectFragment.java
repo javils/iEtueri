@@ -91,14 +91,14 @@ public class SubjectFragment extends Fragment {
 			 * is 0
 			 */
 			int numberExams = 0;
-			if (numberExms != null && !numberExms[0].equals(""))
+			if (numberExms != null && !numberExms[0].trim().isEmpty())
 				numberExams = numberExms.length;
 
 			String[] numberHomw = cur.getString(
-					cur.getColumnIndexOrThrow(DatabaseContract.Subjects.COLUMN_NAME_EXAMS_ID)).split(";");
+					cur.getColumnIndexOrThrow(DatabaseContract.Subjects.COLUMN_NAME_HOMEWORK_ID)).split(";");
 
 			int numberHomework = 0;
-			if (numberHomw != null && !numberHomw[0].equals(""))
+			if (numberHomw != null && !numberHomw[0].trim().isEmpty())
 				numberHomework = numberHomw.length;
 
 			Subject newSubject = new Subject(subjectName, average, numberExams, numberHomework);

@@ -143,8 +143,8 @@ public class NewExamFragment extends Fragment implements OnClickButtonXml {
 
 			values.clear();
 			subject.setNumberOfExams(subject.getNumberOfExams() + 1);
-			subject.setExamsId(subject.getExamsId() + ";"
-					+ DatabaseHelper.getNextId(db, DatabaseContract.Exams.TABLE_NAME));
+			subject.setExamsId(subject.getExamsId() + DatabaseHelper.getNextId(db, DatabaseContract.Exams.TABLE_NAME)
+					+ ";");
 			values.put(DatabaseContract.Subjects.COLUMN_NAME_EXAMS_ID, subject.getExamsId());
 			String[] args = { String.valueOf(subject.getId()) };
 			db.update(DatabaseContract.Subjects.TABLE_NAME, values, DatabaseContract.Subjects._ID + "=?", args);
