@@ -121,6 +121,10 @@ public class MainActivity extends Activity implements NavigationDrawerCallbacks 
 			if (title.equals(getString(R.string.title_today)))
 				getMenuInflater().inflate(R.menu.menu_today, menu);
 
+			/** Schedule Menu */
+			if (title.equals(getString(R.string.title_schedule)))
+				getMenuInflater().inflate(R.menu.menu_schedule, menu);
+
 			/** Courses Menu */
 			if (title.equals(getString(R.string.title_course)))
 				getMenuInflater().inflate(R.menu.menu_courses, menu);
@@ -158,7 +162,7 @@ public class MainActivity extends Activity implements NavigationDrawerCallbacks 
 		int id = item.getItemId();
 
 		/** Today Menu */
-		if (id == R.id.menu_today_menu_new) {
+		if (id == R.id.menu_today_menu_new || id == R.id.menu_schedule_menu_new) {
 			FragmentManager fragmentManager = getFragmentManager();
 			Fragment newFragment = NavigationDrawerController
 					.newInstance(NavigationDrawerController.SECTION_NUMBER_NEW_EVENT_TODAY);
