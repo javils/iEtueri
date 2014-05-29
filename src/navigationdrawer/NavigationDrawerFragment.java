@@ -88,12 +88,12 @@ public class NavigationDrawerFragment extends Fragment {
 		ArrayList<DrawerList> drawerList = new ArrayList<DrawerList>();
 
 		// Make the elements of the menu.
-		drawerList.add(new DrawerList(R.drawable.today_button, R.string.title_today));
-		drawerList.add(new DrawerList(R.drawable.schedule_button, R.string.title_schedule));
-		drawerList.add(new DrawerList(R.drawable.homework_button, R.string.title_homework));
-		drawerList.add(new DrawerList(R.drawable.exams_button, R.string.title_exam));
+		drawerList.add(new DrawerList(R.drawable.new_today, R.string.title_today));
+		drawerList.add(new DrawerList(R.drawable.new_schedule, R.string.title_schedule));
+		drawerList.add(new DrawerList(R.drawable.new_homework, R.string.title_homework));
+		drawerList.add(new DrawerList(R.drawable.new_exams, R.string.title_exam));
 		drawerList.add(new DrawerList(R.drawable.ic_courses, R.string.title_course));
-		drawerList.add(new DrawerList(R.drawable.ic_subject, R.string.title_subject));
+		drawerList.add(new DrawerList(R.drawable.new_subjects, R.string.title_subject));
 
 		// Fill all the ListView with the values of drawerList
 		DrawerListAdapter adapter = new DrawerListAdapter(getActivity(), R.layout.drawer_list_item, drawerList);
