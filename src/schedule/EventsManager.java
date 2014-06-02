@@ -79,6 +79,10 @@ public class EventsManager {
 					// TODO: Make animation with progressbar or something else.
 				}
 				String[] sDate = events.get(i).getInit().split("-");
+				// I don't know why in some mobile phones the dates it's
+				// separate with '/' instead of '-'
+				if (sDate[0].equals(events.get(i).getInit()))
+					sDate = events.get(i).getInit().split("/");
 				int eventYear = Integer.parseInt(sDate[0]);
 				int eventMonth = Integer.parseInt(sDate[1]);
 				int eventDay = Integer.parseInt(sDate[2]);
