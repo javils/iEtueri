@@ -7,10 +7,13 @@ import navigationdrawer.MainActivity;
 import navigationdrawer.NavigationDrawerController;
 import schedule.Event;
 import schedule.EventsManager;
+import schedule.RefreshScheduleEventsData;
 import schedule.ScheduleTodayAdapter;
 import android.app.Activity;
 import android.app.Fragment;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,10 +25,25 @@ import com.javils.ietueri.R;
 public class TodayFragment extends Fragment {
 
 	/** Views */
-	private ListView listEvents;
+	private static ListView listEvents;
+
+	private static boolean iAmActive = false;
+
+	public static Handler updaterHandler = new Handler() {
+		public void handleMessage(Message msg) {
+			switch (msg.what) {
+			case RefreshScheduleEventsData.CALENDAR_DATA_CHANGE:
+				// Update adapter of the ListView
+				((ScheduleTodayAdapter) listEvents.getAdapter()).notifyDataSetChanged();
+				break;
+			}
+			super.handleMessage(msg);
+		}
+	};
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		setiAmActive(true);
 		View view = inflater.inflate(R.layout.fragment_today, container, false);
 
 		listEvents = (ListView) view.findViewById(R.id.list_today_today);
@@ -35,21 +53,25 @@ public class TodayFragment extends Fragment {
 		int month = now.get(Calendar.MONTH);
 		int day = now.get(Calendar.DAY_OF_MONTH);
 
-		if (EventsManager.isThreadfinish()) {
-			ScheduleTodayAdapter adapter = new ScheduleTodayAdapter(view.getContext(), R.layout.schedule_list_item,
-					new ArrayList<Event>());
+		ScheduleTodayAdapter adapter = new ScheduleTodayAdapter(view.getContext(), R.layout.schedule_list_item,
+				new ArrayList<Event>());
 
-			EventsManager.setAdapter(adapter);
+		EventsManager.setAdapter(adapter);
 
-			ArrayList<Event> events = EventsManager.find(getActivity(), year, month, day);
-			if (events != null)
-				EventsManager.getAdapter().setItems(events);
+		ArrayList<Event> events = EventsManager.find(getActivity(), year, month, day);
+		if (events != null)
+			EventsManager.getAdapter().setItems(events);
 
-			EventsManager.getAdapter().notifyDataSetChanged();
-			listEvents.setAdapter(EventsManager.getAdapter());
-		}
+		EventsManager.getAdapter().notifyDataSetChanged();
+		listEvents.setAdapter(EventsManager.getAdapter());
 
 		return view;
+	}
+
+	@Override
+	public void onDestroyView() {
+		setiAmActive(false);
+		super.onDestroyView();
 	}
 
 	@Override
@@ -57,5 +79,13 @@ public class TodayFragment extends Fragment {
 		super.onAttach(activity);
 		((MainActivity) activity).onSectionAttached(getArguments()
 				.getInt(NavigationDrawerController.ARG_SECTION_NUMBER));
+	}
+
+	public static boolean isiAmActive() {
+		return iAmActive;
+	}
+
+	public static void setiAmActive(boolean iAmActive) {
+		TodayFragment.iAmActive = iAmActive;
 	}
 }

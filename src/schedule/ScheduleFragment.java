@@ -8,6 +8,8 @@ import navigationdrawer.NavigationDrawerController;
 import android.app.Activity;
 import android.app.Fragment;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,15 +23,30 @@ public class ScheduleFragment extends Fragment implements OnDateChangeListener {
 
 	/** Views */
 	private CalendarView calendar;
-	private ListView listEvents;
+	private static ListView listEvents;
 
 	/** Variables to check the actual day */
 	private int actualDay;
 	private int actualMonth;
 	private int actualYear;
 
+	private static boolean iAmActive = false;
+
+	public static Handler updaterHandler = new Handler() {
+		public void handleMessage(Message msg) {
+			switch (msg.what) {
+			case RefreshScheduleEventsData.CALENDAR_DATA_CHANGE:
+				// Update adapter of the ListView
+				((ScheduleTodayAdapter) listEvents.getAdapter()).notifyDataSetChanged();
+				break;
+			}
+			super.handleMessage(msg);
+		}
+	};
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		setiAmActive(true);
 		View view = inflater.inflate(R.layout.fragment_schedule, container, false);
 
 		calendar = (CalendarView) view.findViewById(R.id.calendar_calendar);
@@ -46,22 +63,27 @@ public class ScheduleFragment extends Fragment implements OnDateChangeListener {
 
 		calendar.setOnDateChangeListener(this);
 
-		if (EventsManager.isThreadfinish()) {
-			ScheduleTodayAdapter adapter = new ScheduleTodayAdapter(view.getContext(), R.layout.schedule_list_item,
-					new ArrayList<Event>());
+		ScheduleTodayAdapter adapter = new ScheduleTodayAdapter(view.getContext(), R.layout.schedule_list_item,
+				new ArrayList<Event>());
 
-			EventsManager.setAdapter(adapter);
+		EventsManager.setAdapter(adapter);
 
-			ArrayList<Event> events = EventsManager.find(getActivity(), year, month, day);
+		ArrayList<Event> events = EventsManager.find(getActivity(), year, month, day);
 
-			if (events != null)
-				EventsManager.getAdapter().setItems(events);
-
+		if (events != null) {
+			EventsManager.getAdapter().setItems(events);
 			EventsManager.getAdapter().notifyDataSetChanged();
-			listEvents.setAdapter(EventsManager.getAdapter());
 		}
 
+		listEvents.setAdapter(EventsManager.getAdapter());
+
 		return view;
+	}
+
+	@Override
+	public void onDestroyView() {
+		setiAmActive(false);
+		super.onDestroyView();
 	}
 
 	@Override
@@ -76,7 +98,6 @@ public class ScheduleFragment extends Fragment implements OnDateChangeListener {
 
 		EventsManager.getAdapter().setItems(EventsManager.find(getActivity(), year, month, dayOfMonth));
 		EventsManager.getAdapter().notifyDataSetChanged();
-		listEvents.setAdapter(EventsManager.getAdapter());
 
 	}
 
@@ -85,5 +106,13 @@ public class ScheduleFragment extends Fragment implements OnDateChangeListener {
 		super.onAttach(activity);
 		((MainActivity) activity).onSectionAttached(getArguments()
 				.getInt(NavigationDrawerController.ARG_SECTION_NUMBER));
+	}
+
+	public static boolean isiAmActive() {
+		return iAmActive;
+	}
+
+	public static void setiAmActive(boolean iAmActive) {
+		ScheduleFragment.iAmActive = iAmActive;
 	}
 }

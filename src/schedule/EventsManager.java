@@ -33,22 +33,22 @@ public class EventsManager {
 	private static ScheduleTodayAdapter scheduleAdapter;
 
 	/** Get all the events */
-	public static ArrayList<Event> getEvents() {
+	public static synchronized ArrayList<Event> getEvents() {
 		return events;
 	}
 
 	/** Set all events */
-	public static void setEvents(ArrayList<Event> events) {
+	public static synchronized void setEvents(ArrayList<Event> events) {
 		EventsManager.events = events;
 	}
 
 	/** Add one event on the list */
-	public static void addEvent(Event event) {
+	public static synchronized void addEvent(Event event) {
 		events.add(event);
 	}
 
 	/** Remove one event on the list */
-	public static void removeEvent(int position) {
+	public static synchronized void removeEvent(int position) {
 		events.remove(position);
 	}
 
@@ -63,7 +63,7 @@ public class EventsManager {
 	}
 
 	/** Find events with the same start year, month, and day */
-	public static ArrayList<Event> find(Context context, int year, int month, int dayOfMonth) {
+	public static synchronized ArrayList<Event> find(Context context, int year, int month, int dayOfMonth) {
 		// TODO: Use Threads
 		ArrayList<Event> result = new ArrayList<Event>();
 		Calendar cal = Calendar.getInstance();
@@ -73,11 +73,6 @@ public class EventsManager {
 			if (events.get(i).getInit().equals(Event.getDate(cal.getTimeInMillis())))
 				result.add(events.get(i));
 			else {
-				if (events.size() == 0)
-					new Thread(new RefreshScheduleEventsData(context)).start();
-				while (EventsManager.isThreadfinish() == false) {
-					// TODO: Make animation with progressbar or something else.
-				}
 				String[] sDate = events.get(i).getInit().split("-");
 				// I don't know why in some mobile phones the dates it's
 				// separate with '/' instead of '-'
@@ -92,14 +87,6 @@ public class EventsManager {
 			}
 		}
 		return result;
-	}
-
-	public static boolean isThreadfinish() {
-		return threadfinish;
-	}
-
-	public static void setThreadfinish(boolean threadfinish) {
-		EventsManager.threadfinish = threadfinish;
 	}
 
 	/** Check if the data of an event is correct or not */

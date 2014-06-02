@@ -1,7 +1,6 @@
 package navigationdrawer;
 
 import schedule.CalendarManager;
-import schedule.EventsManager;
 import schedule.RefreshScheduleEventsData;
 import subject.NewSubjectFragment;
 import utility.OnClickButtonXml;
@@ -42,11 +41,8 @@ public class MainActivity extends Activity implements NavigationDrawerCallbacks 
 
 		title = getTitle();
 
-		new Thread(new RefreshScheduleEventsData(getApplicationContext())).start();
+		new Thread(new RefreshScheduleEventsData(this)).start();
 
-		while (EventsManager.isThreadfinish() == false) {
-			// TODO: Make animation with progressbar or something else.
-		}
 		// TODO: Excute only in the first execution
 		// CalendarManager.deleteCalendar(getApplicationContext());
 		if (CalendarManager.ID == -1)
@@ -245,6 +241,10 @@ public class MainActivity extends Activity implements NavigationDrawerCallbacks 
 	public static void setCurrentFragment(Fragment fragment) {
 		if (fragment != null)
 			MainActivity.currentFragment = fragment;
+	}
+
+	public static Fragment getCurrentFragment() {
+		return currentFragment;
 	}
 
 	public void onClickButton(View view) {

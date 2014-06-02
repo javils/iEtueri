@@ -1,13 +1,17 @@
 package schedule;
 
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 
+import navigationdrawer.MainActivity;
+
 import org.joda.time.LocalDate;
 
+import today.TodayFragment;
+import android.app.Activity;
 import android.content.ContentResolver;
-import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.CalendarContract;
@@ -36,146 +40,166 @@ public class RefreshScheduleEventsData implements Runnable {
 	/** Max number of repetitions of a event */
 	public static final int MAX_EVENTS_REPETITION = 100;
 
-	/** Context for get the ContentResolver */
-	private Context context;
+	public static final int CALENDAR_DATA_CHANGE = 0x01;
 
-	public RefreshScheduleEventsData(Context context) {
-		this.context = context;
+	/** Context for get the ContentResolver */
+	private Activity activity;
+
+	/** Number of events in the last iteration of thread */
+	private static int numberEventsInLast;
+
+	public RefreshScheduleEventsData(Activity activity) {
+		this.activity = activity;
 	}
 
 	@Override
 	public void run() {
-		checkCalendarID();
-		/** First clear the ArrayList */
-		EventsManager.getEvents().clear();
-		ContentResolver contentResolver = context.getContentResolver();
+		numberEventsInLast = 0;
+		while (!activity.isFinishing()) {
+			checkCalendarID();
+			ArrayList<Event> auxiliar = new ArrayList<Event>();
+			ContentResolver contentResolver = activity.getContentResolver();
 
-		EventsManager.setThreadfinish(false);
-
-		/** Get the content of the Calendar Database */
-		Cursor cursor = contentResolver.query(CalendarContract.Events.CONTENT_URI, EVENT_PROJECTION, null, null, null);
-		cursor.moveToFirst();
-
-		/** Check all dates in the Cursor */
-		for (int i = 0; i < cursor.getCount(); ++i) {
-			if (checkCalendarDeleted(cursor.getString(CALENDAR_CALENDAR_ID))) {
-				cursor.moveToNext();
+			/** Get the content of the Calendar Database */
+			Cursor cursor = contentResolver.query(CalendarContract.Events.CONTENT_URI, EVENT_PROJECTION, null, null,
+					null);
+			if (cursor.getCount() == numberEventsInLast) {
+				cursor.close();
 				continue;
 			}
 
-			String[] date = Event.getDate(Long.parseLong(cursor.getString(CALENDAR_DTSTART))).split("-");
-			int year = Integer.valueOf(date[0]);
-			int month = Integer.valueOf(date[1]);
-			int day = Integer.valueOf(date[2]);
-			long daysDifference = 0;
+			numberEventsInLast = cursor.getCount();
 
-			Calendar calendar = Calendar.getInstance();
+			cursor.moveToFirst();
 
-			/** Init minute, and hour */
-			calendar.setTimeInMillis(Long.parseLong(cursor.getString(CALENDAR_DTSTART)));
-			int inithour = calendar.get(Calendar.HOUR_OF_DAY);
-			int initminute = calendar.get(Calendar.MINUTE);
-
-			/** End minute and hour */
-			int endhour = 0;
-			int endminute = 0;
-			if (cursor.getString(CALENDAR_DTEND) != null) {
-				calendar.setTimeInMillis(Long.parseLong(cursor.getString(CALENDAR_DTEND)));
-				endhour = calendar.get(Calendar.HOUR_OF_DAY);
-				endminute = calendar.get(Calendar.MINUTE);
-			}
-
-			/** Get all data of event */
-			String title = cursor.getString(CALENDAR_TITLE);
-
-			if (title != null && title.equals("Nuevo Evento"))
-				try {
-					Thread.sleep(2000);
-				} catch (InterruptedException e1) {
-					e1.printStackTrace();
+			/** Check all dates in the Cursor */
+			for (int i = 0; i < cursor.getCount(); ++i) {
+				if (checkCalendarDeleted(cursor.getString(CALENDAR_CALENDAR_ID))) {
+					cursor.moveToNext();
+					continue;
 				}
 
-			String description = cursor.getString(CALENDAR_DESCRIPTION);
-			String dtstart = Event.getDate(Long.parseLong(cursor.getString(CALENDAR_DTSTART)));
-			String dtend = null;
-			if (cursor.getString(CALENDAR_DTEND) != null)
-				dtend = Event.getDate(Long.parseLong(cursor.getString(CALENDAR_DTEND)));
+				String[] date = Event.getDate(Long.parseLong(cursor.getString(CALENDAR_DTSTART))).split("-");
+				int year = Integer.valueOf(date[0]);
+				int month = Integer.valueOf(date[1]);
+				int day = Integer.valueOf(date[2]);
+				long daysDifference = 0;
 
-			String rrule = cursor.getString(CALENDAR_RRULE);
-			String location = cursor.getString(CALENDAR_EVENT_LOCATION);
-			boolean allDay = (cursor.getInt(CALENDAR_ALLDAY) == 0) ? false : true;
+				Calendar calendar = Calendar.getInstance();
 
-			/** If is a event without repetition */
-			if (rrule == null) {
-				Event newEvent = new Event(title, description, location, dtstart, dtend, inithour, initminute, endhour,
-						endminute, allDay);
-				EventsManager.addEvent(newEvent);
+				/** Init minute, and hour */
+				calendar.setTimeInMillis(Long.parseLong(cursor.getString(CALENDAR_DTSTART)));
+				int inithour = calendar.get(Calendar.HOUR_OF_DAY);
+				int initminute = calendar.get(Calendar.MINUTE);
 
-				daysDifference = Long.parseLong(cursor.getString(CALENDAR_DTEND))
-						- Long.parseLong(cursor.getString(CALENDAR_DTSTART));
+				/** End minute and hour */
+				int endhour = 0;
+				int endminute = 0;
+				if (cursor.getString(CALENDAR_DTEND) != null) {
+					calendar.setTimeInMillis(Long.parseLong(cursor.getString(CALENDAR_DTEND)));
+					endhour = calendar.get(Calendar.HOUR_OF_DAY);
+					endminute = calendar.get(Calendar.MINUTE);
+				}
 
-				if (daysDifference > EventsManager.ONEDAY_IN_MILLIECONDS) {
-					int count = 0;
-					/** Add all intermediate events to the list */
-					while ((daysDifference - EventsManager.ONEDAY_IN_MILLIECONDS) >= 0) {
-						String intermediateDay = Event.getDate(Long.parseLong(cursor.getString(CALENDAR_DTEND))
-								- EventsManager.ONEDAY_IN_MILLIECONDS * count);
+				/** Get all data of event */
+				String title = cursor.getString(CALENDAR_TITLE);
 
-						daysDifference -= EventsManager.ONEDAY_IN_MILLIECONDS;
-						count++;
-						Event newIntermediateEvent = new Event(title, description, location, intermediateDay, dtend,
-								inithour, initminute, endhour, endminute, allDay);
-						EventsManager.addEvent(newIntermediateEvent);
+				if (title != null && title.equals("Nuevo Evento"))
+					try {
+						Thread.sleep(2000);
+					} catch (InterruptedException e1) {
+						e1.printStackTrace();
 					}
-				}
-			} else {
 
-				LocalDate localdate = new LocalDate(year, month, day);
-				try {
-					/** Add all of repetitions of the event */
-					String eventEndDate = cursor.getString(CALENDAR_DTEND) != null ? cursor.getString(CALENDAR_DTEND)
-							: "0";
-					int numberEventsRepetition = 0;
-					for (LocalDate itr : LocalDateIteratorFactory.createLocalDateIterable("RRULE:" + rrule, localdate,
-							false)) {
-						if (numberEventsRepetition > MAX_EVENTS_REPETITION)
-							break;
-						Event newEvent = new Event(title, description, location, Event.getDate(itr.toDate().getTime()),
-								dtend, inithour, initminute, endhour, endminute, allDay);
-						newEvent.setRepeat(true);
-						EventsManager.addEvent(newEvent);
-						numberEventsRepetition++;
-						daysDifference = Long.parseLong(eventEndDate) - itr.toDate().getTime();
+				String description = cursor.getString(CALENDAR_DESCRIPTION);
+				String dtstart = Event.getDate(Long.parseLong(cursor.getString(CALENDAR_DTSTART)));
+				String dtend = null;
+				if (cursor.getString(CALENDAR_DTEND) != null)
+					dtend = Event.getDate(Long.parseLong(cursor.getString(CALENDAR_DTEND)));
 
-						if (daysDifference > EventsManager.ONEDAY_IN_MILLIECONDS) {
-							int count = 0;
+				String rrule = cursor.getString(CALENDAR_RRULE);
+				String location = cursor.getString(CALENDAR_EVENT_LOCATION);
+				boolean allDay = (cursor.getInt(CALENDAR_ALLDAY) == 0) ? false : true;
 
-							while (daysDifference > EventsManager.ONEDAY_IN_MILLIECONDS) {
-								dtstart = Event.getDate(itr.toDate().getTime() - EventsManager.ONEDAY_IN_MILLIECONDS
-										* count);
-								daysDifference -= EventsManager.ONEDAY_IN_MILLIECONDS;
-								count++;
+				/** If is a event without repetition */
+				if (rrule == null) {
+					Event newEvent = new Event(title, description, location, dtstart, dtend, inithour, initminute,
+							endhour, endminute, allDay);
+					auxiliar.add(newEvent);
 
-								Event newIntermediateEvent = new Event(title, description, location, Event.getDate(itr
-										.toDate().getTime()), dtend, inithour, initminute, endhour, endminute, allDay);
-								EventsManager.addEvent(newIntermediateEvent);
-							}
+					daysDifference = Long.parseLong(cursor.getString(CALENDAR_DTEND))
+							- Long.parseLong(cursor.getString(CALENDAR_DTSTART));
+
+					if (daysDifference > EventsManager.ONEDAY_IN_MILLIECONDS) {
+						int count = 0;
+						/** Add all intermediate events to the list */
+						while ((daysDifference - EventsManager.ONEDAY_IN_MILLIECONDS) >= 0) {
+							String intermediateDay = Event.getDate(Long.parseLong(cursor.getString(CALENDAR_DTEND))
+									- EventsManager.ONEDAY_IN_MILLIECONDS * count);
+
+							daysDifference -= EventsManager.ONEDAY_IN_MILLIECONDS;
+							count++;
+							Event newIntermediateEvent = new Event(title, description, location, intermediateDay,
+									dtend, inithour, initminute, endhour, endminute, allDay);
+							auxiliar.add(newIntermediateEvent);
 						}
 					}
-				} catch (NumberFormatException e) {
-					e.printStackTrace();
-				} catch (ParseException e) {
-					e.printStackTrace();
+				} else {
+
+					LocalDate localdate = new LocalDate(year, month, day);
+					try {
+						/** Add all of repetitions of the event */
+						String eventEndDate = cursor.getString(CALENDAR_DTEND) != null ? cursor
+								.getString(CALENDAR_DTEND) : "0";
+						int numberEventsRepetition = 0;
+						for (LocalDate itr : LocalDateIteratorFactory.createLocalDateIterable("RRULE:" + rrule,
+								localdate, false)) {
+							if (numberEventsRepetition > MAX_EVENTS_REPETITION)
+								break;
+							Event newEvent = new Event(title, description, location, Event.getDate(itr.toDate()
+									.getTime()), dtend, inithour, initminute, endhour, endminute, allDay);
+							newEvent.setRepeat(true);
+							auxiliar.add(newEvent);
+							numberEventsRepetition++;
+							daysDifference = Long.parseLong(eventEndDate) - itr.toDate().getTime();
+
+							if (daysDifference > EventsManager.ONEDAY_IN_MILLIECONDS) {
+								int count = 0;
+
+								while (daysDifference > EventsManager.ONEDAY_IN_MILLIECONDS) {
+									dtstart = Event.getDate(itr.toDate().getTime()
+											- EventsManager.ONEDAY_IN_MILLIECONDS * count);
+									daysDifference -= EventsManager.ONEDAY_IN_MILLIECONDS;
+									count++;
+
+									Event newIntermediateEvent = new Event(title, description, location,
+											Event.getDate(itr.toDate().getTime()), dtend, inithour, initminute,
+											endhour, endminute, allDay);
+									auxiliar.add(newIntermediateEvent);
+								}
+							}
+						}
+					} catch (NumberFormatException e) {
+						e.printStackTrace();
+					} catch (ParseException e) {
+						e.printStackTrace();
+					}
 				}
+				cursor.moveToNext();
 			}
-			cursor.moveToNext();
+			cursor.close();
+			EventsManager.setEvents(auxiliar);
+			/** For more performance sort the array for searchs */
+			Collections.sort(EventsManager.getEvents());
+			/** Update the listViews */
+
+			if (MainActivity.getCurrentFragment() instanceof ScheduleFragment)
+				ScheduleFragment.updaterHandler.sendEmptyMessage(CALENDAR_DATA_CHANGE);
+
+			if (MainActivity.getCurrentFragment() instanceof TodayFragment)
+				TodayFragment.updaterHandler.sendEmptyMessage(CALENDAR_DATA_CHANGE);
+
 		}
-		cursor.close();
-
-		/** For more performance sort the array for searchs */
-		Collections.sort(EventsManager.getEvents());
-
-		EventsManager.setThreadfinish(true);
 	}
 
 	public void checkCalendarID() {
@@ -186,7 +210,7 @@ public class RefreshScheduleEventsData implements Runnable {
 		final int CALENDAR_ID_INDEX = 0;
 
 		Cursor cur = null;
-		ContentResolver cr = context.getContentResolver();
+		ContentResolver cr = activity.getContentResolver();
 		Uri uri = Calendars.CONTENT_URI;
 		String selection = "(" + Calendars.CALENDAR_DISPLAY_NAME + " = ? AND " + Calendars.DELETED + "=?)";
 		String[] selectionArgs = new String[] { CalendarManager.CALENDAR_NAME, "0" };
@@ -209,7 +233,7 @@ public class RefreshScheduleEventsData implements Runnable {
 		// The indices for the projection array above.
 		final int CALENDAR_DELETED_INDEX = 1;
 		Cursor cur = null;
-		ContentResolver cr = context.getContentResolver();
+		ContentResolver cr = activity.getContentResolver();
 		Uri uri = Calendars.CONTENT_URI;
 		String selection = "(" + Calendars._ID + " = ? AND " + Calendars.DELETED + "= ?)";
 		String[] selectionArgs = new String[] { Id, "1" };
