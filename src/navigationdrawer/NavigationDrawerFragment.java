@@ -64,7 +64,6 @@ public class NavigationDrawerFragment extends Fragment {
 			fromSavedInstanceState = true;
 		}
 
-		selectItem(currentSelectedPosition);
 	}
 
 	@Override
@@ -84,6 +83,8 @@ public class NavigationDrawerFragment extends Fragment {
 				selectItem(position);
 			}
 		});
+
+		drawerListView.addHeaderView(inflater.inflate(R.layout.header_navigation_drawer, container, false));
 
 		ArrayList<DrawerList> drawerList = new ArrayList<DrawerList>();
 

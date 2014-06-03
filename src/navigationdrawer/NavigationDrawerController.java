@@ -26,6 +26,7 @@ import exams.NewExamFragment;
 public class NavigationDrawerController {
 
 	/** Constants that represent the sections of the Navigation */
+	public static final int SECTION_NUMBER_HEADER = 0;
 	public static final int SECTION_NUMBER_TODAY = 1;
 	public static final int SECTION_NUMBER_SCHEDULE = 2;
 	public static final int SECTION_NUMBER_HOMEWORK = 3;
@@ -53,9 +54,9 @@ public class NavigationDrawerController {
 	 * @return fragment of the section that we need
 	 */
 	public static Fragment newInstance(int section) {
-		Fragment fragment = chooseFragment(section);
+		Fragment fragment = chooseFragment(section - 1);
 		Bundle args = new Bundle();
-		args.putInt(ARG_SECTION_NUMBER, section);
+		args.putInt(ARG_SECTION_NUMBER, section - 1);
 		fragment.setArguments(args);
 
 		return fragment;
@@ -70,6 +71,9 @@ public class NavigationDrawerController {
 		Fragment newFragment = new Fragment();
 
 		switch (section) {
+		case SECTION_NUMBER_HEADER: // HEADER SECTION
+			newFragment = new OpenBrowser();
+			break;
 		case SECTION_NUMBER_TODAY: // TODAY SECTION
 			newFragment = new TodayFragment();
 			break;
