@@ -7,6 +7,7 @@ import navigationdrawer.MainActivity;
 import navigationdrawer.NavigationDrawerController;
 import schedule.Event;
 import schedule.EventsManager;
+import schedule.FindEvents;
 import schedule.RefreshScheduleEventsData;
 import schedule.ScheduleTodayAdapter;
 import android.app.Activity;
@@ -58,12 +59,12 @@ public class TodayFragment extends Fragment {
 
 		EventsManager.setAdapter(adapter);
 
-		ArrayList<Event> events = EventsManager.find(getActivity(), year, month, day);
-		if (events != null)
-			EventsManager.getAdapter().setItems(events);
+		ArrayList<Event> events = new ArrayList<Event>();
+		new Thread(new FindEvents(getActivity(), adapter, events, year, month, day, true)).start();
+
+		listEvents.setAdapter(EventsManager.getAdapter());
 
 		EventsManager.getAdapter().notifyDataSetChanged();
-		listEvents.setAdapter(EventsManager.getAdapter());
 
 		return view;
 	}
