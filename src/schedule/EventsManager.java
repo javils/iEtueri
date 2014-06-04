@@ -4,9 +4,12 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.Locale;
 
+import android.accounts.Account;
+import android.accounts.AccountManager;
 import android.content.Context;
 import android.net.Uri;
 import android.provider.CalendarContract;
@@ -22,9 +25,6 @@ public class EventsManager {
 
 	/** One day in milliseconds */
 	public static final long ONEDAY_IN_MILLIECONDS = 86400000;
-
-	/** This flag indicate that thread is finish */
-	private static boolean threadfinish = false;
 
 	/** ArrayList with all of the events of the calendars */
 	private static ArrayList<Event> events = new ArrayList<Event>();
@@ -45,6 +45,7 @@ public class EventsManager {
 	/** Add one event on the list */
 	public static synchronized void addEvent(Event event) {
 		events.add(event);
+		Collections.sort(events);
 	}
 
 	/** Remove one event on the list */
@@ -64,13 +65,13 @@ public class EventsManager {
 
 	/** Find events with the same start year, month, and day */
 	public static synchronized ArrayList<Event> find(Context context, int year, int month, int dayOfMonth) {
-		// TODO: Use Threads
+		// TODO: Maybe change the algorithm
 		ArrayList<Event> result = new ArrayList<Event>();
-		Calendar cal = Calendar.getInstance();
-		cal.set(year, month, dayOfMonth);
+		Calendar dateToSearch = Calendar.getInstance();
+		dateToSearch.set(year, month, dayOfMonth);
 
 		for (int i = 0; i < events.size(); ++i) {
-			if (events.get(i).getInit().equals(Event.getDate(cal.getTimeInMillis())))
+			if (events.get(i).getInit().equals(Event.getDate(dateToSearch.getTimeInMillis())))
 				result.add(events.get(i));
 			else {
 				String[] sDate = events.get(i).getInit().split("-");
@@ -86,6 +87,7 @@ public class EventsManager {
 					break;
 			}
 		}
+
 		return result;
 	}
 
@@ -116,10 +118,17 @@ public class EventsManager {
 	}
 
 	/** Builds the Uri for events */
-	public static Uri buildEventUri() {
+	public static Uri buildEventUri(Context context) {
+		Account[] accounts = AccountManager.get(context).getAccountsByType("com.google");
+		String account = new String();
+		if (accounts.length >= 1) {
+			// TODO: Make dialog to choose what account you can synchronize
+			account = accounts[0].name;
+		}
+
 		return CalendarContract.Events.CONTENT_URI.buildUpon()
 				.appendQueryParameter(CalendarContract.CALLER_IS_SYNCADAPTER, "true")
-				.appendQueryParameter(Calendars.ACCOUNT_NAME, "javiluke93@gmail.com")
+				.appendQueryParameter(Calendars.ACCOUNT_NAME, account)
 				.appendQueryParameter(Calendars.ACCOUNT_TYPE, CalendarManager.ACCOUNT_TYPE).build();
 	}
 }

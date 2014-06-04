@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import today.TodayFragment;
 import android.app.Activity;
-import android.util.Log;
 
 public class FindEvents implements Runnable {
 
@@ -30,7 +29,6 @@ public class FindEvents implements Runnable {
 	@Override
 	public void run() {
 		events = EventsManager.find(activity, year, month, day);
-		Log.i("EVENTS COUNT", "" + events.size());
 		adapter.setItems(events);
 		if (!inDayView)
 			ScheduleFragment.updaterHandler.sendEmptyMessage(RefreshScheduleEventsData.CALENDAR_DATA_CHANGE);
