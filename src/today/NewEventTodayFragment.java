@@ -7,6 +7,7 @@ import navigationdrawer.NavigationDrawerController;
 import schedule.CalendarManager;
 import schedule.Event;
 import schedule.EventsManager;
+import schedule.RefreshScheduleEventsData;
 import utility.DatePickerDialogFragment;
 import utility.OnClickButtonXml;
 import utility.TimePickerDialogFragment;
@@ -133,13 +134,15 @@ public class NewEventTodayFragment extends Fragment implements OnClickButtonXml 
 			int initMonth = Integer.valueOf(initDate[1]);
 			int initYear = Integer.valueOf(initDate[2]);
 
-			String[] endDate = eventFromDate.split("/");
+			String[] endDate = eventToDate.split("/");
 			int endDay = Integer.valueOf(endDate[0]);
 			int endMonth = Integer.valueOf(endDate[1]);
 			int endYear = Integer.valueOf(endDate[2]);
+			eventFromDate = initYear + "-" + initMonth + "-" + initDay;
+			eventToDate = endYear + "-" + endMonth + "-" + endDay;
 
 			/** Add event to the array list */
-			newEvent = new Event(eventName, eventDescription, eventPlace, eventFromDate, eventFromDate, initHour,
+			newEvent = new Event(eventName, eventDescription, eventPlace, eventFromDate, eventToDate, initHour,
 					initMinute, endHour, endMinute, eventAllDay);
 			EventsManager.addEvent(newEvent);
 
@@ -178,7 +181,8 @@ public class NewEventTodayFragment extends Fragment implements OnClickButtonXml 
 			cv.put(Events.EVENT_LOCATION, eventPlace);
 			cv.put(Events.ALL_DAY, eventAllDay);
 			cv.put(Events.DESCRIPTION, eventDescription);
-			cr.insert(EventsManager.buildEventUri(), cv);
+			cr.insert(EventsManager.buildEventUri(getActivity()), cv);
+
 			Toast.makeText(getActivity(), "Nuevo Evento creado", Toast.LENGTH_SHORT).show();
 		}
 
@@ -189,6 +193,8 @@ public class NewEventTodayFragment extends Fragment implements OnClickButtonXml 
 			MainActivity.setOnClickFragment(newFragment);
 		MainActivity.setCurrentFragment(newFragment);
 		fragmentManager.beginTransaction().replace(R.id.navigation_drawer_container, newFragment).commit();
+
+		TodayFragment.updaterHandler.sendEmptyMessage(RefreshScheduleEventsData.CALENDAR_DATA_CHANGE);
 
 	}
 

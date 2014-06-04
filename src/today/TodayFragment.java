@@ -60,11 +60,10 @@ public class TodayFragment extends Fragment {
 		EventsManager.setAdapter(adapter);
 
 		ArrayList<Event> events = new ArrayList<Event>();
-		new Thread(new FindEvents(getActivity(), adapter, events, year, month, day, true)).start();
 
 		listEvents.setAdapter(EventsManager.getAdapter());
 
-		EventsManager.getAdapter().notifyDataSetChanged();
+		new Thread(new FindEvents(getActivity(), adapter, events, year, month, day, true)).start();
 
 		return view;
 	}
