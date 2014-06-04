@@ -80,7 +80,7 @@ public class NavigationDrawerFragment extends Fragment {
 		drawerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				selectItem(position);
+				selectItem(position - 1);
 			}
 		});
 

@@ -54,9 +54,9 @@ public class NavigationDrawerController {
 	 * @return fragment of the section that we need
 	 */
 	public static Fragment newInstance(int section) {
-		Fragment fragment = chooseFragment(section - 1);
+		Fragment fragment = chooseFragment(section);
 		Bundle args = new Bundle();
-		args.putInt(ARG_SECTION_NUMBER, section - 1);
+		args.putInt(ARG_SECTION_NUMBER, section);
 		fragment.setArguments(args);
 
 		return fragment;
