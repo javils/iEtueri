@@ -28,6 +28,7 @@ public class FindEvents implements Runnable {
 
 	@Override
 	public void run() {
+
 		events = EventsManager.find(activity, year, month, day);
 		adapter.setItems(events);
 		if (!inDayView)
