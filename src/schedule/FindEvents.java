@@ -31,10 +31,12 @@ public class FindEvents implements Runnable {
 
 		events = EventsManager.find(activity, year, month, day);
 		adapter.setItems(events);
+
 		if (!inDayView)
 			ScheduleFragment.updaterHandler.sendEmptyMessage(RefreshScheduleEventsData.CALENDAR_DATA_CHANGE);
 		else
 			TodayFragment.updaterHandler.sendEmptyMessage(RefreshScheduleEventsData.CALENDAR_DATA_CHANGE);
+
 	}
 
 }
