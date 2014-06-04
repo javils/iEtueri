@@ -68,9 +68,7 @@ public class ScheduleFragment extends Fragment implements OnDateChangeListener {
 
 		EventsManager.setAdapter(adapter);
 
-		ArrayList<Event> events = new ArrayList<Event>();// EventsManager.find(getActivity(),
-															// year, month,
-															// day);
+		ArrayList<Event> events = new ArrayList<Event>();
 
 		listEvents.setAdapter(EventsManager.getAdapter());
 
@@ -95,9 +93,8 @@ public class ScheduleFragment extends Fragment implements OnDateChangeListener {
 		actualMonth = month;
 		actualYear = year;
 
-		EventsManager.getAdapter().setItems(EventsManager.find(getActivity(), year, month, dayOfMonth));
-		EventsManager.getAdapter().notifyDataSetChanged();
-
+		new Thread(new FindEvents(getActivity(), EventsManager.getAdapter(), EventsManager.getEvents(), year, month,
+				dayOfMonth, false)).start();
 	}
 
 	@Override
