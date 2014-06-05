@@ -45,7 +45,6 @@ public class EventsManager {
 	/** Add one event on the list */
 	public static synchronized void addEvent(Event event) {
 		events.add(event);
-		Collections.sort(events);
 	}
 
 	/** Remove one event on the list */
@@ -69,7 +68,7 @@ public class EventsManager {
 		ArrayList<Event> result = new ArrayList<Event>();
 		Calendar dateToSearch = Calendar.getInstance();
 		dateToSearch.set(year, month, dayOfMonth);
-
+		Collections.sort(events);
 		for (int i = 0; i < events.size(); ++i) {
 			if (events.get(i).getInit().equals(Event.getDate(dateToSearch.getTimeInMillis())))
 				result.add(events.get(i));

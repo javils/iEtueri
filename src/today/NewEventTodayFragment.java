@@ -105,7 +105,7 @@ public class NewEventTodayFragment extends Fragment implements OnClickButtonXml 
 	}
 
 	/** Create new event in the provider */
-	public void createNewEvent() {
+	public synchronized void createNewEvent() {
 		/** Get data of event */
 		String eventName = name.getText().toString();
 		String eventPlace = location.getText().toString();

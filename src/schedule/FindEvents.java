@@ -29,6 +29,13 @@ public class FindEvents implements Runnable {
 	@Override
 	public void run() {
 
+		while (!RefreshScheduleEventsData.isThreadFinished()) {
+			try {
+				Thread.sleep(100);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
 		events = EventsManager.find(activity, year, month, day);
 		adapter.setItems(events);
 

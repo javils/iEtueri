@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.CalendarView;
 import android.widget.CalendarView.OnDateChangeListener;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.javils.ietueri.R;
 
@@ -60,6 +61,8 @@ public class ScheduleFragment extends Fragment implements OnDateChangeListener {
 		int year = now.get(Calendar.YEAR);
 		int month = now.get(Calendar.MONTH);
 		int day = now.get(Calendar.DAY_OF_MONTH);
+
+		Toast.makeText(getActivity(), "Cargando Eventos...", Toast.LENGTH_LONG).show();
 
 		calendar.setOnDateChangeListener(this);
 

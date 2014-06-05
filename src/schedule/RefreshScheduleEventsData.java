@@ -48,6 +48,8 @@ public class RefreshScheduleEventsData implements Runnable {
 	/** Number of events in the last iteration of thread */
 	private static int numberEventsInLast;
 
+	private static boolean isThreadFinished;
+
 	public RefreshScheduleEventsData(Activity activity) {
 		this.activity = activity;
 	}
@@ -55,6 +57,8 @@ public class RefreshScheduleEventsData implements Runnable {
 	@Override
 	public void run() {
 		numberEventsInLast = 0;
+		RefreshScheduleEventsData.setThreadFinished(false);
+
 		while (!activity.isFinishing()) {
 			checkCalendarID();
 			ArrayList<Event> auxiliar = new ArrayList<Event>();
@@ -73,8 +77,14 @@ public class RefreshScheduleEventsData implements Runnable {
 			cursor.moveToFirst();
 
 			/** Check all dates in the Cursor */
+
 			for (int i = 0; i < cursor.getCount(); ++i) {
 				if (checkCalendarDeleted(cursor.getString(CALENDAR_CALENDAR_ID))) {
+					if (MainActivity.getCurrentFragment() instanceof ScheduleFragment)
+						ScheduleFragment.updaterHandler.sendEmptyMessage(CALENDAR_DATA_CHANGE);
+
+					if (MainActivity.getCurrentFragment() instanceof TodayFragment)
+						TodayFragment.updaterHandler.sendEmptyMessage(CALENDAR_DATA_CHANGE);
 					cursor.moveToNext();
 					continue;
 				}
@@ -187,6 +197,7 @@ public class RefreshScheduleEventsData implements Runnable {
 				}
 				cursor.moveToNext();
 			}
+
 			cursor.close();
 			EventsManager.setEvents(auxiliar);
 			/** For more performance sort the array for searchs */
@@ -199,6 +210,7 @@ public class RefreshScheduleEventsData implements Runnable {
 			if (MainActivity.getCurrentFragment() instanceof TodayFragment)
 				TodayFragment.updaterHandler.sendEmptyMessage(CALENDAR_DATA_CHANGE);
 
+			RefreshScheduleEventsData.setThreadFinished(true);
 		}
 	}
 
@@ -255,5 +267,13 @@ public class RefreshScheduleEventsData implements Runnable {
 		cur.close();
 
 		return false;
+	}
+
+	public static synchronized boolean isThreadFinished() {
+		return isThreadFinished;
+	}
+
+	public static synchronized void setThreadFinished(boolean isThreadFinished) {
+		RefreshScheduleEventsData.isThreadFinished = isThreadFinished;
 	}
 }

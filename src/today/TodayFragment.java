@@ -19,6 +19,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.javils.ietueri.R;
 
@@ -48,6 +49,8 @@ public class TodayFragment extends Fragment {
 		View view = inflater.inflate(R.layout.fragment_today, container, false);
 
 		listEvents = (ListView) view.findViewById(R.id.list_today_today);
+
+		Toast.makeText(getActivity(), "Cargando Eventos...", Toast.LENGTH_LONG).show();
 
 		Calendar now = Calendar.getInstance();
 		int year = now.get(Calendar.YEAR);
