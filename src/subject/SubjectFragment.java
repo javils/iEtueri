@@ -23,6 +23,8 @@ import android.widget.TextView;
 
 import com.javils.ietueri.R;
 
+import courses.Course;
+
 public class SubjectFragment extends Fragment {
 
 	private ListView listSubjects;
@@ -52,6 +54,11 @@ public class SubjectFragment extends Fragment {
 				FragmentManager fragmentManager = getFragmentManager();
 				Fragment newFragment = NavigationDrawerController
 						.newInstance(NavigationDrawerController.SECTION_NUMBER_DETAIL_SUBJECT);
+
+				Bundle args = new Bundle();
+				args.putInt(NavigationDrawerController.ARG_TYPE_SECTION, NavigationDrawerController.SUBJECT_SECTION);
+				newFragment.setArguments(args);
+
 				if (newFragment instanceof OnClickButtonXml)
 					MainActivity.setOnClickFragment(newFragment);
 				MainActivity.setCurrentFragment(newFragment);
@@ -71,7 +78,8 @@ public class SubjectFragment extends Fragment {
 
 		String[] projection = { DatabaseContract.Subjects._ID, DatabaseContract.Subjects.COLUMN_NAME_SUBJECT_NAME,
 				DatabaseContract.Subjects.COLUMN_NAME_AVERAGE, DatabaseContract.Subjects.COLUMN_NAME_NOTE_NECESSARY,
-				DatabaseContract.Subjects.COLUMN_NAME_HOMEWORK_ID, DatabaseContract.Subjects.COLUMN_NAME_EXAMS_ID };
+				DatabaseContract.Subjects.COLUMN_NAME_HOMEWORK_ID, DatabaseContract.Subjects.COLUMN_NAME_EXAMS_ID,
+				DatabaseContract.Subjects.COLUMN_NAME_COURSE_ID };
 
 		Cursor cur = db.query(DatabaseContract.Subjects.TABLE_NAME, projection, null, null, null, null,
 				DatabaseContract.Subjects._ID + " DESC");
@@ -85,6 +93,7 @@ public class SubjectFragment extends Fragment {
 			String average = cur.getString(cur.getColumnIndexOrThrow(DatabaseContract.Subjects.COLUMN_NAME_AVERAGE));
 			String[] numberExms = cur.getString(
 					cur.getColumnIndexOrThrow(DatabaseContract.Subjects.COLUMN_NAME_EXAMS_ID)).split(";");
+			int courseId = cur.getInt(cur.getColumnIndexOrThrow(DatabaseContract.Subjects.COLUMN_NAME_COURSE_ID));
 
 			/**
 			 * If the first parameter is empty String, numberExams or homeworks
@@ -100,13 +109,40 @@ public class SubjectFragment extends Fragment {
 			int numberHomework = 0;
 			if (numberHomw != null && !numberHomw[0].trim().isEmpty())
 				numberHomework = numberHomw.length;
-
-			Subject newSubject = new Subject(subjectName, average, numberExams, numberHomework);
+			Course course = getCourseById(courseId);
+			Subject newSubject = new Subject(subjectName, average, numberExams, numberHomework, course);
 			result.add(newSubject);
 			cur.moveToNext();
 		}
 
 		return result;
+	}
+
+	private Course getCourseById(int id) {
+		String[] projection = { DatabaseContract.Courses.COLUMN_NAME_INIT_DATE,
+				DatabaseContract.Courses.COLUMN_NAME_END_DATE, DatabaseContract.Courses.COLUMN_NAME_SUBJECTS_IDS,
+				DatabaseContract.Courses.COLUMN_NAME_AVERAGE, DatabaseContract.Courses.COLUMN_NAME_COURSE_NAME,
+				DatabaseContract.Courses.COLUMN_NAME_NUMBER_OF_SUBJECTS };
+		String selection = DatabaseContract.Courses._ID + "=?";
+		String[] args = { String.valueOf(id) };
+
+		Cursor cur = db.query(DatabaseContract.Courses.TABLE_NAME, projection, selection, args, null, null,
+				DatabaseContract.Courses._ID + " DESC");
+
+		cur.moveToFirst();
+
+		String initDate = cur.getString(cur.getColumnIndexOrThrow(DatabaseContract.Courses.COLUMN_NAME_INIT_DATE));
+		String endDate = cur.getString(cur.getColumnIndexOrThrow(DatabaseContract.Courses.COLUMN_NAME_END_DATE));
+		String subjectsIds = cur
+				.getString(cur.getColumnIndexOrThrow(DatabaseContract.Courses.COLUMN_NAME_SUBJECTS_IDS));
+		String name = cur.getString(cur.getColumnIndexOrThrow(DatabaseContract.Courses.COLUMN_NAME_COURSE_NAME));
+		int numberOfSubjects = cur.getInt(cur
+				.getColumnIndexOrThrow(DatabaseContract.Courses.COLUMN_NAME_NUMBER_OF_SUBJECTS));
+		double average = cur.getDouble(cur.getColumnIndexOrThrow(DatabaseContract.Courses.COLUMN_NAME_AVERAGE));
+
+		Course currentCourse = new Course(id, name, numberOfSubjects, average, initDate, endDate, subjectsIds);
+
+		return currentCourse;
 	}
 
 	private Subject getSubjectInDB(String subjectName) {
@@ -129,7 +165,8 @@ public class SubjectFragment extends Fragment {
 		int courseId = Integer.parseInt(cur.getString(cur
 				.getColumnIndexOrThrow(DatabaseContract.Subjects.COLUMN_NAME_COURSE_ID)));
 
-		Subject currentSubject = new Subject(id, courseId, subjectName, homeworkId, examsId);
+		Course course = getCourseById(courseId);
+		Subject currentSubject = new Subject(id, courseId, subjectName, homeworkId, examsId, course);
 
 		return currentSubject;
 	}

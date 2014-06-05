@@ -4,6 +4,7 @@ import navigationdrawer.MainActivity;
 import navigationdrawer.NavigationDrawerController;
 import utility.DatabaseContract;
 import utility.DatabaseHelper;
+import utility.OnBackPressed;
 import utility.OnClickButtonXml;
 import android.app.Activity;
 import android.app.Fragment;
@@ -22,7 +23,7 @@ import com.javils.ietueri.R;
 import courses.Course;
 import courses.CourseDetailFragment;
 
-public class NewSubjectFragment extends Fragment implements OnClickButtonXml {
+public class NewSubjectFragment extends Fragment implements OnClickButtonXml, OnBackPressed {
 
 	private EditText nameSubject;
 	private EditText nameTeacher;
@@ -134,5 +135,10 @@ public class NewSubjectFragment extends Fragment implements OnClickButtonXml {
 
 	public void setCourse(Course course) {
 		this.course = course;
+	}
+
+	@Override
+	public void onBackPressed() {
+		cancelSubject();
 	}
 }

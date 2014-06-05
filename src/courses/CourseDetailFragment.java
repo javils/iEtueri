@@ -9,6 +9,7 @@ import subject.Subject;
 import subject.SubjectListAdapter;
 import utility.DatabaseContract;
 import utility.DatabaseHelper;
+import utility.OnBackPressed;
 import utility.OnClickButtonXml;
 import android.app.Activity;
 import android.app.Fragment;
@@ -26,7 +27,7 @@ import android.widget.TextView;
 
 import com.javils.ietueri.R;
 
-public class CourseDetailFragment extends Fragment {
+public class CourseDetailFragment extends Fragment implements OnBackPressed {
 
 	private ListView listSubjects;
 	private Course course;
@@ -58,6 +59,11 @@ public class CourseDetailFragment extends Fragment {
 				FragmentManager fragmentManager = getFragmentManager();
 				Fragment newFragment = NavigationDrawerController
 						.newInstance(NavigationDrawerController.SECTION_NUMBER_DETAIL_SUBJECT);
+				Bundle args = new Bundle();
+				args.putInt(NavigationDrawerController.ARG_TYPE_SECTION,
+						NavigationDrawerController.COURSE_DETAIL_SECTION);
+				newFragment.setArguments(args);
+
 				if (newFragment instanceof OnClickButtonXml)
 					MainActivity.setOnClickFragment(newFragment);
 				MainActivity.setCurrentFragment(newFragment);
@@ -108,7 +114,7 @@ public class CourseDetailFragment extends Fragment {
 			if (numberHomw != null && !numberHomw[0].trim().isEmpty())
 				numberHomework = numberHomw.length;
 
-			Subject newSubject = new Subject(subjectName, average, numberExams, numberHomework);
+			Subject newSubject = new Subject(subjectName, average, numberExams, numberHomework, course);
 			result.add(newSubject);
 			cur.moveToNext();
 		}
@@ -134,7 +140,7 @@ public class CourseDetailFragment extends Fragment {
 		String homeworkId = cur.getString(cur.getColumnIndexOrThrow(DatabaseContract.Subjects.COLUMN_NAME_HOMEWORK_ID));
 		String examsId = cur.getString(cur.getColumnIndexOrThrow(DatabaseContract.Subjects.COLUMN_NAME_EXAMS_ID));
 
-		Subject currentSubject = new Subject(id, course.getId(), subjectName, homeworkId, examsId);
+		Subject currentSubject = new Subject(id, course.getId(), subjectName, homeworkId, examsId, course);
 
 		return currentSubject;
 	}
@@ -159,5 +165,16 @@ public class CourseDetailFragment extends Fragment {
 		super.onAttach(activity);
 		((MainActivity) activity).onSectionAttached(getArguments()
 				.getInt(NavigationDrawerController.ARG_SECTION_NUMBER));
+	}
+
+	@Override
+	public void onBackPressed() {
+		FragmentManager fragmentManager = getFragmentManager();
+		Fragment newFragment = NavigationDrawerController
+				.newInstance(NavigationDrawerController.SECTION_NUMBER_COURSES);
+		if (newFragment instanceof OnClickButtonXml)
+			MainActivity.setOnClickFragment(newFragment);
+		MainActivity.setCurrentFragment(newFragment);
+		fragmentManager.beginTransaction().replace(R.id.navigation_drawer_container, newFragment).commit();
 	}
 }

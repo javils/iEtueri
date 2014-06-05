@@ -3,6 +3,7 @@ package navigationdrawer;
 import schedule.CalendarManager;
 import schedule.RefreshScheduleEventsData;
 import subject.NewSubjectFragment;
+import utility.OnBackPressed;
 import utility.OnClickButtonXml;
 import android.app.ActionBar;
 import android.app.Activity;
@@ -29,10 +30,14 @@ public class MainActivity extends Activity implements NavigationDrawerCallbacks 
 	private static OnClickButtonXml fragment;
 	private static Fragment currentFragment;
 
+	private static boolean firstTimeBack;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+
+		MainActivity.firstTimeBack = true;
 
 		navigationDrawerFragment = (NavigationDrawerFragment) getFragmentManager().findFragmentById(
 				R.id.navigation_drawer);
@@ -104,6 +109,14 @@ public class MainActivity extends Activity implements NavigationDrawerCallbacks 
 			title = getString(R.string.new_exam);
 			break;
 		}
+	}
+
+	@Override
+	public void onBackPressed() {
+		if (currentFragment instanceof OnBackPressed)
+			((OnBackPressed) currentFragment).onBackPressed();
+		else
+			super.onBackPressed();
 	}
 
 	@Override

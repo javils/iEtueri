@@ -45,6 +45,11 @@ public class NavigationDrawerController {
 
 	/** The fragment argument representing the section number for this fragment. */
 	public static final String ARG_SECTION_NUMBER = "section_number";
+	public static final String ARG_TYPE_SECTION = "type_section";
+
+	/** Types of section */
+	public static final int SUBJECT_SECTION = 0;
+	public static final int COURSE_DETAIL_SECTION = 1;
 
 	/**
 	 * Returns a new instance of this fragment for the given section number.

@@ -1,5 +1,7 @@
 package subject;
 
+import courses.Course;
+
 /**
  * This class represent a container os subjects
  * 
@@ -40,15 +42,18 @@ public class Subject {
 	/** Exam ids */
 	private String examsId;
 
-	public Subject(int id, int courseId, String subjectName, String homeworkId, String examsId) {
+	private Course course;
+
+	public Subject(int id, int courseId, String subjectName, String homeworkId, String examsId, Course course) {
 		this.id = id;
 		this.courseId = courseId;
 		this.name = subjectName;
 		this.setHomeworkId(homeworkId);
 		this.setExamsId(examsId);
+		this.setCourse(course);
 	}
 
-	public Subject(String subjectName, String average, int numberExams, int numberHomework) {
+	public Subject(String subjectName, String average, int numberExams, int numberHomework, Course course) {
 		this.name = subjectName;
 		this.note = Float.parseFloat(average);
 		this.numberOfExams = numberExams;
@@ -152,5 +157,13 @@ public class Subject {
 
 	public void setExamsId(String examsId) {
 		this.examsId = examsId;
+	}
+
+	public Course getCourse() {
+		return course;
+	}
+
+	public void setCourse(Course course) {
+		this.course = course;
 	}
 }

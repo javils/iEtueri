@@ -9,6 +9,7 @@ import subject.Subject;
 import utility.DatabaseContract;
 import utility.DatabaseHelper;
 import utility.DatePickerDialogFragment;
+import utility.OnBackPressed;
 import utility.OnClickButtonXml;
 import utility.PriorityDialogFragment;
 import utility.TimePickerDialogFragment;
@@ -27,7 +28,7 @@ import android.widget.Toast;
 
 import com.javils.ietueri.R;
 
-public class NewHomeworkFragment extends Fragment implements OnClickButtonXml {
+public class NewHomeworkFragment extends Fragment implements OnClickButtonXml, OnBackPressed {
 
 	private EditText homeworkName;
 	private Button date;
@@ -276,5 +277,10 @@ public class NewHomeworkFragment extends Fragment implements OnClickButtonXml {
 
 	public void setHomeworkToEdit(Homework homeworkToEdit) {
 		this.homeworkToEdit = homeworkToEdit;
+	}
+
+	@Override
+	public void onBackPressed() {
+		cancelHomework();
 	}
 }

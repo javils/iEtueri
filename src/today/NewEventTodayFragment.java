@@ -9,6 +9,7 @@ import schedule.Event;
 import schedule.EventsManager;
 import schedule.RefreshScheduleEventsData;
 import utility.DatePickerDialogFragment;
+import utility.OnBackPressed;
 import utility.OnClickButtonXml;
 import utility.TimePickerDialogFragment;
 import android.app.Activity;
@@ -29,7 +30,7 @@ import android.widget.Toast;
 
 import com.javils.ietueri.R;
 
-public class NewEventTodayFragment extends Fragment implements OnClickButtonXml {
+public class NewEventTodayFragment extends Fragment implements OnClickButtonXml, OnBackPressed {
 
 	private EditText name;
 	private EditText location;
@@ -280,5 +281,10 @@ public class NewEventTodayFragment extends Fragment implements OnClickButtonXml 
 		public long typeInterval;
 		public String untilDate;
 		public int eventCount;
+	}
+
+	@Override
+	public void onBackPressed() {
+		cancelNewEvent();
 	}
 }

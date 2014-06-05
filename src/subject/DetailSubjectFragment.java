@@ -10,6 +10,7 @@ import navigationdrawer.MainActivity;
 import navigationdrawer.NavigationDrawerController;
 import utility.DatabaseContract;
 import utility.DatabaseHelper;
+import utility.OnBackPressed;
 import utility.OnClickButtonXml;
 import android.app.Activity;
 import android.app.Fragment;
@@ -28,10 +29,11 @@ import android.widget.TextView;
 
 import com.javils.ietueri.R;
 
+import courses.CourseDetailFragment;
 import exams.Exam;
 import exams.NewExamFragment;
 
-public class DetailSubjectFragment extends Fragment implements OnClickButtonXml, OnClickListener {
+public class DetailSubjectFragment extends Fragment implements OnClickButtonXml, OnClickListener, OnBackPressed {
 
 	private ViewGroup listHomework;
 	private ViewGroup listExams;
@@ -40,6 +42,8 @@ public class DetailSubjectFragment extends Fragment implements OnClickButtonXml,
 	private SQLiteDatabase db;
 
 	private Subject subject;
+
+	private boolean comeFromCourseDetail;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -136,6 +140,11 @@ public class DetailSubjectFragment extends Fragment implements OnClickButtonXml,
 		super.onAttach(activity);
 		((MainActivity) activity).onSectionAttached(getArguments()
 				.getInt(NavigationDrawerController.ARG_SECTION_NUMBER));
+
+		if (getArguments().getInt(NavigationDrawerController.ARG_TYPE_SECTION) == NavigationDrawerController.COURSE_DETAIL_SECTION)
+			comeFromCourseDetail = true;
+		else
+			comeFromCourseDetail = false;
 	}
 
 	@Override
@@ -383,5 +392,23 @@ public class DetailSubjectFragment extends Fragment implements OnClickButtonXml,
 		db.close();
 		dbHelper.close();
 
+	}
+
+	@Override
+	public void onBackPressed() {
+		int fragmentId = NavigationDrawerController.SECTION_NUMBER_DETAIL_COURSE;
+
+		if (!comeFromCourseDetail)
+			fragmentId = NavigationDrawerController.SECTION_NUMBER_SUBJECTS;
+
+		FragmentManager fragmentManager = getFragmentManager();
+		Fragment newFragment = NavigationDrawerController.newInstance(fragmentId);
+		if (newFragment instanceof OnClickButtonXml)
+			MainActivity.setOnClickFragment(newFragment);
+		MainActivity.setCurrentFragment(newFragment);
+		if (comeFromCourseDetail)
+			((CourseDetailFragment) newFragment).setCourse(subject.getCourse());
+
+		fragmentManager.beginTransaction().replace(R.id.navigation_drawer_container, newFragment).commit();
 	}
 }

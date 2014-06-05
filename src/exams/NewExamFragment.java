@@ -9,6 +9,7 @@ import subject.Subject;
 import utility.DatabaseContract;
 import utility.DatabaseHelper;
 import utility.DatePickerDialogFragment;
+import utility.OnBackPressed;
 import utility.OnClickButtonXml;
 import utility.TimePickerDialogFragment;
 import android.app.Activity;
@@ -26,7 +27,7 @@ import android.widget.Toast;
 
 import com.javils.ietueri.R;
 
-public class NewExamFragment extends Fragment implements OnClickButtonXml {
+public class NewExamFragment extends Fragment implements OnClickButtonXml, OnBackPressed {
 
 	private EditText examName;
 	private Button date;
@@ -228,6 +229,11 @@ public class NewExamFragment extends Fragment implements OnClickButtonXml {
 
 	public void setExamToEdit(Exam examToEdit) {
 		this.examToEdit = examToEdit;
+	}
+
+	@Override
+	public void onBackPressed() {
+		cancelExam();
 	}
 
 }

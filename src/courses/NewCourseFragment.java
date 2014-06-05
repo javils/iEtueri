@@ -8,6 +8,7 @@ import schedule.Event;
 import utility.DatabaseContract;
 import utility.DatabaseHelper;
 import utility.DatePickerDialogFragment;
+import utility.OnBackPressed;
 import utility.OnClickButtonXml;
 import android.app.Activity;
 import android.app.Fragment;
@@ -24,7 +25,7 @@ import android.widget.Toast;
 
 import com.javils.ietueri.R;
 
-public class NewCourseFragment extends Fragment implements OnClickButtonXml {
+public class NewCourseFragment extends Fragment implements OnClickButtonXml, OnBackPressed {
 
 	private EditText nameCourse;
 	private Button fromDate;
@@ -128,6 +129,12 @@ public class NewCourseFragment extends Fragment implements OnClickButtonXml {
 		super.onAttach(activity);
 		((MainActivity) activity).onSectionAttached(getArguments()
 				.getInt(NavigationDrawerController.ARG_SECTION_NUMBER));
+	}
+
+	@Override
+	public void onBackPressed() {
+		cancelNewCourse();
+
 	}
 
 }
