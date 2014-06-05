@@ -30,14 +30,10 @@ public class MainActivity extends Activity implements NavigationDrawerCallbacks 
 	private static OnClickButtonXml fragment;
 	private static Fragment currentFragment;
 
-	private static boolean firstTimeBack;
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-
-		MainActivity.firstTimeBack = true;
 
 		navigationDrawerFragment = (NavigationDrawerFragment) getFragmentManager().findFragmentById(
 				R.id.navigation_drawer);
@@ -107,6 +103,9 @@ public class MainActivity extends Activity implements NavigationDrawerCallbacks 
 			break;
 		case NavigationDrawerController.SECTION_NUMBER_NEW_EXAM:
 			title = getString(R.string.new_exam);
+			break;
+		case NavigationDrawerController.SECTION_NUMBER_NEW_HOMEWORK:
+			title = getString(R.string.new_homework);
 			break;
 		}
 	}

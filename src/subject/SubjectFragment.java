@@ -55,15 +55,18 @@ public class SubjectFragment extends Fragment {
 				Fragment newFragment = NavigationDrawerController
 						.newInstance(NavigationDrawerController.SECTION_NUMBER_DETAIL_SUBJECT);
 
-				Bundle args = new Bundle();
-				args.putInt(NavigationDrawerController.ARG_TYPE_SECTION, NavigationDrawerController.SUBJECT_SECTION);
-				newFragment.setArguments(args);
+				newFragment.getArguments().putInt(NavigationDrawerController.ARG_TYPE_SECTION,
+						NavigationDrawerController.SUBJECT_SECTION);
 
 				if (newFragment instanceof OnClickButtonXml)
 					MainActivity.setOnClickFragment(newFragment);
 				MainActivity.setCurrentFragment(newFragment);
 				((DetailSubjectFragment) newFragment).setSubject(currentSubject);
 				fragmentManager.beginTransaction().replace(R.id.navigation_drawer_container, newFragment).commit();
+
+				/** Close the DB */
+				db.close();
+				dbHelper.close();
 
 			}
 		});

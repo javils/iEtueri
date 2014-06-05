@@ -59,15 +59,14 @@ public class CourseDetailFragment extends Fragment implements OnBackPressed {
 				FragmentManager fragmentManager = getFragmentManager();
 				Fragment newFragment = NavigationDrawerController
 						.newInstance(NavigationDrawerController.SECTION_NUMBER_DETAIL_SUBJECT);
-				Bundle args = new Bundle();
-				args.putInt(NavigationDrawerController.ARG_TYPE_SECTION,
-						NavigationDrawerController.COURSE_DETAIL_SECTION);
-				newFragment.setArguments(args);
 
+				newFragment.getArguments().putInt(NavigationDrawerController.ARG_TYPE_SECTION,
+						NavigationDrawerController.COURSE_DETAIL_SECTION);
 				if (newFragment instanceof OnClickButtonXml)
 					MainActivity.setOnClickFragment(newFragment);
 				MainActivity.setCurrentFragment(newFragment);
 				((DetailSubjectFragment) newFragment).setSubject(currentSubject);
+
 				fragmentManager.beginTransaction().replace(R.id.navigation_drawer_container, newFragment).commit();
 
 			}
@@ -119,6 +118,10 @@ public class CourseDetailFragment extends Fragment implements OnBackPressed {
 			cur.moveToNext();
 		}
 
+		/** Close the DB */
+		db.close();
+		dbHelper.close();
+
 		return result;
 	}
 
@@ -142,6 +145,10 @@ public class CourseDetailFragment extends Fragment implements OnBackPressed {
 
 		Subject currentSubject = new Subject(id, course.getId(), subjectName, homeworkId, examsId, course);
 
+		/** Close the DB */
+		db.close();
+		dbHelper.close();
+
 		return currentSubject;
 	}
 
@@ -151,13 +158,6 @@ public class CourseDetailFragment extends Fragment implements OnBackPressed {
 
 	public Course getCourse() {
 		return this.course;
-	}
-
-	@Override
-	public void onStop() {
-		super.onStop();
-		db.close();
-		dbHelper.close();
 	}
 
 	@Override
@@ -176,5 +176,9 @@ public class CourseDetailFragment extends Fragment implements OnBackPressed {
 			MainActivity.setOnClickFragment(newFragment);
 		MainActivity.setCurrentFragment(newFragment);
 		fragmentManager.beginTransaction().replace(R.id.navigation_drawer_container, newFragment).commit();
+
+		/** Close the DB */
+		db.close();
+		dbHelper.close();
 	}
 }

@@ -59,7 +59,6 @@ public class DetailSubjectFragment extends Fragment implements OnClickButtonXml,
 			addExamToList(exams.get(i));
 
 		ArrayList<Homework> homework = getHomeworkOfSubject();
-
 		for (int i = 0; i < homework.size(); i++)
 			addHomeworkToList(homework.get(i));
 
@@ -140,7 +139,6 @@ public class DetailSubjectFragment extends Fragment implements OnClickButtonXml,
 		super.onAttach(activity);
 		((MainActivity) activity).onSectionAttached(getArguments()
 				.getInt(NavigationDrawerController.ARG_SECTION_NUMBER));
-
 		if (getArguments().getInt(NavigationDrawerController.ARG_TYPE_SECTION) == NavigationDrawerController.COURSE_DETAIL_SECTION)
 			comeFromCourseDetail = true;
 		else
@@ -151,6 +149,7 @@ public class DetailSubjectFragment extends Fragment implements OnClickButtonXml,
 	public void onClickXml(View view) {
 		FragmentManager fragmentManager = getFragmentManager();
 		Fragment newFragment = new Fragment();
+
 		switch (view.getId()) {
 		case R.id.detail_subject_new_exam:
 
@@ -171,6 +170,10 @@ public class DetailSubjectFragment extends Fragment implements OnClickButtonXml,
 			fragmentManager.beginTransaction().replace(R.id.navigation_drawer_container, newFragment).commit();
 			break;
 		}
+
+		/** Close the DB */
+		db.close();
+		dbHelper.close();
 	}
 
 	/* Get and set for subject */

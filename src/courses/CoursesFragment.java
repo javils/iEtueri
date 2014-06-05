@@ -67,6 +67,10 @@ public class CoursesFragment extends Fragment {
 				MainActivity.setCurrentFragment(newFragment);
 				((CourseDetailFragment) newFragment).setCourse(course);
 				fragmentManager.beginTransaction().replace(R.id.navigation_drawer_container, newFragment).commit();
+
+				/** Close the DB */
+				db.close();
+				dbHelper.close();
 			}
 		});
 		return view;
