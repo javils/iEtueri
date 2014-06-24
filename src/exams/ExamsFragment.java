@@ -46,7 +46,8 @@ public class ExamsFragment extends Fragment {
 				TextView tIdExam = (TextView) view.findViewById(R.id.detail_subject_exams_examId);
 				String idExam = tIdExam.getText().toString();
 
-				String[] projection = { DatabaseContract.Exams.COLUMN_NAME_SUBJECT_ID };
+				String[] projection = { DatabaseContract.Exams.COLUMN_NAME_SUBJECT_ID,
+						DatabaseContract.Exams.COLUMN_NAME_NOTE };
 
 				String[] argsExamId = { idExam };
 				Cursor cur = db.query(DatabaseContract.Exams.TABLE_NAME, projection,
@@ -56,13 +57,15 @@ public class ExamsFragment extends Fragment {
 
 				String subjectId = cur.getString(cur
 						.getColumnIndexOrThrow(DatabaseContract.Exams.COLUMN_NAME_SUBJECT_ID));
+				float note = cur.getFloat(cur.getColumnIndexOrThrow(DatabaseContract.Exams.COLUMN_NAME_NOTE));
 
 				db.delete(DatabaseContract.Exams.TABLE_NAME, DatabaseContract.Exams._ID + "=" + idExam, null);
 
 				cur.close();
 
 				/** Quit the exam id on subject */
-				projection = new String[] { DatabaseContract.Subjects.COLUMN_NAME_EXAMS_ID };
+				projection = new String[] { DatabaseContract.Subjects.COLUMN_NAME_EXAMS_ID,
+						DatabaseContract.Subjects.COLUMN_NAME_AVERAGE };
 
 				String[] argsId = { String.valueOf(subjectId) };
 				cur = db.query(DatabaseContract.Subjects.TABLE_NAME, projection, DatabaseContract.Subjects._ID + "= ?",
@@ -82,8 +85,10 @@ public class ExamsFragment extends Fragment {
 				}
 
 				/** Update with the new values */
+				float average = cur.getFloat(cur.getColumnIndexOrThrow(DatabaseContract.Subjects.COLUMN_NAME_AVERAGE));
 				ContentValues values = new ContentValues();
 				values.put(DatabaseContract.Subjects.COLUMN_NAME_EXAMS_ID, result);
+				values.put(DatabaseContract.Subjects.COLUMN_NAME_AVERAGE, average - note);
 				db.update(DatabaseContract.Subjects.TABLE_NAME, values,
 						DatabaseContract.Subjects._ID + "=" + subjectId, null);
 

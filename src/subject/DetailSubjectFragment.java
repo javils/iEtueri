@@ -214,17 +214,27 @@ public class DetailSubjectFragment extends Fragment implements OnClickButtonXml,
 				db = dbHelper.getWritableDatabase();
 				TextView tIdExam = (TextView) v.findViewById(R.id.detail_subject_exams_examId);
 				String idExam = tIdExam.getText().toString();
+
+				String[] projection = { DatabaseContract.Exams.COLUMN_NAME_NOTE };
+
+				String[] argsExamId = { idExam };
+				Cursor cur = db.query(DatabaseContract.Exams.TABLE_NAME, projection,
+						DatabaseContract.Exams._ID + "= ?", argsExamId, null, null, null);
+				cur.moveToFirst();
+				float note = cur.getFloat(cur.getColumnIndexOrThrow(DatabaseContract.Exams.COLUMN_NAME_NOTE));
+
 				db.delete(DatabaseContract.Exams.TABLE_NAME, DatabaseContract.Exams._ID + "=" + idExam, null);
 
 				/** Quit the exam id on subject */
-				String[] projection = { DatabaseContract.Subjects.COLUMN_NAME_EXAMS_ID };
+				String[] projection2 = { DatabaseContract.Subjects.COLUMN_NAME_EXAMS_ID,
+						DatabaseContract.Subjects.COLUMN_NAME_AVERAGE };
 
 				String[] argsId = { String.valueOf(subject.getId()) };
-				Cursor cur = db.query(DatabaseContract.Subjects.TABLE_NAME, projection, DatabaseContract.Subjects._ID
+				Cursor cur2 = db.query(DatabaseContract.Subjects.TABLE_NAME, projection2, DatabaseContract.Subjects._ID
 						+ "= ?", argsId, null, null, null);
 
-				cur.moveToFirst();
-				String sExamsIds = cur.getString(cur
+				cur2.moveToFirst();
+				String sExamsIds = cur2.getString(cur2
 						.getColumnIndexOrThrow(DatabaseContract.Subjects.COLUMN_NAME_EXAMS_ID));
 				String[] examIds = sExamsIds.split(";");
 				String result = new String();
@@ -235,12 +245,14 @@ public class DetailSubjectFragment extends Fragment implements OnClickButtonXml,
 					if (!examIds[i].equals(idExam))
 						result += examIds[i] + ";";
 				}
-
+				float average = cur2.getFloat(cur2.getColumnIndexOrThrow(DatabaseContract.Subjects.COLUMN_NAME_AVERAGE));
 				subject.setExamsId(result);
 				subject.setNumberOfExams(subject.getNumberOfExams() - 1);
+				subject.setNote(subject.getNote() - note);
 				/** Update with the new values */
 				ContentValues values = new ContentValues();
 				values.put(DatabaseContract.Subjects.COLUMN_NAME_EXAMS_ID, result);
+				values.put(DatabaseContract.Subjects.COLUMN_NAME_AVERAGE, average - note);
 				db.update(DatabaseContract.Subjects.TABLE_NAME, values,
 						DatabaseContract.Subjects._ID + "=" + subject.getId(), null);
 

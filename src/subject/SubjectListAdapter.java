@@ -59,12 +59,13 @@ public class SubjectListAdapter extends ArrayAdapter<Subject> {
 		// Fill the structure of the item
 		text = (TextView) view.findViewById(R.id.subject_list_item_subject_name);
 		text.setText(subject.getName());
-		text = (TextView) view.findViewById(R.id.subject_list_item_subject_average);
-		text.setText("Media: " + subject.getNote());
-		text = (TextView) view.findViewById(R.id.subject_list_item_subject_note_necessary);
-		text.setText("Necesitas: " + subject.getNoteNecessary());
 		text = (TextView) view.findViewById(R.id.subject_list_item_subject_number_tasks);
 		text.setText("Tareas: " + subject.getNumberOfTasks());
+		text = (TextView) view.findViewById(R.id.subject_list_item_subject_average);
+		float average = (subject.getNote() / subject.getNumberOfExams());
+		if (Float.isNaN(average))
+			average = 0;
+		text.setText("Media: " + average);
 		text = (TextView) view.findViewById(R.id.subject_list_item_subject_number_exams);
 		text.setText("Examenes: " + subject.getNumberOfExams());
 

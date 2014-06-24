@@ -91,6 +91,7 @@ public class CourseDetailFragment extends Fragment implements OnBackPressed {
 		cur.moveToFirst();
 
 		for (int i = 0; i < cur.getCount(); ++i) {
+			int subjectId = cur.getInt(cur.getColumnIndexOrThrow(DatabaseContract.Subjects._ID));
 			String subjectName = cur.getString(cur
 					.getColumnIndexOrThrow(DatabaseContract.Subjects.COLUMN_NAME_SUBJECT_NAME));
 
@@ -114,6 +115,7 @@ public class CourseDetailFragment extends Fragment implements OnBackPressed {
 				numberHomework = numberHomw.length;
 
 			Subject newSubject = new Subject(subjectName, average, numberExams, numberHomework, course);
+			newSubject.setId(subjectId);
 			result.add(newSubject);
 			cur.moveToNext();
 		}
@@ -130,7 +132,7 @@ public class CourseDetailFragment extends Fragment implements OnBackPressed {
 		db = dbHelper.getReadableDatabase();
 
 		String[] projection = { DatabaseContract.Subjects._ID, DatabaseContract.Subjects.COLUMN_NAME_HOMEWORK_ID,
-				DatabaseContract.Subjects.COLUMN_NAME_EXAMS_ID };
+				DatabaseContract.Subjects.COLUMN_NAME_EXAMS_ID, DatabaseContract.Subjects.COLUMN_NAME_AVERAGE };
 
 		String selection = DatabaseContract.Subjects.COLUMN_NAME_SUBJECT_NAME + "= ?";
 		String[] args = { subjectName };
@@ -142,8 +144,10 @@ public class CourseDetailFragment extends Fragment implements OnBackPressed {
 		int id = cur.getInt(cur.getColumnIndexOrThrow(DatabaseContract.Subjects._ID));
 		String homeworkId = cur.getString(cur.getColumnIndexOrThrow(DatabaseContract.Subjects.COLUMN_NAME_HOMEWORK_ID));
 		String examsId = cur.getString(cur.getColumnIndexOrThrow(DatabaseContract.Subjects.COLUMN_NAME_EXAMS_ID));
+		float average = cur.getFloat(cur.getColumnIndexOrThrow(DatabaseContract.Subjects.COLUMN_NAME_AVERAGE));
 
 		Subject currentSubject = new Subject(id, course.getId(), subjectName, homeworkId, examsId, course);
+		currentSubject.setNote(average);
 
 		/** Close the DB */
 		db.close();

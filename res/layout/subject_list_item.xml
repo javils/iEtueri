@@ -27,18 +27,20 @@
         android:layout_marginLeft="40dp"
         android:layout_marginRight="25dp"
         android:layout_marginTop="5dp" >
-
+       
+        
+        <TextView
+            android:id="@+id/subject_list_item_subject_number_tasks"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.2" />
+        
         <TextView
             android:id="@+id/subject_list_item_subject_average"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="0.2" />
+            android:layout_weight="0.1" />
 
-        <TextView
-            android:id="@+id/subject_list_item_subject_note_necessary"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.1"/>
 
     </LinearLayout>
 
@@ -49,11 +51,6 @@
         android:layout_marginLeft="40dp"
         android:layout_marginRight="25dp" >
 
-        <TextView
-            android:id="@+id/subject_list_item_subject_number_tasks"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.2" />
 
         <TextView
             android:id="@+id/subject_list_item_subject_number_exams"
