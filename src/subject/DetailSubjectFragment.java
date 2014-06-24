@@ -37,6 +37,7 @@ public class DetailSubjectFragment extends Fragment implements OnClickButtonXml,
 
 	private ViewGroup listHomework;
 	private ViewGroup listExams;
+	private TextView description;
 
 	private DatabaseHelper dbHelper;
 	private SQLiteDatabase db;
@@ -53,12 +54,19 @@ public class DetailSubjectFragment extends Fragment implements OnClickButtonXml,
 		listHomework = (LinearLayout) view.findViewById(R.id.layout_list_homeworks);
 		listExams = (LinearLayout) view.findViewById(R.id.layout_list_exams);
 
+		description = (TextView) view.findViewById(R.id.detail_description);
+
 		ArrayList<Exam> exams = getExamsOfSubject();
+		ArrayList<Homework> homework = getHomeworkOfSubject();
+
+		if (exams.size() == 0 && homework.size() == 0)
+			description.setVisibility(View.VISIBLE);
+		else
+			description.setVisibility(View.INVISIBLE);
 
 		for (int i = 0; i < exams.size(); i++)
 			addExamToList(exams.get(i));
 
-		ArrayList<Homework> homework = getHomeworkOfSubject();
 		for (int i = 0; i < homework.size(); i++)
 			addHomeworkToList(homework.get(i));
 
@@ -248,6 +256,8 @@ public class DetailSubjectFragment extends Fragment implements OnClickButtonXml,
 				float average = cur2.getFloat(cur2.getColumnIndexOrThrow(DatabaseContract.Subjects.COLUMN_NAME_AVERAGE));
 				subject.setExamsId(result);
 				subject.setNumberOfExams(subject.getNumberOfExams() - 1);
+				if (subject.getNumberOfExams() == 0 && subject.getNumberOfTasks() == 0)
+					description.setVisibility(View.VISIBLE);
 				subject.setNote(subject.getNote() - note);
 				/** Update with the new values */
 				ContentValues values = new ContentValues();
@@ -314,6 +324,8 @@ public class DetailSubjectFragment extends Fragment implements OnClickButtonXml,
 
 				subject.setHomeworkId(result);
 				subject.setNumberOfTasks(subject.getNumberOfTasks() - 1);
+				if (subject.getNumberOfExams() == 0 && subject.getNumberOfTasks() == 0)
+					description.setVisibility(View.VISIBLE);
 				/** Update with the new values */
 				ContentValues values = new ContentValues();
 				values.put(DatabaseContract.Subjects.COLUMN_NAME_HOMEWORK_ID, result);

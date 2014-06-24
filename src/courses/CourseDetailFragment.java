@@ -45,9 +45,13 @@ public class CourseDetailFragment extends Fragment implements OnBackPressed {
 
 		SubjectListAdapter adapter;
 
-		if (subjects != null) {
+		if (subjects != null && subjects.size() != 0) {
 			adapter = new SubjectListAdapter(getActivity(), R.layout.subject_list_item, subjects);
 			listSubjects.setAdapter(adapter);
+		} else {
+			view = inflater.inflate(R.layout.fragment_void, container, false);
+			TextView description = (TextView) view.findViewById(R.id.fragment_void_description);
+			description.setText(R.string.subjects_description);
 		}
 
 		listSubjects.setOnItemClickListener(new OnItemClickListener() {

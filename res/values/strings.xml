@@ -85,4 +85,8 @@
     <string name="high_priority">Alta</string>
     <string name="normal_priority">Normal</string>
     <string name="low_priority">Baja</string>
+    <!-- DESCRIPTIONS -->
+    <string name="courses_description">Pulsa el boton + de la barra del titutlo para crear un nuevo curso.\nDespues de eso, selecciona el curso que desees para crear las asignaturas.</string>
+    <string name="subjects_description">Pulsa el boton + de la barra del titutlo para crear una nueva asignatura.\nSeleccionala, y podras añadir tus examenes y tus deberes</string>
+    <string name="detail_subjects_description">Enhorabuena!\nNo tienes ninguna tarea, disfruta del dia.</string>
 </resources>

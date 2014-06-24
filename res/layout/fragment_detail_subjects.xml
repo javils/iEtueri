@@ -4,9 +4,10 @@
     android:layout_height="fill_parent" >
 
     <ScrollView
+        android:id="@+id/scroolview"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_above="@+id/buttons"
+        android:layout_above="@+id/detail_description"
         android:fillViewport="false" >
 
         <LinearLayout
@@ -45,8 +46,10 @@
         </LinearLayout>
     </ScrollView>
 
+   
+
     <LinearLayout
-        android:id="@+id/buttons"
+        android:id="@+id/buttons_acept"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -76,5 +79,14 @@
             android:onClick="onClickButton"
             android:text="@string/new_homework" />
     </LinearLayout>
+    
+     <TextView
+        android:id="@+id/detail_description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"  
+        android:layout_above="@id/buttons_acept"
+        android:gravity="center_horizontal|center_vertical"
+        android:text="@string/detail_subjects_description"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
 
 </RelativeLayout>

@@ -39,10 +39,13 @@ public class CoursesFragment extends Fragment {
 		courses = getCoursesInDB();
 
 		CoursesAdapter adapter;
-		if (courses != null) {
+		if (courses != null && courses.size() != 0) {
 			adapter = new CoursesAdapter(getActivity(), R.layout.courses_list_item, courses);
-
 			listCourses.setAdapter(adapter);
+		} else {
+			view = inflater.inflate(R.layout.fragment_void, container, false);
+			TextView description = (TextView) view.findViewById(R.id.fragment_void_description);
+			description.setText(R.string.courses_description);
 		}
 
 		listCourses.setOnItemClickListener(new OnItemClickListener() {
