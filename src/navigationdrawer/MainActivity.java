@@ -43,9 +43,8 @@ public class MainActivity extends Activity implements NavigationDrawerCallbacks 
 		title = getTitle();
 
 		new Thread(new RefreshScheduleEventsData(this)).start();
+		CalendarManager.checkCalendarID(this);
 
-		// TODO: Excute only in the first execution
-		// CalendarManager.deleteCalendar(getApplicationContext());
 		if (CalendarManager.ID == -1)
 			CalendarManager.createCalendar(getApplicationContext());
 

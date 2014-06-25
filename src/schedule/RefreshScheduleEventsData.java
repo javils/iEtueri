@@ -60,7 +60,6 @@ public class RefreshScheduleEventsData implements Runnable {
 		RefreshScheduleEventsData.setThreadFinished(false);
 
 		while (!activity.isFinishing()) {
-			checkCalendarID();
 			ArrayList<Event> auxiliar = new ArrayList<Event>();
 			ContentResolver contentResolver = activity.getContentResolver();
 
@@ -69,6 +68,11 @@ public class RefreshScheduleEventsData implements Runnable {
 					null);
 			if (cursor.getCount() == numberEventsInLast) {
 				cursor.close();
+				try {
+					Thread.sleep(2000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
 				continue;
 			}
 
@@ -211,29 +215,13 @@ public class RefreshScheduleEventsData implements Runnable {
 				TodayFragment.updaterHandler.sendEmptyMessage(CALENDAR_DATA_CHANGE);
 
 			RefreshScheduleEventsData.setThreadFinished(true);
+
+			try {
+				Thread.sleep(2000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 		}
-	}
-
-	public void checkCalendarID() {
-		final String[] EVENT_PROJECTION = new String[] { Calendars._ID, Calendars.CALENDAR_DISPLAY_NAME,
-				Calendars.DELETED };
-
-		// The indices for the projection array above.
-		final int CALENDAR_ID_INDEX = 0;
-
-		Cursor cur = null;
-		ContentResolver cr = activity.getContentResolver();
-		Uri uri = Calendars.CONTENT_URI;
-		String selection = "(" + Calendars.CALENDAR_DISPLAY_NAME + " = ? AND " + Calendars.DELETED + "=?)";
-		String[] selectionArgs = new String[] { CalendarManager.CALENDAR_NAME, "0" };
-		// Submit the query and get a Cursor object back.
-		cur = cr.query(uri, EVENT_PROJECTION, selection, selectionArgs, null);
-		cur.moveToFirst();
-		while (cur.isAfterLast() == false) {
-			CalendarManager.ID = cur.getInt(CALENDAR_ID_INDEX);
-			cur.moveToNext();
-		}
-		cur.close();
 	}
 
 	public boolean checkCalendarDeleted(String Id) {
