@@ -88,5 +88,5 @@
     <!-- DESCRIPTIONS -->
     <string name="courses_description">Pulsa el boton + de la barra del titutlo para crear un nuevo curso.\nDespues de eso, selecciona el curso que desees para crear las asignaturas.</string>
     <string name="subjects_description">Pulsa el boton + de la barra del titutlo para crear una nueva asignatura.\nSeleccionala, y podras añadir tus examenes y tus deberes</string>
-    <string name="detail_subjects_description">Enhorabuena!\nNo tienes ninguna tarea, disfruta del dia.</string>
+    <string name="detail_subjects_description">¡Enhorabuena!\nNo tienes ninguna tarea en esta asignatura.</string>
 </resources>
