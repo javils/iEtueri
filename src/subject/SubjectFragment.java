@@ -41,36 +41,41 @@ public class SubjectFragment extends Fragment {
 
 		ArrayList<Subject> subjects = getAllSubjects();
 
-		SubjectListAdapter adapter = new SubjectListAdapter(getActivity(), R.layout.subject_list_item, subjects);
+		if (subjects.size() == 0) {
+			view = inflater.inflate(R.layout.fragment_void, container, false);
+			TextView description = (TextView) view.findViewById(R.id.fragment_void_description);
+			description.setText(R.string.subject_description);
+		} else {
+			SubjectListAdapter adapter = new SubjectListAdapter(getActivity(), R.layout.subject_list_item, subjects);
 
-		listSubjects.setAdapter(adapter);
+			listSubjects.setAdapter(adapter);
 
-		listSubjects.setOnItemClickListener(new OnItemClickListener() {
+			listSubjects.setOnItemClickListener(new OnItemClickListener() {
 
-			@Override
-			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				TextView subjectName = (TextView) view.findViewById(R.id.subject_list_item_subject_name);
-				Subject currentSubject = getSubjectInDB(subjectName.getText().toString());
-				FragmentManager fragmentManager = getFragmentManager();
-				Fragment newFragment = NavigationDrawerController
-						.newInstance(NavigationDrawerController.SECTION_NUMBER_DETAIL_SUBJECT);
+				@Override
+				public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+					TextView subjectName = (TextView) view.findViewById(R.id.subject_list_item_subject_name);
+					Subject currentSubject = getSubjectInDB(subjectName.getText().toString());
+					FragmentManager fragmentManager = getFragmentManager();
+					Fragment newFragment = NavigationDrawerController
+							.newInstance(NavigationDrawerController.SECTION_NUMBER_DETAIL_SUBJECT);
 
-				newFragment.getArguments().putInt(NavigationDrawerController.ARG_TYPE_SECTION,
-						NavigationDrawerController.SUBJECT_SECTION);
+					newFragment.getArguments().putInt(NavigationDrawerController.ARG_TYPE_SECTION,
+							NavigationDrawerController.SUBJECT_SECTION);
 
-				if (newFragment instanceof OnClickButtonXml)
-					MainActivity.setOnClickFragment(newFragment);
-				MainActivity.setCurrentFragment(newFragment);
-				((DetailSubjectFragment) newFragment).setSubject(currentSubject);
-				fragmentManager.beginTransaction().replace(R.id.navigation_drawer_container, newFragment).commit();
+					if (newFragment instanceof OnClickButtonXml)
+						MainActivity.setOnClickFragment(newFragment);
+					MainActivity.setCurrentFragment(newFragment);
+					((DetailSubjectFragment) newFragment).setSubject(currentSubject);
+					fragmentManager.beginTransaction().replace(R.id.navigation_drawer_container, newFragment).commit();
 
-				/** Close the DB */
-				db.close();
-				dbHelper.close();
+					/** Close the DB */
+					db.close();
+					dbHelper.close();
 
-			}
-		});
-
+				}
+			});
+		}
 		return view;
 	}
 

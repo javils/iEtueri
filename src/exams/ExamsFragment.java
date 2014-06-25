@@ -36,69 +36,75 @@ public class ExamsFragment extends Fragment {
 		listExams = (ListView) view.findViewById(R.id.list_homework);
 
 		ArrayList<Exam> exams = getAllExams();
-		final ExamsAdapter adapter = new ExamsAdapter(getActivity(), R.layout.subject_detail_exam_item, exams);
-		listExams.setAdapter(adapter);
+		if (exams.size() == 0) {
+			view = inflater.inflate(R.layout.fragment_void, container, false);
+			TextView description = (TextView) view.findViewById(R.id.fragment_void_description);
+			description.setText(R.string.exams_description);
+		} else {
+			final ExamsAdapter adapter = new ExamsAdapter(getActivity(), R.layout.subject_detail_exam_item, exams);
+			listExams.setAdapter(adapter);
 
-		listExams.setOnItemLongClickListener(new OnItemLongClickListener() {
+			listExams.setOnItemLongClickListener(new OnItemLongClickListener() {
 
-			@Override
-			public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-				TextView tIdExam = (TextView) view.findViewById(R.id.detail_subject_exams_examId);
-				String idExam = tIdExam.getText().toString();
+				@Override
+				public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+					TextView tIdExam = (TextView) view.findViewById(R.id.detail_subject_exams_examId);
+					String idExam = tIdExam.getText().toString();
 
-				String[] projection = { DatabaseContract.Exams.COLUMN_NAME_SUBJECT_ID,
-						DatabaseContract.Exams.COLUMN_NAME_NOTE };
+					String[] projection = { DatabaseContract.Exams.COLUMN_NAME_SUBJECT_ID,
+							DatabaseContract.Exams.COLUMN_NAME_NOTE };
 
-				String[] argsExamId = { idExam };
-				Cursor cur = db.query(DatabaseContract.Exams.TABLE_NAME, projection,
-						DatabaseContract.Exams._ID + "= ?", argsExamId, null, null, null);
+					String[] argsExamId = { idExam };
+					Cursor cur = db.query(DatabaseContract.Exams.TABLE_NAME, projection, DatabaseContract.Exams._ID
+							+ "= ?", argsExamId, null, null, null);
 
-				cur.moveToFirst();
+					cur.moveToFirst();
 
-				String subjectId = cur.getString(cur
-						.getColumnIndexOrThrow(DatabaseContract.Exams.COLUMN_NAME_SUBJECT_ID));
-				float note = cur.getFloat(cur.getColumnIndexOrThrow(DatabaseContract.Exams.COLUMN_NAME_NOTE));
+					String subjectId = cur.getString(cur
+							.getColumnIndexOrThrow(DatabaseContract.Exams.COLUMN_NAME_SUBJECT_ID));
+					float note = cur.getFloat(cur.getColumnIndexOrThrow(DatabaseContract.Exams.COLUMN_NAME_NOTE));
 
-				db.delete(DatabaseContract.Exams.TABLE_NAME, DatabaseContract.Exams._ID + "=" + idExam, null);
+					db.delete(DatabaseContract.Exams.TABLE_NAME, DatabaseContract.Exams._ID + "=" + idExam, null);
 
-				cur.close();
+					cur.close();
 
-				/** Quit the exam id on subject */
-				projection = new String[] { DatabaseContract.Subjects.COLUMN_NAME_EXAMS_ID,
-						DatabaseContract.Subjects.COLUMN_NAME_AVERAGE };
+					/** Quit the exam id on subject */
+					projection = new String[] { DatabaseContract.Subjects.COLUMN_NAME_EXAMS_ID,
+							DatabaseContract.Subjects.COLUMN_NAME_AVERAGE };
 
-				String[] argsId = { String.valueOf(subjectId) };
-				cur = db.query(DatabaseContract.Subjects.TABLE_NAME, projection, DatabaseContract.Subjects._ID + "= ?",
-						argsId, null, null, null);
+					String[] argsId = { String.valueOf(subjectId) };
+					cur = db.query(DatabaseContract.Subjects.TABLE_NAME, projection, DatabaseContract.Subjects._ID
+							+ "= ?", argsId, null, null, null);
 
-				cur.moveToFirst();
-				String sExamsIds = cur.getString(cur
-						.getColumnIndexOrThrow(DatabaseContract.Subjects.COLUMN_NAME_EXAMS_ID));
-				String[] examIds = sExamsIds.split(";");
-				String result = new String();
-				for (int i = 0; i < examIds.length; i++) {
-					if (examIds[i].isEmpty())
-						continue;
+					cur.moveToFirst();
+					String sExamsIds = cur.getString(cur
+							.getColumnIndexOrThrow(DatabaseContract.Subjects.COLUMN_NAME_EXAMS_ID));
+					String[] examIds = sExamsIds.split(";");
+					String result = new String();
+					for (int i = 0; i < examIds.length; i++) {
+						if (examIds[i].isEmpty())
+							continue;
 
-					if (!examIds[i].equals(idExam))
-						result += examIds[i] + ";";
+						if (!examIds[i].equals(idExam))
+							result += examIds[i] + ";";
+					}
+
+					/** Update with the new values */
+					float average = cur.getFloat(cur
+							.getColumnIndexOrThrow(DatabaseContract.Subjects.COLUMN_NAME_AVERAGE));
+					ContentValues values = new ContentValues();
+					values.put(DatabaseContract.Subjects.COLUMN_NAME_EXAMS_ID, result);
+					values.put(DatabaseContract.Subjects.COLUMN_NAME_AVERAGE, average - note);
+					db.update(DatabaseContract.Subjects.TABLE_NAME, values, DatabaseContract.Subjects._ID + "="
+							+ subjectId, null);
+
+					adapter.remove(adapter.getItem(position));
+
+					adapter.notifyDataSetChanged();
+					return true;
 				}
-
-				/** Update with the new values */
-				float average = cur.getFloat(cur.getColumnIndexOrThrow(DatabaseContract.Subjects.COLUMN_NAME_AVERAGE));
-				ContentValues values = new ContentValues();
-				values.put(DatabaseContract.Subjects.COLUMN_NAME_EXAMS_ID, result);
-				values.put(DatabaseContract.Subjects.COLUMN_NAME_AVERAGE, average - note);
-				db.update(DatabaseContract.Subjects.TABLE_NAME, values,
-						DatabaseContract.Subjects._ID + "=" + subjectId, null);
-
-				adapter.remove(adapter.getItem(position));
-
-				adapter.notifyDataSetChanged();
-				return true;
-			}
-		});
-
+			});
+		}
 		return view;
 	}
 

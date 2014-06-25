@@ -37,65 +37,71 @@ public class HomeworkFragment extends Fragment {
 		listHomework = (ListView) view.findViewById(R.id.list_homework);
 
 		ArrayList<Homework> homework = getAllHomework();
-		final HomeworkAdapter adapter = new HomeworkAdapter(getActivity(), R.layout.subject_detail_homework_item,
-				homework);
-		listHomework.setAdapter(adapter);
+		if (homework.size() == 0) {
+			view = inflater.inflate(R.layout.fragment_void, container, false);
+			TextView description = (TextView) view.findViewById(R.id.fragment_void_description);
+			description.setText(R.string.homework_description);
+		} else {
+			final HomeworkAdapter adapter = new HomeworkAdapter(getActivity(), R.layout.subject_detail_homework_item,
+					homework);
+			listHomework.setAdapter(adapter);
 
-		listHomework.setOnItemLongClickListener(new OnItemLongClickListener() {
+			listHomework.setOnItemLongClickListener(new OnItemLongClickListener() {
 
-			@Override
-			public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-				TextView tIdHomeowrk = (TextView) view.findViewById(R.id.detail_subject_homework_homeworkId);
-				String idHomework = tIdHomeowrk.getText().toString();
+				@Override
+				public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+					TextView tIdHomeowrk = (TextView) view.findViewById(R.id.detail_subject_homework_homeworkId);
+					String idHomework = tIdHomeowrk.getText().toString();
 
-				String[] projection = { DatabaseContract.Homework.COLUMN_NAME_SUBJECT_ID };
+					String[] projection = { DatabaseContract.Homework.COLUMN_NAME_SUBJECT_ID };
 
-				String[] argsHomeworkId = { idHomework };
-				Cursor cur = db.query(DatabaseContract.Homework.TABLE_NAME, projection, DatabaseContract.Exams._ID
-						+ "= ?", argsHomeworkId, null, null, null);
+					String[] argsHomeworkId = { idHomework };
+					Cursor cur = db.query(DatabaseContract.Homework.TABLE_NAME, projection, DatabaseContract.Exams._ID
+							+ "= ?", argsHomeworkId, null, null, null);
 
-				cur.moveToFirst();
+					cur.moveToFirst();
 
-				String subjectId = cur.getString(cur
-						.getColumnIndexOrThrow(DatabaseContract.Homework.COLUMN_NAME_SUBJECT_ID));
+					String subjectId = cur.getString(cur
+							.getColumnIndexOrThrow(DatabaseContract.Homework.COLUMN_NAME_SUBJECT_ID));
 
-				db.delete(DatabaseContract.Homework.TABLE_NAME, DatabaseContract.Homework._ID + "=" + idHomework, null);
+					db.delete(DatabaseContract.Homework.TABLE_NAME, DatabaseContract.Homework._ID + "=" + idHomework,
+							null);
 
-				cur.close();
+					cur.close();
 
-				/** Quit the homework id on subject */
-				projection = new String[] { DatabaseContract.Subjects.COLUMN_NAME_HOMEWORK_ID };
+					/** Quit the homework id on subject */
+					projection = new String[] { DatabaseContract.Subjects.COLUMN_NAME_HOMEWORK_ID };
 
-				String[] argsId = { String.valueOf(subjectId) };
-				cur = db.query(DatabaseContract.Subjects.TABLE_NAME, projection, DatabaseContract.Subjects._ID + "= ?",
-						argsId, null, null, null);
+					String[] argsId = { String.valueOf(subjectId) };
+					cur = db.query(DatabaseContract.Subjects.TABLE_NAME, projection, DatabaseContract.Subjects._ID
+							+ "= ?", argsId, null, null, null);
 
-				cur.moveToFirst();
-				String sHomeworkIds = cur.getString(cur
-						.getColumnIndexOrThrow(DatabaseContract.Subjects.COLUMN_NAME_HOMEWORK_ID));
-				String[] homeworkIds = sHomeworkIds.split(";");
-				String result = new String();
-				for (int i = 0; i < homeworkIds.length; i++) {
-					if (homeworkIds[i].isEmpty())
-						continue;
+					cur.moveToFirst();
+					String sHomeworkIds = cur.getString(cur
+							.getColumnIndexOrThrow(DatabaseContract.Subjects.COLUMN_NAME_HOMEWORK_ID));
+					String[] homeworkIds = sHomeworkIds.split(";");
+					String result = new String();
+					for (int i = 0; i < homeworkIds.length; i++) {
+						if (homeworkIds[i].isEmpty())
+							continue;
 
-					if (!homeworkIds[i].equals(idHomework))
-						result += homeworkIds[i] + ";";
+						if (!homeworkIds[i].equals(idHomework))
+							result += homeworkIds[i] + ";";
+					}
+
+					/** Update with the new values */
+					ContentValues values = new ContentValues();
+					values.put(DatabaseContract.Subjects.COLUMN_NAME_HOMEWORK_ID, result);
+					db.update(DatabaseContract.Subjects.TABLE_NAME, values, DatabaseContract.Subjects._ID + "="
+							+ subjectId, null);
+
+					adapter.remove(adapter.getItem(position));
+
+					adapter.notifyDataSetChanged();
+					return true;
 				}
-
-				/** Update with the new values */
-				ContentValues values = new ContentValues();
-				values.put(DatabaseContract.Subjects.COLUMN_NAME_HOMEWORK_ID, result);
-				db.update(DatabaseContract.Subjects.TABLE_NAME, values,
-						DatabaseContract.Subjects._ID + "=" + subjectId, null);
-
-				adapter.remove(adapter.getItem(position));
-
-				adapter.notifyDataSetChanged();
-				return true;
-			}
-		});
-
+			});
+		}
 		return view;
 	}
 
