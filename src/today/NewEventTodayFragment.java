@@ -139,7 +139,21 @@ public class NewEventTodayFragment extends Fragment implements OnClickButtonXml,
 			int endDay = Integer.valueOf(endDate[0]);
 			int endMonth = Integer.valueOf(endDate[1]);
 			int endYear = Integer.valueOf(endDate[2]);
-			eventFromDate = initYear + "-" + initMonth + "-" + initDay;
+
+			String sInitMonth = new String();
+			String sInitDay = new String();
+
+			if (initMonth < 9)
+				sInitMonth = "0" + initMonth;
+			else
+				sInitMonth = "" + initMonth;
+
+			if (initDay < 9)
+				sInitDay = "0" + initDay;
+			else
+				sInitDay = "" + initDay;
+
+			eventFromDate = initYear + "-" + sInitMonth + "-" + sInitDay;
 			eventToDate = endYear + "-" + endMonth + "-" + endDay;
 
 			/** Add event to the array list */
