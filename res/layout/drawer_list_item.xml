@@ -16,15 +16,15 @@
         android:contentDescription="@string/quit_warnings"/>
 
     <TextView
-        android:id = "@+id/drawer_list_item_title"
-        android:textSize="10pt"
-        android:textColor="#000000"
+        android:id="@+id/drawer_list_item_title"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_weight="0.5"
+        android:paddingBottom="15dp"
         android:paddingLeft="20dp"
         android:paddingTop="15dp"
-        android:paddingBottom="15dp"
-        android:layout_weight="0.5"
-        android:layout_gravity="center"/>
+        android:textColor="#0099CC"
+        android:textSize="10pt" />
 
 </LinearLayout>
