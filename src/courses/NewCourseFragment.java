@@ -83,6 +83,7 @@ public class NewCourseFragment extends Fragment implements OnClickButtonXml, OnB
 		else {
 			/** Fill the database with the data */
 			ContentValues values = new ContentValues();
+			values.put(DatabaseContract.Courses._ID, DatabaseHelper.getNextId(db, DatabaseContract.Courses.TABLE_NAME));
 			values.put(DatabaseContract.Courses.COLUMN_NAME_COURSE_NAME, nameCourse.getText().toString());
 			values.put(DatabaseContract.Courses.COLUMN_NAME_NUMBER_OF_SUBJECTS, 0);
 			values.put(DatabaseContract.Courses.COLUMN_NAME_AVERAGE, 0);

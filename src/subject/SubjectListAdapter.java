@@ -68,6 +68,8 @@ public class SubjectListAdapter extends ArrayAdapter<Subject> {
 		text.setText("Media: " + average);
 		text = (TextView) view.findViewById(R.id.subject_list_item_subject_number_exams);
 		text.setText("Examenes: " + subject.getNumberOfExams());
+		text = (TextView) view.findViewById(R.id.detail_course_subject_subjectId);
+		text.setText("" + subject.getId());
 
 		return view;
 	}

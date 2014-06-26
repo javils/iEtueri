@@ -56,8 +56,8 @@ public class HomeworkFragment extends Fragment {
 					String[] projection = { DatabaseContract.Homework.COLUMN_NAME_SUBJECT_ID };
 
 					String[] argsHomeworkId = { idHomework };
-					Cursor cur = db.query(DatabaseContract.Homework.TABLE_NAME, projection, DatabaseContract.Exams._ID
-							+ "= ?", argsHomeworkId, null, null, null);
+					Cursor cur = db.query(DatabaseContract.Homework.TABLE_NAME, projection,
+							DatabaseContract.Homework._ID + "= ?", argsHomeworkId, null, null, null);
 
 					cur.moveToFirst();
 

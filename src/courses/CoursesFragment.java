@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -38,45 +39,94 @@ public class CoursesFragment extends Fragment {
 		ArrayList<Course> courses = new ArrayList<Course>();
 		courses = getCoursesInDB();
 
-		CoursesAdapter adapter;
 		if (courses != null && courses.size() != 0) {
-			adapter = new CoursesAdapter(getActivity(), R.layout.courses_list_item, courses);
+			final CoursesAdapter adapter = new CoursesAdapter(getActivity(), R.layout.courses_list_item, courses);
 			listCourses.setAdapter(adapter);
+			listCourses.setOnItemClickListener(new OnItemClickListener() {
+
+				@Override
+				public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+					TextView textName = (TextView) view.findViewById(R.id.courses_list_item_course_name);
+					TextView textNSubjects = (TextView) view.findViewById(R.id.courses_list_item_number_subjects);
+					TextView textAverage = (TextView) view.findViewById(R.id.courses_list_item_course_average);
+
+					String courseName = textName.getText().toString();
+					int numberOfSubjects = Integer.parseInt(textNSubjects.getText().toString().split(" ")[0]);
+					double average = Double.parseDouble(textAverage.getText().toString());
+
+					Course course = getCourseInDB(courseName, numberOfSubjects, average);
+
+					FragmentManager fragmentManager = getFragmentManager();
+					Fragment newFragment = NavigationDrawerController
+							.newInstance(NavigationDrawerController.SECTION_NUMBER_DETAIL_COURSE);
+					if (newFragment instanceof OnClickButtonXml)
+						MainActivity.setOnClickFragment(newFragment);
+					MainActivity.setCurrentFragment(newFragment);
+					((CourseDetailFragment) newFragment).setCourse(course);
+					fragmentManager.beginTransaction().replace(R.id.navigation_drawer_container, newFragment).commit();
+
+					/** Close the DB */
+					db.close();
+					dbHelper.close();
+				}
+			});
+
+			listCourses.setOnItemLongClickListener(new OnItemLongClickListener() {
+
+				@Override
+				public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+					TextView textName = (TextView) view.findViewById(R.id.courses_list_item_course_name);
+					TextView textNSubjects = (TextView) view.findViewById(R.id.courses_list_item_number_subjects);
+					TextView textAverage = (TextView) view.findViewById(R.id.courses_list_item_course_average);
+					TextView tIdCourse = (TextView) view.findViewById(R.id.course_courseId);
+
+					String idCourse = tIdCourse.getText().toString();
+
+					String courseName = textName.getText().toString();
+					int numberOfSubjects = Integer.parseInt(textNSubjects.getText().toString().split(" ")[0]);
+					double average = Double.parseDouble(textAverage.getText().toString());
+					removeCourse(getActivity(), courseName, numberOfSubjects, average, idCourse);
+
+					adapter.remove(adapter.getItem(position));
+					adapter.notifyDataSetChanged();
+
+					return true;
+				}
+			});
 		} else {
 			view = inflater.inflate(R.layout.fragment_void, container, false);
 			TextView description = (TextView) view.findViewById(R.id.fragment_void_description);
 			description.setText(R.string.courses_description);
 		}
 
-		listCourses.setOnItemClickListener(new OnItemClickListener() {
-
-			@Override
-			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				TextView textName = (TextView) view.findViewById(R.id.courses_list_item_course_name);
-				TextView textNSubjects = (TextView) view.findViewById(R.id.courses_list_item_number_subjects);
-				TextView textAverage = (TextView) view.findViewById(R.id.courses_list_item_course_average);
-
-				String subjectName = textName.getText().toString();
-				int numberOfSubjects = Integer.parseInt(textNSubjects.getText().toString().split(" ")[0]);
-				double average = Double.parseDouble(textAverage.getText().toString());
-
-				Course course = getCourseInDB(subjectName, numberOfSubjects, average);
-
-				FragmentManager fragmentManager = getFragmentManager();
-				Fragment newFragment = NavigationDrawerController
-						.newInstance(NavigationDrawerController.SECTION_NUMBER_DETAIL_COURSE);
-				if (newFragment instanceof OnClickButtonXml)
-					MainActivity.setOnClickFragment(newFragment);
-				MainActivity.setCurrentFragment(newFragment);
-				((CourseDetailFragment) newFragment).setCourse(course);
-				fragmentManager.beginTransaction().replace(R.id.navigation_drawer_container, newFragment).commit();
-
-				/** Close the DB */
-				db.close();
-				dbHelper.close();
-			}
-		});
 		return view;
+	}
+
+	private void removeCourse(Activity activity, String courseName, int numberOfSubject, double average, String idCourse) {
+		dbHelper = new DatabaseHelper(activity);
+		db = dbHelper.getReadableDatabase();
+		String[] projection = { DatabaseContract.Subjects._ID };
+		String[] args = { idCourse };
+
+		Cursor cur = db.query(DatabaseContract.Subjects.TABLE_NAME, projection,
+				DatabaseContract.Subjects.COLUMN_NAME_COURSE_ID + "= ?", args, null, null, null);
+
+		cur.moveToFirst();
+
+		for (int i = 0; i < cur.getCount(); i++) {
+			Course course = getCourseInDB(courseName, numberOfSubject, average);
+			CourseDetailFragment.removeSubject(activity,
+					cur.getString(cur.getColumnIndexOrThrow(DatabaseContract.Subjects._ID)), course);
+			cur.moveToNext();
+		}
+
+		db.delete(DatabaseContract.Courses.TABLE_NAME, DatabaseContract.Courses._ID + "=" + idCourse, null);
+
+		cur.close();
+
+		dbHelper.close();
+		db.close();
+
 	}
 
 	private ArrayList<Course> getCoursesInDB() {

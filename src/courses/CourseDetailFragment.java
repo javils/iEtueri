@@ -14,6 +14,7 @@ import utility.OnClickButtonXml;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -22,6 +23,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -31,8 +33,8 @@ public class CourseDetailFragment extends Fragment implements OnBackPressed {
 
 	private ListView listSubjects;
 	private Course course;
-	private DatabaseHelper dbHelper;
-	private SQLiteDatabase db;
+	private static DatabaseHelper dbHelper;
+	private static SQLiteDatabase db;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -43,39 +45,90 @@ public class CourseDetailFragment extends Fragment implements OnBackPressed {
 		ArrayList<Subject> subjects = new ArrayList<Subject>();
 		subjects = getSubjectsInDB();
 
-		SubjectListAdapter adapter;
-
 		if (subjects != null && subjects.size() != 0) {
-			adapter = new SubjectListAdapter(getActivity(), R.layout.subject_list_item, subjects);
+
+			final SubjectListAdapter adapter = new SubjectListAdapter(getActivity(), R.layout.subject_list_item,
+					subjects);
 			listSubjects.setAdapter(adapter);
+			listSubjects.setOnItemClickListener(new OnItemClickListener() {
+
+				@Override
+				public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+					TextView subjectName = (TextView) view.findViewById(R.id.subject_list_item_subject_name);
+					Subject currentSubject = getSubjectInDB(subjectName.getText().toString());
+					FragmentManager fragmentManager = getFragmentManager();
+					Fragment newFragment = NavigationDrawerController
+							.newInstance(NavigationDrawerController.SECTION_NUMBER_DETAIL_SUBJECT);
+
+					newFragment.getArguments().putInt(NavigationDrawerController.ARG_TYPE_SECTION,
+							NavigationDrawerController.COURSE_DETAIL_SECTION);
+					if (newFragment instanceof OnClickButtonXml)
+						MainActivity.setOnClickFragment(newFragment);
+					MainActivity.setCurrentFragment(newFragment);
+					((DetailSubjectFragment) newFragment).setSubject(currentSubject);
+
+					fragmentManager.beginTransaction().replace(R.id.navigation_drawer_container, newFragment).commit();
+
+				}
+			});
+
+			listSubjects.setOnItemLongClickListener(new OnItemLongClickListener() {
+
+				@Override
+				public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+
+					TextView tIdSubject = (TextView) view.findViewById(R.id.detail_course_subject_subjectId);
+					String idSubject = tIdSubject.getText().toString();
+					removeSubject(getActivity(), idSubject, course);
+
+					adapter.remove(adapter.getItem(position));
+					adapter.notifyDataSetChanged();
+
+					return true;
+				}
+			});
 		} else {
 			view = inflater.inflate(R.layout.fragment_void, container, false);
 			TextView description = (TextView) view.findViewById(R.id.fragment_void_description);
 			description.setText(R.string.subjects_description);
 		}
 
-		listSubjects.setOnItemClickListener(new OnItemClickListener() {
-
-			@Override
-			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				TextView subjectName = (TextView) view.findViewById(R.id.subject_list_item_subject_name);
-				Subject currentSubject = getSubjectInDB(subjectName.getText().toString());
-				FragmentManager fragmentManager = getFragmentManager();
-				Fragment newFragment = NavigationDrawerController
-						.newInstance(NavigationDrawerController.SECTION_NUMBER_DETAIL_SUBJECT);
-
-				newFragment.getArguments().putInt(NavigationDrawerController.ARG_TYPE_SECTION,
-						NavigationDrawerController.COURSE_DETAIL_SECTION);
-				if (newFragment instanceof OnClickButtonXml)
-					MainActivity.setOnClickFragment(newFragment);
-				MainActivity.setCurrentFragment(newFragment);
-				((DetailSubjectFragment) newFragment).setSubject(currentSubject);
-
-				fragmentManager.beginTransaction().replace(R.id.navigation_drawer_container, newFragment).commit();
-
-			}
-		});
 		return view;
+	}
+
+	public static void removeSubject(Activity activity, String idSubject, Course course) {
+		dbHelper = new DatabaseHelper(activity);
+		db = dbHelper.getReadableDatabase();
+		String[] projection = { DatabaseContract.Subjects.COLUMN_NAME_COURSE_ID };
+		String[] args = { idSubject };
+
+		Cursor cur = db.query(DatabaseContract.Subjects.TABLE_NAME, projection, DatabaseContract.Subjects._ID + "= ?",
+				args, null, null, null);
+
+		cur.moveToFirst();
+
+		String courseId = cur.getString(cur.getColumnIndexOrThrow(DatabaseContract.Subjects.COLUMN_NAME_COURSE_ID));
+
+		db.delete(DatabaseContract.Subjects.TABLE_NAME, DatabaseContract.Subjects._ID + "=" + idSubject, null);
+
+		cur.close();
+
+		/** Update courses */
+		course.setNumberOfSubjects(course.getNumberOfSubjects() - 1);
+		ContentValues values = new ContentValues();
+		values.put(DatabaseContract.Courses.COLUMN_NAME_NUMBER_OF_SUBJECTS, course.getNumberOfSubjects());
+
+		db.update(DatabaseContract.Courses.TABLE_NAME, values, DatabaseContract.Courses._ID + "=" + courseId, null);
+
+		/** Remove all the homework and exams of the subject */
+		db.delete(DatabaseContract.Homework.TABLE_NAME, DatabaseContract.Homework.COLUMN_NAME_SUBJECT_ID + "="
+				+ idSubject, null);
+		db.delete(DatabaseContract.Exams.TABLE_NAME, DatabaseContract.Exams.COLUMN_NAME_SUBJECT_ID + "=" + idSubject,
+				null);
+
+		dbHelper.close();
+		db.close();
+
 	}
 
 	private ArrayList<Subject> getSubjectsInDB() {

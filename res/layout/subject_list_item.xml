@@ -58,6 +58,13 @@
             android:layout_height="wrap_content"
             android:layout_weight="0.1" />
 
+         
+    <TextView
+        android:id="@+id/detail_course_subject_subjectId"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="invisible" />
     </LinearLayout>
+   
 
 </LinearLayout>

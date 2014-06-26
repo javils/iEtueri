@@ -86,8 +86,8 @@
     <string name="normal_priority">Normal</string>
     <string name="low_priority">Baja</string>
     <!-- DESCRIPTIONS -->
-    <string name="courses_description">Pulsa el boton + de la barra del titutlo para crear un nuevo curso.\nDespues de eso, selecciona el curso que desees para crear las asignaturas.</string>
-    <string name="subjects_description">Pulsa el boton + de la barra del titutlo para crear una nueva asignatura.\nSeleccionala, y podras añadir tus examenes y tus deberes.</string>
+    <string name="courses_description">Pulsa el boton + de la barra del titutlo para crear un nuevo curso.\nDespues de eso, selecciona el curso que desees para crear las asignaturas.\nSi deseas borrar un curso, mantenlo pulsado.</string>
+    <string name="subjects_description">Pulsa el boton + de la barra del titutlo para crear una nueva asignatura.\nSeleccionala, y podras añadir tus examenes y tus deberes.\nSi deseas borrar una asignatura, manten pulsado.</string>
     <string name="detail_subjects_description">¡Enhorabuena!\nNo tienes ninguna tarea en esta asignatura.</string>
     <string name="exams_description">No tienes nigun examen pendiente.</string>
     <string name="homework_description">No tienes ningun trabajo pendiente.</string>

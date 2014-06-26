@@ -75,6 +75,8 @@ public class CoursesAdapter extends ArrayAdapter<Course> {
 				+ (course.getNumberOfSubjects() != 1 ? " asignaturas" : " asignatura"));
 		text = (TextView) view.findViewById(R.id.courses_list_item_course_average);
 		text.setText("" + course.getAverage());
+		text = (TextView) view.findViewById(R.id.course_courseId);
+		text.setText("" + course.getId());
 
 		return view;
 	}
